@@ -25,12 +25,26 @@ namespace GPSFA_WinForms
         public frmListaVoluntarios()
         {
             InitializeComponent();
+            desabilitarBotoes();
         }
 
         private void frmListaVoluntarios_Load(object sender, EventArgs e)
         {
             CarregarDadosNaListaDeVoluntarios();
-            ConfigDgvVoluntarios();
+            ConfigDgvVoluntarios(); 
+            this.dgvVoluntarios.AllowUserToAddRows = false;
+        }
+
+        private void desabilitarBotoes()
+        {
+            btnPesquisar.Enabled = false;
+            btnLimpar.Enabled = false;
+        }
+
+        private void habilitarBotoes()
+        {
+            btnPesquisar.Enabled = true;
+            btnLimpar.Enabled = true;
         }
 
         private void ConfigDgvVoluntarios()
@@ -54,6 +68,36 @@ namespace GPSFA_WinForms
             buttonColumn.Text = "Editar"; // The text displayed on the button
             buttonColumn.UseColumnTextForButtonValue = true; // Use the Text property value for all buttons
             dgvVoluntarios.Columns.Add(buttonColumn);
+        }
+
+        public void buscarVoluntarioPorDescricao(string descricao)
+        {
+            dgvVoluntarios.Columns.Clear();
+
+            DataTable tabela = new DataTable();
+
+            using (MySqlConnection conexao = DataBaseConnection.OpenConnection())
+            {
+                StringBuilder query = new StringBuilder();
+
+                query.Append("SELECT codVol, nome, cpf, telCel FROM tbVoluntarios WHERE nome LIKE '%@descricao%' OR cpf LIKE '%@descricao%' OR telCel LIKE '%@descricao%';");
+
+                MySqlCommand comm = new MySqlCommand();
+                comm.Connection = conexao;
+
+                comm.CommandText = query.ToString();
+
+                comm.Parameters.Clear();
+                comm.Parameters.Add("@descricao", MySqlDbType.VarChar, 100).Value = descricao;
+
+                MySqlDataAdapter DA = new MySqlDataAdapter(comm);
+                DA.Fill(tabela);
+
+                dgvVoluntarios.DataSource = tabela;
+
+                dgvVoluntarios.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+                DataBaseConnection.CloseConnection();
+            }
         }
 
         private void dgvVoluntarios_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -102,6 +146,37 @@ namespace GPSFA_WinForms
             frmVoluntarios abrir = new frmVoluntarios();
             abrir.Show();
             this.Close();
+        }
+
+        private void btnPesquisar_Click(object sender, EventArgs e)
+        {
+            if (txtDescricao.Text.Equals(""))
+            {
+                MessageBox.Show("Favor inserir um valor",
+                    "Mensagem do sistema",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error,
+                    MessageBoxDefaultButton.Button1);
+                txtDescricao.Focus();
+            }
+            else
+            {
+                buscarVoluntarioPorDescricao(txtDescricao.Text);
+                ConfigDgvVoluntarios();
+            }
+        }
+
+        private void btnLimpar_Click(object sender, EventArgs e)
+        {
+            txtDescricao.Clear();
+            ConfigDgvVoluntarios();
+            CarregarDadosNaListaDeVoluntarios();
+            desabilitarBotoes();
+        }
+
+        private void txtDescricao_TextChanged(object sender, EventArgs e)
+        {
+            habilitarBotoes();
         }
     }
 }

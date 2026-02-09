@@ -30,13 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmListaVoluntarios));
             this.gpbListaVoluntarios = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.txtDescricao = new System.Windows.Forms.TextBox();
             this.lblDescricao = new System.Windows.Forms.Label();
             this.dgvVoluntarios = new System.Windows.Forms.DataGridView();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btnPesquisar = new System.Windows.Forms.Button();
-            this.btnLimpar = new System.Windows.Forms.Button();
             this.btnVoltar = new System.Windows.Forms.Button();
+            this.btnLimpar = new System.Windows.Forms.Button();
+            this.btnPesquisar = new System.Windows.Forms.Button();
             this.gpbListaVoluntarios.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVoluntarios)).BeginInit();
             this.SuspendLayout();
@@ -55,6 +55,18 @@
             this.gpbListaVoluntarios.TabIndex = 0;
             this.gpbListaVoluntarios.TabStop = false;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.Black;
+            this.label1.Location = new System.Drawing.Point(14, 159);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(299, 36);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Lista de Voluntários";
+            // 
             // txtDescricao
             // 
             this.txtDescricao.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -63,8 +75,9 @@
             this.txtDescricao.Margin = new System.Windows.Forms.Padding(4);
             this.txtDescricao.MaxLength = 20;
             this.txtDescricao.Name = "txtDescricao";
-            this.txtDescricao.Size = new System.Drawing.Size(854, 47);
+            this.txtDescricao.Size = new System.Drawing.Size(708, 47);
             this.txtDescricao.TabIndex = 7;
+            this.txtDescricao.TextChanged += new System.EventHandler(this.txtDescricao_TextChanged);
             // 
             // lblDescricao
             // 
@@ -89,48 +102,6 @@
             this.dgvVoluntarios.TabIndex = 6;
             this.dgvVoluntarios.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvVoluntarios_CellContentClick);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.Black;
-            this.label1.Location = new System.Drawing.Point(14, 159);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(299, 36);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "Lista de Voluntários";
-            // 
-            // btnPesquisar
-            // 
-            this.btnPesquisar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnPesquisar.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPesquisar.Image = ((System.Drawing.Image)(resources.GetObject("btnPesquisar.Image")));
-            this.btnPesquisar.Location = new System.Drawing.Point(909, 96);
-            this.btnPesquisar.Margin = new System.Windows.Forms.Padding(4);
-            this.btnPesquisar.Name = "btnPesquisar";
-            this.btnPesquisar.Size = new System.Drawing.Size(183, 65);
-            this.btnPesquisar.TabIndex = 21;
-            this.btnPesquisar.Text = "&Pesquisar";
-            this.btnPesquisar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnPesquisar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnPesquisar.UseVisualStyleBackColor = true;
-            // 
-            // btnLimpar
-            // 
-            this.btnLimpar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnLimpar.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLimpar.Image = ((System.Drawing.Image)(resources.GetObject("btnLimpar.Image")));
-            this.btnLimpar.Location = new System.Drawing.Point(1100, 96);
-            this.btnLimpar.Margin = new System.Windows.Forms.Padding(4);
-            this.btnLimpar.Name = "btnLimpar";
-            this.btnLimpar.Size = new System.Drawing.Size(183, 65);
-            this.btnLimpar.TabIndex = 22;
-            this.btnLimpar.Text = "&Limpar";
-            this.btnLimpar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnLimpar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnLimpar.UseVisualStyleBackColor = true;
-            // 
             // btnVoltar
             // 
             this.btnVoltar.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -146,6 +117,38 @@
             this.btnVoltar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnVoltar.UseVisualStyleBackColor = true;
             this.btnVoltar.Click += new System.EventHandler(this.btnVoltar_Click);
+            // 
+            // btnLimpar
+            // 
+            this.btnLimpar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnLimpar.Font = new System.Drawing.Font("Microsoft YaHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLimpar.Image = ((System.Drawing.Image)(resources.GetObject("btnLimpar.Image")));
+            this.btnLimpar.Location = new System.Drawing.Point(917, 94);
+            this.btnLimpar.Margin = new System.Windows.Forms.Padding(4);
+            this.btnLimpar.Name = "btnLimpar";
+            this.btnLimpar.Size = new System.Drawing.Size(173, 49);
+            this.btnLimpar.TabIndex = 24;
+            this.btnLimpar.Text = "&Limpar";
+            this.btnLimpar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnLimpar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnLimpar.UseVisualStyleBackColor = true;
+            this.btnLimpar.Click += new System.EventHandler(this.btnLimpar_Click);
+            // 
+            // btnPesquisar
+            // 
+            this.btnPesquisar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnPesquisar.Font = new System.Drawing.Font("Microsoft YaHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPesquisar.Image = ((System.Drawing.Image)(resources.GetObject("btnPesquisar.Image")));
+            this.btnPesquisar.Location = new System.Drawing.Point(736, 94);
+            this.btnPesquisar.Margin = new System.Windows.Forms.Padding(4);
+            this.btnPesquisar.Name = "btnPesquisar";
+            this.btnPesquisar.Size = new System.Drawing.Size(173, 49);
+            this.btnPesquisar.TabIndex = 23;
+            this.btnPesquisar.Text = "&Pesquisar";
+            this.btnPesquisar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnPesquisar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnPesquisar.UseVisualStyleBackColor = true;
+            this.btnPesquisar.Click += new System.EventHandler(this.btnPesquisar_Click);
             // 
             // frmListaVoluntarios
             // 
@@ -174,8 +177,8 @@
         private System.Windows.Forms.Label lblDescricao;
         private System.Windows.Forms.DataGridView dgvVoluntarios;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button btnPesquisar;
-        private System.Windows.Forms.Button btnLimpar;
         private System.Windows.Forms.Button btnVoltar;
+        private System.Windows.Forms.Button btnLimpar;
+        private System.Windows.Forms.Button btnPesquisar;
     }
 }
