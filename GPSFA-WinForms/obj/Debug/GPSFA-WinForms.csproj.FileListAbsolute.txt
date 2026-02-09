@@ -73,7 +73,6 @@ C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\
 C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\obj\Debug\Projeto_Socorrista.frmEstoque.resources
 C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\obj\Debug\GPSFA_WinForms.frmMenuPrincipal.resources
 C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\obj\Debug\GPSFA_WinForms.frmRelatorios.resources
-C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\obj\Debug\GPSFA_WinForms.frmGestaoDeVoluntarios.resources
 C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\obj\Debug\GPSFA_WinForms.Properties.Resources.resources
 C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\obj\Debug\GPSFA-WinForms.csproj.GenerateResource.cache
 C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\obj\Debug\GPSFA-WinForms.csproj.CoreCompileInputs.cache
@@ -469,9 +468,7 @@ C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos1\GPSFA-WinForms
 C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos1\GPSFA-WinForms\obj\Debug\GPSFA-Wi.9FD634F4.Up2Date
 C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\bin\Debug\GPSFA-WinForms.exe.manifest
 C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\bin\Debug\GPSFA-WinForms.application
-C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\obj\Debug\GPSFA_WinForms.frmCadastrarVoluntarios.resources
 C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\obj\Debug\GPSFA_WinForms.frmGerenciarProdutos.resources
-C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\obj\Debug\GPSFA_WinForms.frmGerenciarDadosDoVoluntario.resources
 C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\obj\Debug\GPSFA_WinForms.frmListaProdutos.resources
 C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\obj\Debug\GPSFA_WinForms.frmLogin.resources
 C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\obj\Debug\GPSFA_WinForms.frmOrigemDoacao.resources
@@ -733,3 +730,6 @@ C:\Users\Anselmo\Documents\Projetos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\o
 C:\Users\Anselmo\Documents\Projetos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\obj\Debug\GPSFA-Wi.9FD634F4.Up2Date
 C:\Users\Anselmo\Documents\Projetos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\obj\Debug\GPSFA-WinForms.exe
 C:\Users\Anselmo\Documents\Projetos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\obj\Debug\GPSFA-WinForms.pdb
+C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\obj\Debug\GPSFA_WinForms.frmListaVoluntarios.resources
+C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\obj\Debug\GPSFA_WinForms.frmPesquisarOrigemDoacao.resources
+C:\Users\Caua.gpereira2\Source\Repos\DashboardDeGestaoDeProdutos\GPSFA-WinForms\obj\Debug\GPSFA_WinForms.frmVoluntarios.resources
