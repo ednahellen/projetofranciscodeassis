@@ -197,6 +197,7 @@ namespace GPSFA_WinForms
             txtBairro.Clear();
             txtUsuario.Clear();
             txtSenha.Clear();
+            txtConfirmaSenha.Clear();
             cbbEstado.Items.Clear();
             txtCidade.Clear();
         }
@@ -212,6 +213,7 @@ namespace GPSFA_WinForms
             ckbUsuarioAtivo.Enabled = false;
             txtUsuario.Enabled = false;
             txtSenha.Enabled = false;
+            txtConfirmaSenha.Enabled = false;
             mskCpf.Enabled = false;
             mskTelefone.Enabled = false;
             mskCep.Enabled = false;
@@ -403,11 +405,13 @@ namespace GPSFA_WinForms
             {
                 txtUsuario.Enabled = true;
                 txtSenha.Enabled = true;
+                txtConfirmaSenha.Enabled = true;
             }
             else
             {
                 txtUsuario.Enabled = false;
                 txtSenha.Enabled = false;
+                txtConfirmaSenha.Enabled = false;
             }
         }
 
@@ -435,7 +439,9 @@ namespace GPSFA_WinForms
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    string url = $"https://viacep.com.br/ws/{cep}/json/";
+                    // O viacep retorna dados apenas caso o cep eteja em sua base de dados
+                    // Se~não houver dados sobre aquele cep, a api retorna erro.
+                    string url = $"https://viacep.com.br/ws/{cep}/json/"; 
 
                     var response = await client.GetAsync(url);
 

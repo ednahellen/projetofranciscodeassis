@@ -46,7 +46,6 @@ namespace GPSFA_WinForms
             //cbbUnidadeMedida.SelectedIndex = 0;
         }
 
-<<<<<<< HEAD
         //Novo Cadastro
 
         public int cadastrarProdutos(string descricao, int quantidade, int peso, string unidade, string codBar, DateTime dataDeEntrada, DateTime dataDeValidade, DateTime dataLimiteDeSaida, int codUsu, int codOri, int codList)
@@ -66,7 +65,7 @@ namespace GPSFA_WinForms
             comm.Parameters.Add("@dataLimiteDeSaida", MySqlDbType.Date).Value = dataLimiteDeSaida;
             comm.Parameters.Add("@codUsu", MySqlDbType.Int32).Value = codUsu;
             comm.Parameters.Add("@codOri", MySqlDbType.Int32).Value = codOri;
-            comm.Parameters.Add("@codLis", MySqlDbType.Int32).Value = codList;            
+            comm.Parameters.Add("@codLis", MySqlDbType.Int32).Value = codList;
 
             comm.Connection = DataBaseConnection.OpenConnection();
 
@@ -88,8 +87,8 @@ namespace GPSFA_WinForms
             return 0;
         }
 
-        private int enviarDoacoes(string nomeProduto, int quantidade, int peso, string unidadeMedida, string codBar, DateTime dataArrecadacao, DateTime dataDeValidade, DateTime dataLimiteDeSaida, int codUsu)
-=======
+        //private int enviarDoacoes(string nomeProduto, int quantidade, int peso, string unidadeMedida, string codBar, DateTime dataArrecadacao, DateTime dataDeValidade, DateTime dataLimiteDeSaida, int codUsu);
+
         private (int codOrigem, int codProduto) BuscaCodigoDeListEOrigem(string nomeOrigem, string nomeProduto){
             nomeOrigem = cbbOrigemDoacao.Text;
             nomeProduto = cbbDescricao.Text;
@@ -120,7 +119,6 @@ namespace GPSFA_WinForms
         }
 
         private int enviarDoacoes(string nomeProduto, int quantidade, int peso, string unidadeMedida, string codBar, DateTime dataArrecadacao, DateTime dataDeValidade, DateTime dataLimiteDeSaida, int codUsu, int codOri, int codList)
->>>>>>> dc32c7218e4572ed7061238d5db8060bc574e6f6
         {
             MySqlCommand comm = new MySqlCommand();
             comm.CommandText = @"INSERT INTO tbProdutos( descricao,
@@ -160,7 +158,7 @@ namespace GPSFA_WinForms
             comm.Parameters.Add("@dataLimiteDeSaida", MySqlDbType.VarChar, 300).Value = dataLimiteDeSaida;
             comm.Parameters.Add("@codUsu", MySqlDbType.Int32).Value = codUsu;
 
-           var(codOrigem, codLista) = BuscaCodigoDeListEOrigem(cbbOrigemDoacao.Text, cbbDescricao.Text);
+            var (codOrigem, codLista) = BuscaCodigoDeListEOrigem(cbbOrigemDoacao.Text, cbbDescricao.Text);
 
             comm.Parameters.Add("@codOri", MySqlDbType.Int32).Value = codOrigem;
             comm.Parameters.Add("@codList", MySqlDbType.Int32).Value = codLista;
@@ -226,7 +224,7 @@ namespace GPSFA_WinForms
 
             while (DR.Read())
             {
-               cbbDescricao.Items.Add(DR.GetString(1));
+                cbbDescricao.Items.Add(DR.GetString(1));
             }
 
             DataBaseConnection.CloseConnection();
@@ -292,7 +290,6 @@ namespace GPSFA_WinForms
             //    return;
             //}
 
-<<<<<<< HEAD
             //if (!VerificaFormatacaoDosCampos())
             //{
             //    return;
@@ -318,7 +315,7 @@ namespace GPSFA_WinForms
             //    MessageBox.Show("Erro ao cadastrar doação!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             //    limparCamposDeCadastro();
             //}
-=======
+
             if (!VerificaFormatacaoDosCampos())
             {
                 return;
@@ -351,13 +348,12 @@ namespace GPSFA_WinForms
                 MessageBox.Show("Erro ao cadastrar doação!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 limparCamposDeCadastro();
             }
->>>>>>> dc32c7218e4572ed7061238d5db8060bc574e6f6
 
             ////dgvProdutos.Columns.Clear();
             ////CarregarListaProdutos();
             ///
 
-            cadastrarProdutos(cbbDescricao.Text,Convert.ToInt32(txtQuantidade.Text), peso, cbbUnidadeMedida.Text, dtpDataEntrada.Text, dtpDataValidade.Text, dtpDataValidade.Text, 1, 1, 1 );
+            cadastrarProdutos(cbbDescricao.SelectedItem.ToString(), Convert.ToInt32(txtQuantidade.Text), peso, cbbUnidadeMedida.Text, codBar.ToString() ,dtpDataEntrada.Value, dtpDataValidade.Value, dtpDataValidade.Value, 1, 1, 1);
         }
 
         private void btnAtualizarDados_Click(object sender, EventArgs e)
@@ -370,7 +366,7 @@ namespace GPSFA_WinForms
 
         public void limparCamposDeCadastro()
         {
-            
+
             txtQuantidade.Clear();
             dtpDataValidade.Value = DateTime.Now;
             DateTime dataRecebimento = Convert.ToDateTime(dtpDataEntrada.Text);
@@ -381,7 +377,7 @@ namespace GPSFA_WinForms
 
         private void btnSair_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void btnCancelar_Click(object sender, EventArgs e)
@@ -445,9 +441,10 @@ namespace GPSFA_WinForms
 
             MySqlDataReader DR = comm.ExecuteReader();
 
-            if (DR.Read()) { 
-                    txtPeso.Text = DR.GetInt32(0).ToString();
-                    cbbUnidadeMedida.Text = DR.GetString(1);
+            if (DR.Read())
+            {
+                txtPeso.Text = DR.GetInt32(0).ToString();
+                cbbUnidadeMedida.Text = DR.GetString(1);
             }
             DataBaseConnection.CloseConnection();
         }

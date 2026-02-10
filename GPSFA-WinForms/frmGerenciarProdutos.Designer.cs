@@ -418,12 +418,8 @@
             this.btnCadastrar.Text = "&Cadastrar";
             this.btnCadastrar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnCadastrar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-<<<<<<< HEAD
-            this.btnCadastrar.UseVisualStyleBackColor = true;   
-=======
             this.btnCadastrar.UseVisualStyleBackColor = true;
             this.btnCadastrar.Click += new System.EventHandler(this.btnCadastrar_Click);
->>>>>>> dc32c7218e4572ed7061238d5db8060bc574e6f6
             // 
             // frmGerenciarProdutos
             // 

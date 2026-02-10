@@ -17,11 +17,7 @@ namespace GPSFA_WinForms
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-<<<<<<< HEAD
-            Application.Run(new frmOrigemDoacao());
-=======
             Application.Run(new frmMenuPrincipal());
->>>>>>> dc32c7218e4572ed7061238d5db8060bc574e6f6
         }
     }
 }

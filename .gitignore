@@ -25,3 +25,5 @@ packages/
 
 # Variaveis de ambiente
 .env
+appsettings.Development.json
+appsettings.Production.json

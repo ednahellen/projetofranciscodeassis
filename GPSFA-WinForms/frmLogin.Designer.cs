@@ -41,7 +41,7 @@
             // 
             this.lblUusuario.AutoSize = true;
             this.lblUusuario.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUusuario.Location = new System.Drawing.Point(115, 221);
+            this.lblUusuario.Location = new System.Drawing.Point(264, 256);
             this.lblUusuario.Name = "lblUusuario";
             this.lblUusuario.Size = new System.Drawing.Size(85, 27);
             this.lblUusuario.TabIndex = 4;
@@ -50,24 +50,25 @@
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(120, 252);
+            this.textBox1.Location = new System.Drawing.Point(253, 286);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(424, 34);
+            this.textBox1.Size = new System.Drawing.Size(360, 34);
             this.textBox1.TabIndex = 5;
             // 
             // textBox2
             // 
-            this.textBox2.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(120, 340);
+            this.textBox2.Font = new System.Drawing.Font("Wingdings", 18F);
+            this.textBox2.Location = new System.Drawing.Point(253, 363);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(424, 34);
+            this.textBox2.PasswordChar = 'l';
+            this.textBox2.Size = new System.Drawing.Size(360, 34);
             this.textBox2.TabIndex = 7;
             // 
             // lblSenha
             // 
             this.lblSenha.AutoSize = true;
             this.lblSenha.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSenha.Location = new System.Drawing.Point(115, 309);
+            this.lblSenha.Location = new System.Drawing.Point(264, 333);
             this.lblSenha.Name = "lblSenha";
             this.lblSenha.Size = new System.Drawing.Size(70, 27);
             this.lblSenha.TabIndex = 6;
@@ -78,7 +79,7 @@
             this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(112)))), ((int)(((byte)(99)))));
             this.button1.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.button1.Location = new System.Drawing.Point(120, 409);
+            this.button1.Location = new System.Drawing.Point(253, 415);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(152, 65);
             this.button1.TabIndex = 8;
@@ -90,7 +91,7 @@
             this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(11)))), ((int)(((byte)(13)))));
             this.button2.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button2.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.button2.Location = new System.Drawing.Point(392, 409);
+            this.button2.Location = new System.Drawing.Point(461, 415);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(152, 65);
             this.button2.TabIndex = 9;
@@ -102,7 +103,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(237)))), ((int)(((byte)(228)))));
-            this.ClientSize = new System.Drawing.Size(680, 511);
+            this.ClientSize = new System.Drawing.Size(865, 561);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox2);
