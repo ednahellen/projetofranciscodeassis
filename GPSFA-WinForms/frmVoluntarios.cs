@@ -83,15 +83,16 @@ namespace GPSFA_WinForms
             DataBaseConnection.CloseConnection();
         }
 
-        private int buscarVoluntario(string descricao)
+        private int buscarVoluntario(string nome, string cpf)
         {
             MySqlCommand comm = new MySqlCommand();
-            comm.CommandText = $"SELECT * FROM tbVoluntarios WHERE nome = @descricao;";
+            comm.CommandText = $"SELECT * FROM tbVoluntarios WHERE nome = @nome OR cpf = @cpf;";
 
             comm.CommandType = CommandType.Text;
 
             comm.Parameters.Clear();
-            comm.Parameters.Add("@descricao", MySqlDbType.VarChar, 20).Value = descricao;
+            comm.Parameters.Add("@nome", MySqlDbType.VarChar, 20).Value = nome;
+            comm.Parameters.Add("@cpf", MySqlDbType.VarChar, 20).Value = cpf;
 
             comm.Connection = DataBaseConnection.OpenConnection();
 
@@ -135,6 +136,37 @@ namespace GPSFA_WinForms
             catch (Exception)
             {
                 MessageBox.Show("Este voluntario já existe!", "Mensagem do sistema",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error,
+                    MessageBoxDefaultButton.Button1);
+            }
+            return 0;
+        }
+
+        public int cadastrarUsuario(int codVol, string usuario, string senha)
+        {
+            MySqlCommand comm = new MySqlCommand();
+            comm.CommandText = "INSERT INTO tbVoluntarios(usuario,senha.codVol)VALUES(@usuario,@senha,@codVol)";
+            comm.CommandType = CommandType.Text;
+
+            comm.Parameters.Clear();
+            comm.Parameters.Add("@usuario", MySqlDbType.VarChar, 20).Value = usuario;
+            comm.Parameters.Add("@senha", MySqlDbType.VarChar, 20).Value = senha;
+            comm.Parameters.Add("@codVol", MySqlDbType.VarChar, 20).Value = codVol;
+
+            comm.Connection = DataBaseConnection.OpenConnection();
+
+            try
+            {
+                int resp = comm.ExecuteNonQuery();
+
+                DataBaseConnection.CloseConnection();
+
+                return resp;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Erro ao editar dados do Voluntário!", "Mensagem do sistema",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error,
                     MessageBoxDefaultButton.Button1);
@@ -281,7 +313,7 @@ namespace GPSFA_WinForms
                     MessageBoxDefaultButton.Button1);
                 txtNomeVoluntario.Focus();
             }
-            else if (buscarVoluntario(txtNomeVoluntario.Text).Equals(1))
+            else if (buscarVoluntario(txtNomeVoluntario.Text, mskCpf.Text).Equals(1))
             {
                 MessageBox.Show("Este registro já existe!", "Mensagem do sistema",
                     MessageBoxButtons.OK,
