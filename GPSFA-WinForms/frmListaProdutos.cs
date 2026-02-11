@@ -65,8 +65,8 @@ namespace GPSFA_WinForms
             {
 
                 //Regex utilizado para remover espaços extras entre as palavras.
-
-                int resp = cadastrarProdutos(Regex.Replace(txtDescricao.Text, @"\s+", " ").Trim().ToUpper(), Convert.ToInt32(txtPeso.Text), cbbUnidadeMedida.Text, 1);
+                double peso = Double.Parse(txtPeso.Text);
+               double resp = cadastrarProdutos(Regex.Replace(txtDescricao.Text, @"\s+", " ").Trim().ToUpper() + " - " + txtPeso.Text + cbbUnidadeMedida.Text, peso, cbbUnidadeMedida.Text, 1);
 
                 if (resp.Equals(1))
                 {
@@ -96,7 +96,7 @@ namespace GPSFA_WinForms
             }
         }
 
-        public int cadastrarProdutos(string descricao, int peso, string unidade, int codUni)
+        public int cadastrarProdutos(string descricao, double peso, string unidade, int codUni)
         {
             MySqlCommand comm = new MySqlCommand();
             comm.CommandText = "INSERT INTO tbLista(descricao, peso, unidade, codUni)VALUES(@descricao, @peso, @unidade, @codUni);";

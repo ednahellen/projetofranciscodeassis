@@ -46,10 +46,9 @@ namespace GPSFA_WinForms
             //cbbUnidadeMedida.SelectedIndex = 0;
         }
 
-        //Novo Cadastro
-
-        public int cadastrarProdutos(string descricao, int quantidade, int peso, string unidade, string codBar, DateTime dataDeEntrada, DateTime dataDeValidade, DateTime dataLimiteDeSaida, int codUsu, int codOri, int codList)
+        private (int codOrigem, int codProduto) BuscaCodigoDeListEOrigem(string nomeOrigem, string nomeProduto)
         {
+<<<<<<< HEAD
             MySqlCommand comm = new MySqlCommand();
             comm.CommandText = "INSERT INTO tbprodutos(descricao, quantidade, peso, unidade, codBar, dataDeEntrada, dataDeValidade, dataLimiteDeSaida, codUsu, codOri, codList)VALUES(@descricao, @quantidade, @peso, @unidade, @codBar, @dataDeEntrada, @dataDeValidade, @dataLimiteDeSaida, @codUsu, @codOri, @codList);";
             comm.CommandType = CommandType.Text;
@@ -90,6 +89,8 @@ namespace GPSFA_WinForms
         //private int enviarDoacoes(string nomeProduto, int quantidade, int peso, string unidadeMedida, string codBar, DateTime dataArrecadacao, DateTime dataDeValidade, DateTime dataLimiteDeSaida, int codUsu);
 
         private (int codOrigem, int codProduto) BuscaCodigoDeListEOrigem(string nomeOrigem, string nomeProduto){
+=======
+>>>>>>> 97b6174c0d16f5f3fcfb276780a51818df577b0c
             nomeOrigem = cbbOrigemDoacao.Text;
             nomeProduto = cbbDescricao.Text;
 
@@ -110,13 +111,14 @@ namespace GPSFA_WinForms
                 codOri = DR.GetInt32(0);
             }
 
-          
+
             if (DR.NextResult() && DR.Read())
             {
                 codList = DR.GetInt32(0);
             }
             return (codOri, codList);
         }
+<<<<<<< HEAD
 
         //private int enviarDoacoes(string nomeProduto, int quantidade, int peso, string unidadeMedida, string codBar, DateTime dataArrecadacao, DateTime dataDeValidade, DateTime dataLimiteDeSaida, int codUsu, int codOri, int codList)
         //{
@@ -145,6 +147,35 @@ namespace GPSFA_WinForms
         //                        @codOri,
         //                        @codList);";
         //    comm.CommandType = CommandType.Text;
+=======
+        private int enviarDoacoes(string nomeProduto, int quantidade, int peso, string unidadeMedida, string codBar, DateTime dataArrecadacao, DateTime dataDeValidade, DateTime dataLimiteDeSaida, int codUsu, int codOri, int codList)
+        {
+            MySqlCommand comm = new MySqlCommand();
+            comm.CommandText = @"INSERT INTO tbProdutos( descricao,
+                                quantidade,
+                                peso,
+                                unidade,
+                                codBar,
+                                dataDeEntrada,
+                                dataDeValidade,
+                                dataLimiteDeSaida,
+                                codUsu, 
+                                codOri,
+                                codList) 
+                                VALUES(
+                                @descricao, 
+                                @quantidade, 
+                                @peso, 
+                                @unidade,
+                                @codBar,
+                                @dataArrecadacao, 
+                                @dataDeValidade, 
+                                @dataLimiteDeSaida, 
+                                @codUsu,
+                                @codOri,
+                                @codList);";
+            comm.CommandType = CommandType.Text;
+>>>>>>> 97b6174c0d16f5f3fcfb276780a51818df577b0c
 
         //    comm.Parameters.Clear();
 
@@ -215,7 +246,7 @@ namespace GPSFA_WinForms
         {
             cbbDescricao.Items.Clear();
             MySqlCommand comm = new MySqlCommand();
-            comm.CommandText = "SELECT * FROM tbLista ORDER BY descricao ASC;";
+            comm.CommandText = "SELECT descricao FROM tbLista ORDER BY descricao ASC;";
             comm.CommandType = CommandType.Text;
 
             comm.Connection = DataBaseConnection.OpenConnection();
@@ -224,7 +255,7 @@ namespace GPSFA_WinForms
 
             while (DR.Read())
             {
-                cbbDescricao.Items.Add(DR.GetString(1));
+                cbbDescricao.Items.Add(DR.GetString(0));
             }
 
             DataBaseConnection.CloseConnection();
@@ -251,6 +282,7 @@ namespace GPSFA_WinForms
         //        return false;
         //    }
 
+<<<<<<< HEAD
         //    if (Regex.IsMatch(txtQuantidade.Text, @"[a-zA-Z]"))
         //    {
         //        MessageBox.Show("Quantidade inválida", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -259,6 +291,17 @@ namespace GPSFA_WinForms
         //    }
         //    return true;
         //}
+=======
+            if (Regex.IsMatch(txtQuantidade.Text, @"[a-zA-Z]") || Convert.ToInt32(txtQuantidade.Text) == 0)
+            {
+                MessageBox.Show("Quantidade inválida", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtQuantidade.Focus();
+                return false;
+            }
+
+            return true;
+        }
+>>>>>>> 97b6174c0d16f5f3fcfb276780a51818df577b0c
 
         private string SimplificarUnidade(string unidadeSelecionada)
         {
@@ -281,9 +324,9 @@ namespace GPSFA_WinForms
             }
         }
 
-
         private void btnCadastrar_Click(object sender, EventArgs e)
         {
+<<<<<<< HEAD
             int resp = cadastrarProdutos(cbbDescricao.Text, Convert.ToInt32(txtQuantidade.Text), Convert.ToInt32(txtPeso.Text), cbbUnidadeMedida.Text, txtCodBarras.Text, dtpDataEntrada.Value, dtpDataValidade.Value, dtpDataEntrada.Value, 1, 1, 1 );
 
             if (resp.Equals(1))
@@ -334,6 +377,13 @@ namespace GPSFA_WinForms
             //    MessageBox.Show("Erro ao cadastrar doação!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             //    limparCamposDeCadastro();
             //}
+=======
+            if (cbbDescricao.Text.Equals("") || txtQuantidade.Text.Equals(""))
+            {
+                MessageBox.Show("Um ou mais campos não foram preenchidos corretamente", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+>>>>>>> 97b6174c0d16f5f3fcfb276780a51818df577b0c
 
             //if (!VerificaFormatacaoDosCampos())
             //{
@@ -350,6 +400,7 @@ namespace GPSFA_WinForms
             //int codUsu = 1;
             //var (codOrigem, codLista) = BuscaCodigoDeListEOrigem(cbbOrigemDoacao.Text, cbbDescricao.Text);
 
+<<<<<<< HEAD
             //if (dtpDataValidade.Value < DateTime.Today){
             //    MessageBox.Show("A data de validade não pode ser anterior a data atual!", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             //    dtpDataValidade.Focus();
@@ -373,6 +424,39 @@ namespace GPSFA_WinForms
             ///
 
             //cadastrarProdutos(cbbDescricao.SelectedItem.ToString(), Convert.ToInt32(txtQuantidade.Text), peso, cbbUnidadeMedida.Text, codBar.ToString() ,dtpDataEntrada.Value, dtpDataValidade.Value, dtpDataValidade.Value, 1, 1, 1);
+=======
+            if (dtpDataValidade.Value < DateTime.Today)
+            {
+                MessageBox.Show("A data de validade não pode ser anterior a data atual!", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dtpDataValidade.Focus();
+                return;
+            }
+
+            int quantidadeMinimaParaCadastroDeProduto = 1;
+            while (quantidadeMinimaParaCadastroDeProduto <= quantidade)
+            {
+                if (enviarDoacoes(nomeItem, 1, peso, tipoUnidade, codBar, dataRecebimento, dataValidade, dataLimiteDeSaida, codUsu, codOrigem, codLista) == 1)
+                {
+                    quantidadeMinimaParaCadastroDeProduto++;
+                    //dgvProdutos.Columns.Clear();
+                    //CarregarListaProdutos();
+                    if (quantidadeMinimaParaCadastroDeProduto == quantidade)
+                    {
+                        MessageBox.Show("Doação cadastrada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        limparCamposDeCadastro();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Erro ao cadastrar doação!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    limparCamposDeCadastro();
+                }
+
+            }
+
+            //dgvProdutos.Columns.Clear();
+            //CarregarListaProdutos();
+>>>>>>> 97b6174c0d16f5f3fcfb276780a51818df577b0c
         }
 
         private void btnAtualizarDados_Click(object sender, EventArgs e)
