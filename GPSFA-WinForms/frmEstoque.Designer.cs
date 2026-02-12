@@ -62,6 +62,7 @@
             this.cbxCategoria = new System.Windows.Forms.ComboBox();
             this.lblCategoria = new System.Windows.Forms.Label();
             this.lblStatus = new System.Windows.Forms.Label();
+            this.btnVoltar = new System.Windows.Forms.Button();
             this.pnlFiltrosDeBusca.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -269,6 +270,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(112)))), ((int)(((byte)(99)))));
+            this.panel1.Controls.Add(this.btnVoltar);
             this.panel1.Controls.Add(this.btnAplicarModoExibicao);
             this.panel1.Controls.Add(this.cbxModoExibicao);
             this.panel1.Controls.Add(this.label2);
@@ -473,6 +475,21 @@
             this.lblStatus.TabIndex = 6;
             this.lblStatus.Text = "Status:";
             // 
+            // btnVoltar
+            // 
+            this.btnVoltar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnVoltar.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVoltar.Image = ((System.Drawing.Image)(resources.GetObject("btnVoltar.Image")));
+            this.btnVoltar.Location = new System.Drawing.Point(201, 682);
+            this.btnVoltar.Name = "btnVoltar";
+            this.btnVoltar.Size = new System.Drawing.Size(166, 70);
+            this.btnVoltar.TabIndex = 20;
+            this.btnVoltar.Text = "&Voltar";
+            this.btnVoltar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnVoltar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnVoltar.UseVisualStyleBackColor = true;
+            this.btnVoltar.Click += new System.EventHandler(this.btnVoltar_Click);
+            // 
             // frmEstoque
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
@@ -540,5 +557,6 @@
         private System.Windows.Forms.ComboBox cbxModoExibicao;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblModoExibicao;
+        private System.Windows.Forms.Button btnVoltar;
     }
 }
