@@ -36,22 +36,27 @@ namespace GPSFA_WinForms
             desativarBotoes();
             desabilitarCampos();
         }
-
+        
+        // Instância da Janela com variável imbutida
         public frmVoluntarios(string text)
         {
             InitializeComponent();
             codVol = Convert.ToInt32(text);
-            buscarDadosDoVoluntario(codVol);
+            buscarDadosDoVoluntarioPeloCodigo(codVol);
+            buscarUsuarioAtivo(codVol);
             habilitarCampos();
-            desativarBotoesNovo();
-            desabilitarBotaoCadastrar();
+            btnNovo.Enabled = false;
+            btnCadastrar.Enabled = false;
         }
 
-        // Instância global do código do voluntário
-        int codVol = 0;
-        bool isVoluntarioActive = true;
+        // Variaveis globais 
+        int codVol = 0; // Código do voluntário
+        bool isVoluntarioActive = true; // Estado do voluntário
+        bool isUsuarioActive = true; // Estado do usuário do voluntário
 
-        private void buscarDadosDoVoluntario(int codVoluntario)
+
+        // Métodos para ações CRUD e queries do banco de dados
+        private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
         {
             MySqlCommand comm = new MySqlCommand();
             comm.CommandText = $"SELECT * FROM tbVoluntarios WHERE codVol = @codVol;";
@@ -85,7 +90,60 @@ namespace GPSFA_WinForms
             DataBaseConnection.CloseConnection();
         }
 
-        private int buscarVoluntario(string nome, string cpf)
+        private void buscarUsuarioAtivo(int codVoluntario)
+        {
+            MySqlCommand comm = new MySqlCommand();
+            comm.CommandText = $"SELECT * FROM tbUsuarios WHERE codVol = @codVol;";
+
+            comm.CommandType = CommandType.Text;
+            comm.Parameters.Clear();
+
+            comm.Parameters.Add("@codVol", MySqlDbType.VarChar, 100).Value = codVoluntario;
+
+            comm.Connection = DataBaseConnection.OpenConnection();
+
+            MySqlDataReader DR;
+            DR = comm.ExecuteReader();
+
+            while (DR.Read())
+            {
+                isUsuarioActive = DR.GetBoolean(5);
+                txtUsuario.Text = DR.GetString(1);
+                txtSenha.Text = DR.GetString(2);
+                txtConfirmaSenha.Text = DR.GetString(2);
+                string acesso = DR.GetString(3);
+                SelecionarAcessoDoUsuario(acesso);
+            }
+
+            if (isUsuarioActive)
+            {
+                ckbUsuarioAtivo.Checked = true;
+            }
+            else if (isUsuarioActive == false)
+            {
+                ckbUsuarioAtivo.Checked = false;
+            }
+        }
+        private void SelecionarAcessoDoUsuario(string acesso)
+        {
+            if (string.IsNullOrWhiteSpace(acesso))
+                return;
+
+            acesso = acesso.Trim().ToUpper();
+
+            for (int i = 0; i < cbbEstado.Items.Count; i++)
+            {
+                string item = cbbEstado.Items[i].ToString();
+
+                if (item.EndsWith($"({acesso})"))
+                {
+                    cbbEstado.SelectedIndex = i;
+                    return;
+                }
+            }
+        }
+
+        private int buscarVoluntarioPorDescricao(string nome, string cpf)
         {
             MySqlCommand comm = new MySqlCommand();
             comm.CommandText = $"SELECT * FROM tbVoluntarios WHERE nome = @nome OR cpf = @cpf;";
@@ -150,7 +208,7 @@ namespace GPSFA_WinForms
         public int cadastrarUsuario(int codVol, string usuario, string senha)
         {
             MySqlCommand comm = new MySqlCommand();
-            comm.CommandText = "INSERT INTO tbVoluntarios(usuario,senha.codVol)VALUES(@usuario,@senha,@codVol)";
+            comm.CommandText = "INSERT INTO tbVoluntarios(usuario,senha,codVol)VALUES(@usuario,@senha,@codVol)";
             comm.CommandType = CommandType.Text;
 
             comm.Parameters.Clear();
@@ -225,7 +283,7 @@ namespace GPSFA_WinForms
             MySqlCommand comm = new MySqlCommand();
             comm.CommandText = "UPDATE tbVoluntarios SET  telCel = '', cpf = '', cep = '', rua = '', numero = '', complemento  = '', bairro = '', cidade = '', estado = '', ativo = 0 WHERE codVol = @codVol;";
             
-            comm.CommandText = "UPDATE tbVoluntarios SET  telCel = '', cpf = '', cep = '', rua = '', numero = '', complemento  = '', bairro = '', cidade = '', estado = '' WHERE codVol = @codVol;";
+            //comm.CommandText = "UPDATE tbVoluntarios SET  telCel = '', cpf = '', cep = '', rua = '', numero = '', complemento  = '', bairro = '', cidade = '', estado = '' WHERE codVol = @codVol;";
 
             comm.CommandType = CommandType.Text;
 
@@ -252,7 +310,8 @@ namespace GPSFA_WinForms
             return 0;
         }
 
-        // Métodos para habilitar ou desabilitar campos da janela
+
+        // Métodos para atalizações dos campos e recursos da janela
         private void limparCampos()
         {
             txtNomeVoluntario.Clear();
@@ -306,7 +365,6 @@ namespace GPSFA_WinForms
             txtCidade.Enabled = true;
         }
 
-        // Métodos para desabilitar ou habilitar recursos da janela
         private void desativarBotoes()
         {
             btnCadastrar.Enabled = false;
@@ -315,196 +373,8 @@ namespace GPSFA_WinForms
             btnExcluir.Enabled = false;
         }
 
-        private void desabilitarBotaoCadastrar()
-        {
-            btnCadastrar.Enabled = false;
-        }
 
-        private void habilitarBotoesCadastrar()
-        {
-            btnCadastrar.Enabled = true;
-        }
-
-        private void desativarBotoesNovo()
-        {
-            btnNovo.Enabled = false;
-        }
-
-        // Conigurações dos botões e suas respectivas ações
-        private void btnNovo_Click(object sender, EventArgs e)
-        {
-            habilitarCampos();
-            habilitarBotoesCadastrar();
-            desativarBotoesNovo();
-            btnLimpar.Enabled = true;
-            txtNomeVoluntario.Focus();
-        }
-
-        private void btnCadastrar_Click(object sender, EventArgs e)
-        {
-            if (txtNomeVoluntario.Text.Equals("")) // Falta adicionar mais validações
-            {
-                MessageBox.Show("Favor inserir valores!", "Mensagem do sistema",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information,
-                    MessageBoxDefaultButton.Button1);
-                txtNomeVoluntario.Focus();
-            }
-            else if (buscarVoluntario(txtNomeVoluntario.Text, mskCpf.Text).Equals(1))
-            {
-                MessageBox.Show("Este registro já existe!", "Mensagem do sistema",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information,
-                    MessageBoxDefaultButton.Button1);
-                txtNomeVoluntario.Focus();
-            }
-            else
-            {
-                int resp = cadastrarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, mskCpf.Text, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, cbbEstado.SelectedItem.ToString());
-
-                if (resp.Equals(1))
-                {
-                    MessageBox.Show("Cadastrado com sucesso!", "Mensagem do sistema",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information,
-                    MessageBoxDefaultButton.Button1);
-                    desativarBotoes();
-                    desabilitarCampos();
-                    desativarBotoes();
-                    btnNovo.Enabled = true;
-                    btnNovo.Focus();
-                }
-                else
-                {
-                    MessageBox.Show("Erro ao Cadastrar!", "Mensagem do sistema",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error,
-                    MessageBoxDefaultButton.Button1);
-
-                    limparCampos();
-                    desabilitarCampos();
-                    desativarBotoes();
-                    desabilitarBotaoCadastrar();
-                    btnNovo.Enabled = true;
-
-                }
-            }
-        }
-
-        private void btnAlterar_Click(object sender, EventArgs e)
-        {
-            if (txtNomeVoluntario.Text.Equals("")) // Falta adicionar mais validações
-            {
-                MessageBox.Show("Favor inserir valores!", "Mensagem do sistema",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information,
-                    MessageBoxDefaultButton.Button1);
-                txtNomeVoluntario.Focus();
-            }
-            else
-            {
-                int resp = alterarDadosVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, mskCpf.Text, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, cbbEstado.SelectedItem.ToString(), txtUsuario.Text, txtSenha.Text, codVol);
-
-                if (resp.Equals(1))
-                {
-                    MessageBox.Show("dados do voluntário alterados com sucesso!", "Mensagem do sistema",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information,
-                    MessageBoxDefaultButton.Button1);
-                    desativarBotoes();
-                    desabilitarCampos();
-                    desativarBotoes();
-                    btnNovo.Enabled = true;
-                    btnNovo.Focus();
-                }
-                else
-                {
-                    MessageBox.Show("Erro ao alterar dados!", "Mensagem do sistema",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error,
-                        MessageBoxDefaultButton.Button1);
-
-                    limparCampos();
-                    desabilitarCampos();
-                    desativarBotoes();
-                    desabilitarBotaoCadastrar();
-                    btnNovo.Enabled = true;
-
-                }
-            }
-
-        }
-
-        private void btnLimpar_Click(object sender, EventArgs e)
-        {
-            limparCampos();
-            desabilitarCampos();
-            desativarBotoes();
-            btnNovo.Enabled = true;
-            ckbUsuarioAtivo.Checked = false;
-        }
-
-        private void btnExcluir_Click(object sender, EventArgs e)
-        {
-            if (txtNomeVoluntario.Text.Equals("") || mskTelefone.Text.Equals("") || mskCpf.Text.Equals("") || mskCep.Text.Equals("") || txtRua.Text.Equals("") || txtNumero.Text.Equals("") || txtComplemento.Text.Equals("") || txtBairro.Text.Equals("") || txtCidade.Text.Equals(""))
-            {
-                MessageBox.Show("Não há usuário selecionado para exclusão!", "Mensagem do sistema",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error,
-                    MessageBoxDefaultButton.Button1);
-            }
-            else
-            {
-
-            }
-
-        }
-
-        private void btnPesquisar_Click(object sender, EventArgs e)
-        {
-            frmPesquisarVoluntarios abrir = new frmPesquisarVoluntarios();
-            abrir.Show();
-            this.Close();
-        }
-
-        private void btnVoltar_Click(object sender, EventArgs e)
-        {
-            frmMenuPrincipal abrir = new frmMenuPrincipal();
-            abrir.Show();
-            this.Close();
-        }
-
-        private void frmVoluntarios_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ckbUsuarioAtivo_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ckbUsuarioAtivo.Checked == true)
-            {
-                txtUsuario.Enabled = true;
-                txtSenha.Enabled = true;
-                txtConfirmaSenha.Enabled = true;
-            }
-            else
-            {
-                txtUsuario.Enabled = false;
-                txtSenha.Enabled = false;
-                txtConfirmaSenha.Enabled = false;
-            }
-        }
-
-        private void mskCep_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress = true; // evita beep do Enter
-
-                buscarEnderecoPorCep();
-            }
-        }
-
+        // Integração com API do ViaCep para buscar endereço através do CEP
         private async void buscarEnderecoPorCep()
         {
             string cep = Regex.Replace(mskCep.Text, @"\D", "");
@@ -574,6 +444,196 @@ namespace GPSFA_WinForms
             // Caso não encontre
             MessageBox.Show($"Estado com sigla '{uf}' não encontrado na lista.");
 
+        }
+
+
+        // Métodos de click dos botões e suas ações
+        private void btnNovo_Click(object sender, EventArgs e) // Habilita o botão cadastrar e campos da janela para criação de um novo voluntário
+        {
+            habilitarCampos();
+            btnCadastrar.Enabled = true;
+            btnNovo.Enabled = false;
+            btnLimpar.Enabled = true;
+            txtNomeVoluntario.Focus();
+        }
+
+        private void btnCadastrar_Click(object sender, EventArgs e) // Com base no preenchimento dos campos da janela, faz o insert dos dados
+        {
+            if (txtNomeVoluntario.Text.Equals("") || mskTelefone.Text.Equals("") || mskCpf.Text.Equals("") || mskCep.Text.Equals("") || txtRua.Text.Equals("") || txtNumero.Text.Equals("") || txtBairro.Text.Equals("") || txtCidade.Text.Equals("")) // Falta adicionar mais validações
+            {
+                MessageBox.Show("Favor inserir valores nos campos vazios!", "Mensagem do sistema",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1);
+                txtNomeVoluntario.Focus();
+            }
+            else if (txtNomeVoluntario.Text.Equals("") && mskTelefone.Text.Equals("") && mskCpf.Text.Equals("") && mskCep.Text.Equals("") && txtRua.Text.Equals("") && txtNumero.Text.Equals("") && txtRua.Text.Equals("") && txtCidade.Text.Equals("")) // Falta adicionar mais validações
+            {
+                MessageBox.Show("Todos os campos devem estar preenchidos!", "Mensagem do sistema",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1);
+                txtNomeVoluntario.Focus();
+            }
+            else if (buscarVoluntarioPorDescricao(txtNomeVoluntario.Text, mskCpf.Text).Equals(1))
+            {
+                MessageBox.Show("Este registro já existe!", "Mensagem do sistema",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1);
+                limparCampos();
+                desabilitarCampos();
+                desativarBotoes();
+                btnNovo.Enabled = true;
+            }
+            else
+            {
+                int resp = cadastrarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, mskCpf.Text, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, cbbEstado.SelectedItem.ToString());
+
+                if (resp.Equals(1))
+                {
+                    MessageBox.Show("Cadastrado com sucesso!", "Mensagem do sistema",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1);
+                    desativarBotoes();
+                    desabilitarCampos();
+                    desativarBotoes();
+                    btnNovo.Enabled = true;
+                    btnNovo.Focus();
+                }
+                else
+                {
+                    MessageBox.Show("Erro ao Cadastrar!", "Mensagem do sistema",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error,
+                    MessageBoxDefaultButton.Button1);
+
+                    limparCampos();
+                    desabilitarCampos();
+                    desativarBotoes();
+                    btnNovo.Enabled = true;
+                    btnNovo.Focus();
+
+                }
+            }
+        }
+
+        private void btnAlterar_Click(object sender, EventArgs e) // Após pesquisar um voluntário e instânciar ele, permite alterar os dados
+        {
+            if (txtNomeVoluntario.Text.Equals("") || mskTelefone.Text.Equals("") || mskCpf.Text.Equals("") || mskCep.Text.Equals("") || txtRua.Text.Equals("") || txtNumero.Text.Equals("") || txtBairro.Text.Equals("") || txtCidade.Text.Equals("")) // Falta adicionar mais validações
+            {
+                MessageBox.Show("Favor inserir valores!", "Mensagem do sistema",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1);
+                txtNomeVoluntario.Focus();
+            }
+            else
+            {
+                int resp = alterarDadosVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, mskCpf.Text, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, cbbEstado.SelectedItem.ToString(), txtUsuario.Text, txtSenha.Text, codVol);
+
+                if (resp.Equals(1))
+                {
+                    MessageBox.Show("dados do voluntário alterados com sucesso!", "Mensagem do sistema",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1);
+                    desativarBotoes();
+                    desabilitarCampos();
+                    desativarBotoes();
+                    btnNovo.Enabled = true;
+                    btnNovo.Focus();
+                }
+                else
+                {
+                    MessageBox.Show("Erro ao alterar dados!", "Mensagem do sistema",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error,
+                        MessageBoxDefaultButton.Button1);
+
+                    limparCampos();
+                    desabilitarCampos();
+                    desativarBotoes();
+                    btnNovo.Enabled = true;
+                }
+            }
+
+        }
+
+        private void btnLimpar_Click(object sender, EventArgs e) // Aciona os métodos de limpeza de campos  e "reseta" a janela
+        {
+            limparCampos();
+            desabilitarCampos();
+            desativarBotoes();
+            btnNovo.Enabled = true;
+            ckbUsuarioAtivo.Checked = false;
+        }
+
+        private void btnExcluir_Click(object sender, EventArgs e) // Aciona o método de exclusão e limpeza de dados com base na instância dos dados de um voluntário
+        {
+            if (txtNomeVoluntario.Text.Equals("") || mskTelefone.Text.Equals("") || mskCpf.Text.Equals("") || mskCep.Text.Equals("") || txtRua.Text.Equals("") || txtNumero.Text.Equals("") || txtComplemento.Text.Equals("") || txtBairro.Text.Equals("") || txtCidade.Text.Equals(""))
+            {
+                MessageBox.Show("Não há usuário selecionado para exclusão!", "Mensagem do sistema",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error,
+                    MessageBoxDefaultButton.Button1);
+            }
+            else
+            {
+
+            }
+
+        }
+
+        private void btnPesquisar_Click(object sender, EventArgs e) // Aciona a janela de pesquisa de voluntários
+        {
+            frmPesquisarVoluntarios abrir = new frmPesquisarVoluntarios();
+            abrir.Show();
+            this.Close();
+        }
+
+        private void btnVoltar_Click(object sender, EventArgs e) // Volta para a anela de Menu Principal
+        {
+            frmMenuPrincipal abrir = new frmMenuPrincipal();
+            abrir.Show();
+            this.Close();
+        }
+
+        private void mskCep_KeyDown(object sender, KeyEventArgs e) // Aciona o método de buscar endereço por CEP ao digitar o cep no campo e clicar na tecla "Enter"
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true; // evita beep do Enter
+                if (mskCep.Text.Equals(""))
+                {
+                    MessageBox.Show("Erro ao buscar endereço, digite um CEP para buscar o endereço!", "Mensagem do sistema",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error,
+                        MessageBoxDefaultButton.Button1);
+                    mskCep.Focus();
+                }
+                else
+                {
+                    buscarEnderecoPorCep();
+                }
+            }
+        }
+
+        private void ckbUsuarioAtivo_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckbUsuarioAtivo.Checked)
+            {
+                txtUsuario.Enabled = true;
+                txtSenha.Enabled = true;
+                txtConfirmaSenha.Enabled = true;
+            }
+            else
+            {
+                txtUsuario.Enabled = false;
+                txtSenha.Enabled = false;
+                txtConfirmaSenha.Enabled = false;
+            }
         }
     }
 }

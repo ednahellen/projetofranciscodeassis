@@ -30,6 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmVoluntarios));
             this.gpbCamposDoProduto = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.txtConfirmaSenha = new System.Windows.Forms.TextBox();
+            this.lblSenha = new System.Windows.Forms.Label();
+            this.txtSenha = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtUsuario = new System.Windows.Forms.TextBox();
+            this.ckbUsuarioAtivo = new System.Windows.Forms.CheckBox();
             this.txtCidade = new System.Windows.Forms.TextBox();
             this.mskTelefone = new System.Windows.Forms.MaskedTextBox();
             this.mskCep = new System.Windows.Forms.MaskedTextBox();
@@ -60,13 +67,8 @@
             this.btnNovo = new System.Windows.Forms.Button();
             this.pnlDadosProdutos = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
-            this.ckbUsuarioAtivo = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtUsuario = new System.Windows.Forms.TextBox();
-            this.lblSenha = new System.Windows.Forms.Label();
-            this.txtSenha = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.txtConfirmaSenha = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.cbbTipoDeAcesso = new System.Windows.Forms.ComboBox();
             this.gpbCamposDoProduto.SuspendLayout();
             this.pnlCrud.SuspendLayout();
             this.pnlDadosProdutos.SuspendLayout();
@@ -75,6 +77,8 @@
             // gpbCamposDoProduto
             // 
             this.gpbCamposDoProduto.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(237)))), ((int)(((byte)(228)))));
+            this.gpbCamposDoProduto.Controls.Add(this.cbbTipoDeAcesso);
+            this.gpbCamposDoProduto.Controls.Add(this.label3);
             this.gpbCamposDoProduto.Controls.Add(this.label4);
             this.gpbCamposDoProduto.Controls.Add(this.txtConfirmaSenha);
             this.gpbCamposDoProduto.Controls.Add(this.lblSenha);
@@ -108,6 +112,80 @@
             this.gpbCamposDoProduto.Size = new System.Drawing.Size(1214, 453);
             this.gpbCamposDoProduto.TabIndex = 0;
             this.gpbCamposDoProduto.TabStop = false;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.Color.Black;
+            this.label4.Location = new System.Drawing.Point(621, 361);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(208, 29);
+            this.label4.TabIndex = 92;
+            this.label4.Text = "Confirmar Senha";
+            // 
+            // txtConfirmaSenha
+            // 
+            this.txtConfirmaSenha.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtConfirmaSenha.Font = new System.Drawing.Font("Microsoft YaHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtConfirmaSenha.Location = new System.Drawing.Point(626, 393);
+            this.txtConfirmaSenha.MaxLength = 100;
+            this.txtConfirmaSenha.Name = "txtConfirmaSenha";
+            this.txtConfirmaSenha.Size = new System.Drawing.Size(231, 39);
+            this.txtConfirmaSenha.TabIndex = 93;
+            // 
+            // lblSenha
+            // 
+            this.lblSenha.AutoSize = true;
+            this.lblSenha.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSenha.ForeColor = System.Drawing.Color.Black;
+            this.lblSenha.Location = new System.Drawing.Point(379, 361);
+            this.lblSenha.Name = "lblSenha";
+            this.lblSenha.Size = new System.Drawing.Size(87, 29);
+            this.lblSenha.TabIndex = 90;
+            this.lblSenha.Text = "Senha";
+            // 
+            // txtSenha
+            // 
+            this.txtSenha.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtSenha.Font = new System.Drawing.Font("Microsoft YaHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSenha.Location = new System.Drawing.Point(384, 393);
+            this.txtSenha.MaxLength = 100;
+            this.txtSenha.Name = "txtSenha";
+            this.txtSenha.Size = new System.Drawing.Size(231, 39);
+            this.txtSenha.TabIndex = 91;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.Black;
+            this.label1.Location = new System.Drawing.Point(25, 361);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(213, 29);
+            this.label1.TabIndex = 88;
+            this.label1.Text = "Nome do usuário";
+            // 
+            // txtUsuario
+            // 
+            this.txtUsuario.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtUsuario.Font = new System.Drawing.Font("Microsoft YaHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtUsuario.Location = new System.Drawing.Point(30, 393);
+            this.txtUsuario.MaxLength = 100;
+            this.txtUsuario.Name = "txtUsuario";
+            this.txtUsuario.Size = new System.Drawing.Size(333, 39);
+            this.txtUsuario.TabIndex = 89;
+            // 
+            // ckbUsuarioAtivo
+            // 
+            this.ckbUsuarioAtivo.AutoSize = true;
+            this.ckbUsuarioAtivo.Location = new System.Drawing.Point(30, 327);
+            this.ckbUsuarioAtivo.Name = "ckbUsuarioAtivo";
+            this.ckbUsuarioAtivo.Size = new System.Drawing.Size(163, 31);
+            this.ckbUsuarioAtivo.TabIndex = 87;
+            this.ckbUsuarioAtivo.Text = "Ativar usuario";
+            this.ckbUsuarioAtivo.UseVisualStyleBackColor = true;
+            this.ckbUsuarioAtivo.CheckedChanged += new System.EventHandler(this.ckbUsuarioAtivo_CheckedChanged);
             // 
             // txtCidade
             // 
@@ -154,9 +232,9 @@
             this.lblTelefone.ForeColor = System.Drawing.Color.Black;
             this.lblTelefone.Location = new System.Drawing.Point(465, 41);
             this.lblTelefone.Name = "lblTelefone";
-            this.lblTelefone.Size = new System.Drawing.Size(118, 29);
+            this.lblTelefone.Size = new System.Drawing.Size(143, 29);
             this.lblTelefone.TabIndex = 79;
-            this.lblTelefone.Text = "Telefone";
+            this.lblTelefone.Text = "*  Telefone";
             // 
             // lblEstado
             // 
@@ -165,9 +243,9 @@
             this.lblEstado.ForeColor = System.Drawing.Color.Black;
             this.lblEstado.Location = new System.Drawing.Point(379, 227);
             this.lblEstado.Name = "lblEstado";
-            this.lblEstado.Size = new System.Drawing.Size(94, 29);
+            this.lblEstado.Size = new System.Drawing.Size(112, 29);
             this.lblEstado.TabIndex = 78;
-            this.lblEstado.Text = "Estado";
+            this.lblEstado.Text = "* Estado";
             // 
             // cbbEstado
             // 
@@ -213,9 +291,9 @@
             this.lblBairro.ForeColor = System.Drawing.Color.Black;
             this.lblBairro.Location = new System.Drawing.Point(25, 227);
             this.lblBairro.Name = "lblBairro";
-            this.lblBairro.Size = new System.Drawing.Size(84, 29);
+            this.lblBairro.Size = new System.Drawing.Size(102, 29);
             this.lblBairro.TabIndex = 75;
-            this.lblBairro.Text = "Bairro";
+            this.lblBairro.Text = "* Bairro";
             // 
             // txtBairro
             // 
@@ -255,9 +333,9 @@
             this.lblNumero.ForeColor = System.Drawing.Color.Black;
             this.lblNumero.Location = new System.Drawing.Point(676, 131);
             this.lblNumero.Name = "lblNumero";
-            this.lblNumero.Size = new System.Drawing.Size(106, 29);
+            this.lblNumero.Size = new System.Drawing.Size(124, 29);
             this.lblNumero.TabIndex = 71;
-            this.lblNumero.Text = "Número";
+            this.lblNumero.Text = "* Número";
             // 
             // txtNumero
             // 
@@ -276,9 +354,9 @@
             this.lblRua.ForeColor = System.Drawing.Color.Black;
             this.lblRua.Location = new System.Drawing.Point(25, 131);
             this.lblRua.Name = "lblRua";
-            this.lblRua.Size = new System.Drawing.Size(59, 29);
+            this.lblRua.Size = new System.Drawing.Size(77, 29);
             this.lblRua.TabIndex = 69;
-            this.lblRua.Text = "Rua";
+            this.lblRua.Text = "* Rua";
             // 
             // txtRua
             // 
@@ -297,9 +375,9 @@
             this.lblCep.ForeColor = System.Drawing.Color.Black;
             this.lblCep.Location = new System.Drawing.Point(896, 41);
             this.lblCep.Name = "lblCep";
-            this.lblCep.Size = new System.Drawing.Size(65, 29);
+            this.lblCep.Size = new System.Drawing.Size(83, 29);
             this.lblCep.TabIndex = 67;
-            this.lblCep.Text = "CEP";
+            this.lblCep.Text = "* CEP";
             // 
             // lblCpf
             // 
@@ -308,9 +386,9 @@
             this.lblCpf.ForeColor = System.Drawing.Color.Black;
             this.lblCpf.Location = new System.Drawing.Point(679, 41);
             this.lblCpf.Name = "lblCpf";
-            this.lblCpf.Size = new System.Drawing.Size(64, 29);
+            this.lblCpf.Size = new System.Drawing.Size(82, 29);
             this.lblCpf.TabIndex = 63;
-            this.lblCpf.Text = "CPF";
+            this.lblCpf.Text = "* CPF";
             // 
             // lblCidade
             // 
@@ -319,9 +397,9 @@
             this.lblCidade.ForeColor = System.Drawing.Color.Black;
             this.lblCidade.Location = new System.Drawing.Point(680, 226);
             this.lblCidade.Name = "lblCidade";
-            this.lblCidade.Size = new System.Drawing.Size(97, 29);
+            this.lblCidade.Size = new System.Drawing.Size(115, 29);
             this.lblCidade.TabIndex = 62;
-            this.lblCidade.Text = "Cidade";
+            this.lblCidade.Text = "* Cidade";
             // 
             // lblNome
             // 
@@ -330,9 +408,9 @@
             this.lblNome.ForeColor = System.Drawing.Color.Black;
             this.lblNome.Location = new System.Drawing.Point(25, 41);
             this.lblNome.Name = "lblNome";
-            this.lblNome.Size = new System.Drawing.Size(245, 29);
+            this.lblNome.Size = new System.Drawing.Size(263, 29);
             this.lblNome.TabIndex = 1;
-            this.lblNome.Text = "Nome do Voluntário";
+            this.lblNome.Text = "* Nome do Voluntário";
             // 
             // txtNomeVoluntario
             // 
@@ -486,78 +564,27 @@
             this.label2.TabIndex = 90;
             this.label2.Text = "Gerenciar Voluntário";
             // 
-            // ckbUsuarioAtivo
+            // label3
             // 
-            this.ckbUsuarioAtivo.AutoSize = true;
-            this.ckbUsuarioAtivo.Location = new System.Drawing.Point(30, 327);
-            this.ckbUsuarioAtivo.Name = "ckbUsuarioAtivo";
-            this.ckbUsuarioAtivo.Size = new System.Drawing.Size(163, 31);
-            this.ckbUsuarioAtivo.TabIndex = 87;
-            this.ckbUsuarioAtivo.Text = "Ativar usuario";
-            this.ckbUsuarioAtivo.UseVisualStyleBackColor = true;
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.Black;
+            this.label3.Location = new System.Drawing.Point(871, 361);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(194, 29);
+            this.label3.TabIndex = 94;
+            this.label3.Text = "Tipo de acesso";
             // 
-            // label1
+            // cbbTipoDeAcesso
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.Black;
-            this.label1.Location = new System.Drawing.Point(25, 361);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(213, 29);
-            this.label1.TabIndex = 88;
-            this.label1.Text = "Nome do usuário";
-            // 
-            // txtUsuario
-            // 
-            this.txtUsuario.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtUsuario.Font = new System.Drawing.Font("Microsoft YaHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtUsuario.Location = new System.Drawing.Point(30, 393);
-            this.txtUsuario.MaxLength = 100;
-            this.txtUsuario.Name = "txtUsuario";
-            this.txtUsuario.Size = new System.Drawing.Size(333, 39);
-            this.txtUsuario.TabIndex = 89;
-            // 
-            // lblSenha
-            // 
-            this.lblSenha.AutoSize = true;
-            this.lblSenha.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSenha.ForeColor = System.Drawing.Color.Black;
-            this.lblSenha.Location = new System.Drawing.Point(379, 361);
-            this.lblSenha.Name = "lblSenha";
-            this.lblSenha.Size = new System.Drawing.Size(87, 29);
-            this.lblSenha.TabIndex = 90;
-            this.lblSenha.Text = "Senha";
-            // 
-            // txtSenha
-            // 
-            this.txtSenha.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtSenha.Font = new System.Drawing.Font("Microsoft YaHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSenha.Location = new System.Drawing.Point(384, 393);
-            this.txtSenha.MaxLength = 100;
-            this.txtSenha.Name = "txtSenha";
-            this.txtSenha.Size = new System.Drawing.Size(231, 39);
-            this.txtSenha.TabIndex = 91;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.ForeColor = System.Drawing.Color.Black;
-            this.label4.Location = new System.Drawing.Point(621, 361);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(208, 29);
-            this.label4.TabIndex = 92;
-            this.label4.Text = "Confirmar Senha";
-            // 
-            // txtConfirmaSenha
-            // 
-            this.txtConfirmaSenha.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtConfirmaSenha.Font = new System.Drawing.Font("Microsoft YaHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtConfirmaSenha.Location = new System.Drawing.Point(626, 393);
-            this.txtConfirmaSenha.MaxLength = 100;
-            this.txtConfirmaSenha.Name = "txtConfirmaSenha";
-            this.txtConfirmaSenha.Size = new System.Drawing.Size(231, 39);
-            this.txtConfirmaSenha.TabIndex = 93;
+            this.cbbTipoDeAcesso.FormattingEnabled = true;
+            this.cbbTipoDeAcesso.Items.AddRange(new object[] {
+            "USER",
+            "ADMIN"});
+            this.cbbTipoDeAcesso.Location = new System.Drawing.Point(876, 393);
+            this.cbbTipoDeAcesso.Name = "cbbTipoDeAcesso";
+            this.cbbTipoDeAcesso.Size = new System.Drawing.Size(218, 35);
+            this.cbbTipoDeAcesso.TabIndex = 95;
             // 
             // frmVoluntarios
             // 
@@ -571,7 +598,6 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmVoluntarios";
             this.Text = "Grupo Socorrista São Francisco de Assis - Gerenciar Voluntario";
-            this.Load += new System.EventHandler(this.frmVoluntarios_Load);
             this.gpbCamposDoProduto.ResumeLayout(false);
             this.gpbCamposDoProduto.PerformLayout();
             this.pnlCrud.ResumeLayout(false);
@@ -620,5 +646,7 @@
         private System.Windows.Forms.TextBox txtConfirmaSenha;
         private System.Windows.Forms.Label lblSenha;
         private System.Windows.Forms.TextBox txtSenha;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox cbbTipoDeAcesso;
     }
 }
