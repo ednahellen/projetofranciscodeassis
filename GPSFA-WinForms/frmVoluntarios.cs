@@ -34,23 +34,26 @@ namespace GPSFA_WinForms
         {
             InitializeComponent();
             desativarBotoes();
-            desabilitarCampos();
+            desabilitarCamposVoluntario();
+            desabilitarCamposUsuario();
         }
         
         // Instância da Janela com variável imbutida
         public frmVoluntarios(string text)
         {
             InitializeComponent();
-            codVol = Convert.ToInt32(text);
-            buscarDadosDoVoluntarioPeloCodigo(codVol);
-            buscarUsuarioAtivo(codVol);
-            habilitarCampos();
+            codVolSelected = Convert.ToInt32(text);
+            buscarDadosDoVoluntarioPeloCodigo(codVolSelected);
+            buscarUsuarioPorCodVol(codVolSelected);
+            habilitarCamposVoluntario();
+            desabilitarCamposUsuario();
             btnNovo.Enabled = false;
             btnCadastrar.Enabled = false;
+            ckbEditarUsuario.Checked = false;
         }
 
         // Variaveis globais 
-        int codVol = 0; // Código do voluntário
+        int codVolSelected = 0; // Código do voluntário
         bool isVoluntarioActive = true; // Estado do voluntário
         bool isUsuarioActive = true; // Estado do usuário do voluntário
 
@@ -73,7 +76,7 @@ namespace GPSFA_WinForms
 
             while (DR.Read())
             {
-                codVol = DR.GetInt32(0);
+                codVolSelected = DR.GetInt32(0);
                 txtNomeVoluntario.Text = DR.GetString(1);
                 mskTelefone.Text = DR.GetString(2);
                 mskCpf.Text = DR.GetString(3);
@@ -90,7 +93,7 @@ namespace GPSFA_WinForms
             DataBaseConnection.CloseConnection();
         }
 
-        private void buscarUsuarioAtivo(int codVoluntario)
+        private void buscarUsuarioPorCodVol(int codVoluntario)
         {
             MySqlCommand comm = new MySqlCommand();
             comm.CommandText = $"SELECT * FROM tbUsuarios WHERE codVol = @codVol;";
@@ -117,11 +120,13 @@ namespace GPSFA_WinForms
 
             if (isUsuarioActive)
             {
-                ckbUsuarioAtivo.Checked = true;
+                rdbtnUsuarioAtivo.Checked = true;
+                rdbtnUsuarioDesativado.Checked = false;
             }
             else if (isUsuarioActive == false)
             {
-                ckbUsuarioAtivo.Checked = false;
+                rdbtnUsuarioDesativado.Checked = true;
+                rdbtnUsuarioAtivo.Checked = false;
             }
         }
         private void BuscarAcessoDoUsuario(string acesso)
@@ -312,8 +317,11 @@ namespace GPSFA_WinForms
 
 
         // Métodos para atalizações dos campos e recursos da janela
-        private void limparCampos()
+        private void limparCamposVoluntario()
         {
+            codVolSelected = 0;
+            isVoluntarioActive = true;
+
             txtNomeVoluntario.Clear();
             txtNomeVoluntario.Focus();
             mskTelefone.Clear();
@@ -323,14 +331,24 @@ namespace GPSFA_WinForms
             txtComplemento.Clear();
             mskCep.Clear();
             txtBairro.Clear();
-            txtUsuario.Clear();
-            txtSenha.Clear();
-            txtConfirmaSenha.Clear();
             cbbEstado.Items.Clear();
             txtCidade.Clear();
         }
 
-        private void desabilitarCampos()
+        private void limparCamposUsuario()
+        {
+            isUsuarioActive = true;
+
+            txtUsuario.Clear();
+            txtSenha.Clear();
+            txtConfirmaSenha.Clear();
+            rdbtnUsuarioAtivo.Checked = false;
+            rdbtnUsuarioDesativado.Checked = false;
+            cbbTipoDeAcesso.SelectedItem = null;
+        }
+
+
+        private void desabilitarCamposVoluntario()
         {
             // Recursos relacionados a dados do voluntário
             txtNomeVoluntario.Enabled = false;
@@ -344,16 +362,10 @@ namespace GPSFA_WinForms
             mskCep.Enabled = false;
             cbbEstado.Enabled = false;
             txtCidade.Enabled = false;
-
-            // Recursos relacionados a dados de usuário
-            ckbUsuarioAtivo.Enabled = false;
-            txtUsuario.Enabled = false;
-            txtSenha.Enabled = false;
-            txtConfirmaSenha.Enabled = false;
-            cbbTipoDeAcesso.Enabled = false;
+            ckbEditarUsuario.Enabled = false;
         }
 
-        private void habilitarCampos()
+        private void habilitarCamposVoluntario()
         {
             txtNomeVoluntario.Enabled = true;
             txtNomeVoluntario.Enabled = true;
@@ -361,12 +373,32 @@ namespace GPSFA_WinForms
             txtNumero.Enabled = true;
             txtComplemento.Enabled = true;
             txtBairro.Enabled = true;
-            ckbUsuarioAtivo.Enabled = true;
             mskCpf.Enabled = true;
             mskTelefone.Enabled = true;
             mskCep.Enabled = true;
             cbbEstado.Enabled = true;
             txtCidade.Enabled = true;
+            ckbEditarUsuario.Enabled = true;
+        }
+
+        private void desabilitarCamposUsuario()
+        {
+            txtUsuario.Enabled = false;
+            txtSenha.Enabled = false;
+            txtConfirmaSenha.Enabled = false;
+            cbbTipoDeAcesso.Enabled = false;
+            rdbtnUsuarioAtivo.Enabled = false;
+            rdbtnUsuarioDesativado.Enabled = false;
+        }
+
+        private void habilitarCamposUsuario()
+        {
+            txtUsuario.Enabled = true;
+            txtSenha.Enabled = true;
+            txtConfirmaSenha.Enabled = true;
+            cbbTipoDeAcesso.Enabled = true;
+            rdbtnUsuarioAtivo.Enabled = true;
+            rdbtnUsuarioDesativado.Enabled = true;
         }
 
         private void desativarBotoes()
@@ -454,7 +486,7 @@ namespace GPSFA_WinForms
         // Métodos de click dos botões e suas ações
         private void btnNovo_Click(object sender, EventArgs e) // Habilita o botão cadastrar e campos da janela para criação de um novo voluntário
         {
-            habilitarCampos();
+            habilitarCamposVoluntario();
             btnCadastrar.Enabled = true;
             btnNovo.Enabled = false;
             btnLimpar.Enabled = true;
@@ -469,7 +501,6 @@ namespace GPSFA_WinForms
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information,
                     MessageBoxDefaultButton.Button1);
-                txtNomeVoluntario.Focus();
             }
             else if (txtNomeVoluntario.Text.Equals("") && mskTelefone.Text.Equals("") && mskCpf.Text.Equals("") && mskCep.Text.Equals("") && txtRua.Text.Equals("") && txtNumero.Text.Equals("") && txtRua.Text.Equals("") && txtCidade.Text.Equals("")) // Falta adicionar mais validações
             {
@@ -477,7 +508,6 @@ namespace GPSFA_WinForms
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information,
                     MessageBoxDefaultButton.Button1);
-                txtNomeVoluntario.Focus();
             }
             else if (buscarVoluntarioPorDescricao(txtNomeVoluntario.Text, mskCpf.Text).Equals(1))
             {
@@ -485,8 +515,10 @@ namespace GPSFA_WinForms
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information,
                     MessageBoxDefaultButton.Button1);
-                limparCampos();
-                desabilitarCampos();
+                limparCamposVoluntario();
+                desabilitarCamposVoluntario();
+                limparCamposUsuario();
+                desabilitarCamposUsuario();
                 desativarBotoes();
                 btnNovo.Enabled = true;
             }
@@ -500,8 +532,11 @@ namespace GPSFA_WinForms
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information,
                     MessageBoxDefaultButton.Button1);
+                    limparCamposVoluntario();
+                    desabilitarCamposVoluntario();
+                    limparCamposUsuario();
+                    desabilitarCamposUsuario();
                     desativarBotoes();
-                    desabilitarCampos();
                     desativarBotoes();
                     btnNovo.Enabled = true;
                     btnNovo.Focus();
@@ -513,8 +548,10 @@ namespace GPSFA_WinForms
                     MessageBoxIcon.Error,
                     MessageBoxDefaultButton.Button1);
 
-                    limparCampos();
-                    desabilitarCampos();
+                    limparCamposVoluntario();
+                    desabilitarCamposVoluntario();
+                    limparCamposUsuario();
+                    desabilitarCamposUsuario();
                     desativarBotoes();
                     btnNovo.Enabled = true;
                     btnNovo.Focus();
@@ -535,7 +572,7 @@ namespace GPSFA_WinForms
             }
             else
             {
-                int resp = alterarDadosVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, mskCpf.Text, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, cbbEstado.SelectedItem.ToString(), txtUsuario.Text, txtSenha.Text, codVol);
+                int resp = alterarDadosVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, mskCpf.Text, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, cbbEstado.SelectedItem.ToString(), txtUsuario.Text, txtSenha.Text, codVolSelected);
 
                 if (resp.Equals(1))
                 {
@@ -544,7 +581,8 @@ namespace GPSFA_WinForms
                     MessageBoxIcon.Information,
                     MessageBoxDefaultButton.Button1);
                     desativarBotoes();
-                    desabilitarCampos();
+                    desabilitarCamposVoluntario();
+                    //desabilitarCamposUsuario();
                     desativarBotoes();
                     btnNovo.Enabled = true;
                     btnNovo.Focus();
@@ -556,8 +594,8 @@ namespace GPSFA_WinForms
                         MessageBoxIcon.Error,
                         MessageBoxDefaultButton.Button1);
 
-                    limparCampos();
-                    desabilitarCampos();
+                    limparCamposVoluntario();
+                    desabilitarCamposVoluntario();
                     desativarBotoes();
                     btnNovo.Enabled = true;
                 }
@@ -567,11 +605,13 @@ namespace GPSFA_WinForms
 
         private void btnLimpar_Click(object sender, EventArgs e) // Aciona os métodos de limpeza de campos  e "reseta" a janela
         {
-            limparCampos();
-            desabilitarCampos();
+            limparCamposVoluntario();
+            desabilitarCamposVoluntario();
+            limparCamposUsuario();
+            desabilitarCamposUsuario();
             desativarBotoes();
             btnNovo.Enabled = true;
-            ckbUsuarioAtivo.Checked = false;
+            ckbEditarUsuario.Checked = false;
         }
 
         private void btnExcluir_Click(object sender, EventArgs e) // Aciona o método de exclusão e limpeza de dados com base na instância dos dados de um voluntário
@@ -624,21 +664,15 @@ namespace GPSFA_WinForms
             }
         }
 
-        private void ckbUsuarioAtivo_CheckedChanged(object sender, EventArgs e)
+        private void ckbEditarUsuario_CheckedChanged(object sender, EventArgs e)
         {
-            if (ckbUsuarioAtivo.Checked)
+            if (ckbEditarUsuario.Checked)
             {
-                txtUsuario.Enabled = true;
-                txtSenha.Enabled = true;
-                txtConfirmaSenha.Enabled = true;
-                cbbTipoDeAcesso.Enabled = true;
+                habilitarCamposUsuario();
             }
-            else
+            else if (ckbEditarUsuario.Checked == false)
             {
-                txtUsuario.Enabled = false;
-                txtSenha.Enabled = false;
-                txtConfirmaSenha.Enabled = false;
-                cbbTipoDeAcesso.Enabled = false;
+                desabilitarCamposUsuario();
             }
         }
     }

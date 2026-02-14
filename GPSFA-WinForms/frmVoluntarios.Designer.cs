@@ -30,6 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmVoluntarios));
             this.gpbCamposDoProduto = new System.Windows.Forms.GroupBox();
+            this.rdbtnUsuarioDesativado = new System.Windows.Forms.RadioButton();
+            this.rdbtnUsuarioAtivo = new System.Windows.Forms.RadioButton();
+            this.lblPerfilAtivo = new System.Windows.Forms.Label();
             this.cbbTipoDeAcesso = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -38,7 +41,7 @@
             this.txtSenha = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txtUsuario = new System.Windows.Forms.TextBox();
-            this.ckbUsuarioAtivo = new System.Windows.Forms.CheckBox();
+            this.ckbEditarUsuario = new System.Windows.Forms.CheckBox();
             this.txtCidade = new System.Windows.Forms.TextBox();
             this.mskTelefone = new System.Windows.Forms.MaskedTextBox();
             this.mskCep = new System.Windows.Forms.MaskedTextBox();
@@ -77,6 +80,9 @@
             // gpbCamposDoProduto
             // 
             this.gpbCamposDoProduto.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(237)))), ((int)(((byte)(228)))));
+            this.gpbCamposDoProduto.Controls.Add(this.rdbtnUsuarioDesativado);
+            this.gpbCamposDoProduto.Controls.Add(this.rdbtnUsuarioAtivo);
+            this.gpbCamposDoProduto.Controls.Add(this.lblPerfilAtivo);
             this.gpbCamposDoProduto.Controls.Add(this.cbbTipoDeAcesso);
             this.gpbCamposDoProduto.Controls.Add(this.label3);
             this.gpbCamposDoProduto.Controls.Add(this.label4);
@@ -85,7 +91,7 @@
             this.gpbCamposDoProduto.Controls.Add(this.txtSenha);
             this.gpbCamposDoProduto.Controls.Add(this.label1);
             this.gpbCamposDoProduto.Controls.Add(this.txtUsuario);
-            this.gpbCamposDoProduto.Controls.Add(this.ckbUsuarioAtivo);
+            this.gpbCamposDoProduto.Controls.Add(this.ckbEditarUsuario);
             this.gpbCamposDoProduto.Controls.Add(this.txtCidade);
             this.gpbCamposDoProduto.Controls.Add(this.mskTelefone);
             this.gpbCamposDoProduto.Controls.Add(this.mskCep);
@@ -113,15 +119,48 @@
             this.gpbCamposDoProduto.TabIndex = 0;
             this.gpbCamposDoProduto.TabStop = false;
             // 
+            // rdbtnUsuarioDesativado
+            // 
+            this.rdbtnUsuarioDesativado.AutoSize = true;
+            this.rdbtnUsuarioDesativado.Location = new System.Drawing.Point(102, 397);
+            this.rdbtnUsuarioDesativado.Name = "rdbtnUsuarioDesativado";
+            this.rdbtnUsuarioDesativado.Size = new System.Drawing.Size(70, 31);
+            this.rdbtnUsuarioDesativado.TabIndex = 98;
+            this.rdbtnUsuarioDesativado.TabStop = true;
+            this.rdbtnUsuarioDesativado.Text = "Não";
+            this.rdbtnUsuarioDesativado.UseVisualStyleBackColor = true;
+            // 
+            // rdbtnUsuarioAtivo
+            // 
+            this.rdbtnUsuarioAtivo.AutoSize = true;
+            this.rdbtnUsuarioAtivo.Location = new System.Drawing.Point(30, 397);
+            this.rdbtnUsuarioAtivo.Name = "rdbtnUsuarioAtivo";
+            this.rdbtnUsuarioAtivo.Size = new System.Drawing.Size(66, 31);
+            this.rdbtnUsuarioAtivo.TabIndex = 97;
+            this.rdbtnUsuarioAtivo.TabStop = true;
+            this.rdbtnUsuarioAtivo.Text = "Sim";
+            this.rdbtnUsuarioAtivo.UseVisualStyleBackColor = true;
+            // 
+            // lblPerfilAtivo
+            // 
+            this.lblPerfilAtivo.AutoSize = true;
+            this.lblPerfilAtivo.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPerfilAtivo.ForeColor = System.Drawing.Color.Black;
+            this.lblPerfilAtivo.Location = new System.Drawing.Point(25, 361);
+            this.lblPerfilAtivo.Name = "lblPerfilAtivo";
+            this.lblPerfilAtivo.Size = new System.Drawing.Size(137, 29);
+            this.lblPerfilAtivo.TabIndex = 96;
+            this.lblPerfilAtivo.Text = "Perfil ativo";
+            // 
             // cbbTipoDeAcesso
             // 
             this.cbbTipoDeAcesso.FormattingEnabled = true;
             this.cbbTipoDeAcesso.Items.AddRange(new object[] {
             "USER",
             "ADMIN"});
-            this.cbbTipoDeAcesso.Location = new System.Drawing.Point(876, 393);
+            this.cbbTipoDeAcesso.Location = new System.Drawing.Point(460, 393);
             this.cbbTipoDeAcesso.Name = "cbbTipoDeAcesso";
-            this.cbbTipoDeAcesso.Size = new System.Drawing.Size(218, 35);
+            this.cbbTipoDeAcesso.Size = new System.Drawing.Size(148, 35);
             this.cbbTipoDeAcesso.TabIndex = 95;
             // 
             // label3
@@ -129,7 +168,7 @@
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.Black;
-            this.label3.Location = new System.Drawing.Point(871, 361);
+            this.label3.Location = new System.Drawing.Point(455, 361);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(194, 29);
             this.label3.TabIndex = 94;
@@ -140,7 +179,7 @@
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.Black;
-            this.label4.Location = new System.Drawing.Point(621, 361);
+            this.label4.Location = new System.Drawing.Point(897, 361);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(208, 29);
             this.label4.TabIndex = 92;
@@ -149,11 +188,12 @@
             // txtConfirmaSenha
             // 
             this.txtConfirmaSenha.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtConfirmaSenha.Font = new System.Drawing.Font("Microsoft YaHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtConfirmaSenha.Location = new System.Drawing.Point(626, 393);
+            this.txtConfirmaSenha.Font = new System.Drawing.Font("Wingdings", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.txtConfirmaSenha.Location = new System.Drawing.Point(902, 393);
             this.txtConfirmaSenha.MaxLength = 100;
             this.txtConfirmaSenha.Name = "txtConfirmaSenha";
-            this.txtConfirmaSenha.Size = new System.Drawing.Size(231, 39);
+            this.txtConfirmaSenha.PasswordChar = 'l';
+            this.txtConfirmaSenha.Size = new System.Drawing.Size(224, 37);
             this.txtConfirmaSenha.TabIndex = 93;
             // 
             // lblSenha
@@ -161,7 +201,7 @@
             this.lblSenha.AutoSize = true;
             this.lblSenha.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSenha.ForeColor = System.Drawing.Color.Black;
-            this.lblSenha.Location = new System.Drawing.Point(379, 361);
+            this.lblSenha.Location = new System.Drawing.Point(655, 361);
             this.lblSenha.Name = "lblSenha";
             this.lblSenha.Size = new System.Drawing.Size(87, 29);
             this.lblSenha.TabIndex = 90;
@@ -170,11 +210,12 @@
             // txtSenha
             // 
             this.txtSenha.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtSenha.Font = new System.Drawing.Font("Microsoft YaHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSenha.Location = new System.Drawing.Point(384, 393);
+            this.txtSenha.Font = new System.Drawing.Font("Wingdings", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.txtSenha.Location = new System.Drawing.Point(660, 393);
             this.txtSenha.MaxLength = 100;
             this.txtSenha.Name = "txtSenha";
-            this.txtSenha.Size = new System.Drawing.Size(231, 39);
+            this.txtSenha.PasswordChar = 'l';
+            this.txtSenha.Size = new System.Drawing.Size(224, 37);
             this.txtSenha.TabIndex = 91;
             // 
             // label1
@@ -182,7 +223,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Black;
-            this.label1.Location = new System.Drawing.Point(25, 361);
+            this.label1.Location = new System.Drawing.Point(182, 361);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(213, 29);
             this.label1.TabIndex = 88;
@@ -192,22 +233,22 @@
             // 
             this.txtUsuario.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtUsuario.Font = new System.Drawing.Font("Microsoft YaHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtUsuario.Location = new System.Drawing.Point(30, 393);
+            this.txtUsuario.Location = new System.Drawing.Point(187, 393);
             this.txtUsuario.MaxLength = 100;
             this.txtUsuario.Name = "txtUsuario";
-            this.txtUsuario.Size = new System.Drawing.Size(333, 39);
+            this.txtUsuario.Size = new System.Drawing.Size(258, 39);
             this.txtUsuario.TabIndex = 89;
             // 
-            // ckbUsuarioAtivo
+            // ckbEditarUsuario
             // 
-            this.ckbUsuarioAtivo.AutoSize = true;
-            this.ckbUsuarioAtivo.Location = new System.Drawing.Point(30, 327);
-            this.ckbUsuarioAtivo.Name = "ckbUsuarioAtivo";
-            this.ckbUsuarioAtivo.Size = new System.Drawing.Size(163, 31);
-            this.ckbUsuarioAtivo.TabIndex = 87;
-            this.ckbUsuarioAtivo.Text = "Ativar usuario";
-            this.ckbUsuarioAtivo.UseVisualStyleBackColor = true;
-            this.ckbUsuarioAtivo.CheckedChanged += new System.EventHandler(this.ckbUsuarioAtivo_CheckedChanged);
+            this.ckbEditarUsuario.AutoSize = true;
+            this.ckbEditarUsuario.Location = new System.Drawing.Point(30, 318);
+            this.ckbEditarUsuario.Name = "ckbEditarUsuario";
+            this.ckbEditarUsuario.Size = new System.Drawing.Size(162, 31);
+            this.ckbEditarUsuario.TabIndex = 87;
+            this.ckbEditarUsuario.Text = "Editar usuário";
+            this.ckbEditarUsuario.UseVisualStyleBackColor = true;
+            this.ckbEditarUsuario.CheckedChanged += new System.EventHandler(this.ckbEditarUsuario_CheckedChanged);
             // 
             // txtCidade
             // 
@@ -640,7 +681,7 @@
         private System.Windows.Forms.TextBox txtCidade;
         private System.Windows.Forms.Panel pnlDadosProdutos;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.CheckBox ckbUsuarioAtivo;
+        private System.Windows.Forms.CheckBox ckbEditarUsuario;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtUsuario;
         private System.Windows.Forms.Label label4;
@@ -649,5 +690,8 @@
         private System.Windows.Forms.TextBox txtSenha;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cbbTipoDeAcesso;
+        private System.Windows.Forms.Label lblPerfilAtivo;
+        private System.Windows.Forms.RadioButton rdbtnUsuarioDesativado;
+        private System.Windows.Forms.RadioButton rdbtnUsuarioAtivo;
     }
 }
