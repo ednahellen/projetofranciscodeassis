@@ -946,7 +946,7 @@ namespace GPSFA_WinForms
                     if (resultado == DialogResult.Yes)
                     {
                         // Faz a edição dos dados na linha referente ao voluntário
-                        int updtVolResp = editarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, mskCpf.Text, mskCep.Text, txtNumero.Text, txtRua.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, cbbEstado.SelectedItem.ToString(), codVolSelected);
+                        int updtVolResp = editarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, mskCpf.Text, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, cbbEstado.SelectedItem.ToString(), codVolSelected);
 
                         // Se houver sucesso na edição do registro retorna mensagem de sucesso
                         if (updtVolResp.Equals(1))
