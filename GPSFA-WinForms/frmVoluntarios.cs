@@ -30,6 +30,7 @@ namespace GPSFA_WinForms
         [DllImport("user32")]
         static extern int GetMenuItemCount(IntPtr hWnd);
 
+        // Instância base da janela
         public frmVoluntarios()
         {
             InitializeComponent();
@@ -49,7 +50,6 @@ namespace GPSFA_WinForms
             desabilitarCamposUsuario();
             btnNovo.Enabled = false;
             btnCadastrar.Enabled = false;
-            ckbEditarUsuario.Checked = false;
         }
 
         //    -----    Variaveis globais para edição dos dados do voluntário / usuário
@@ -58,80 +58,94 @@ namespace GPSFA_WinForms
         bool isUsuarioActive; // Estado do usuário do voluntário
 
 
-//    -----    Métodos para ações CRUD e queries do banco de dados
+        //    -----    Métodos para ações CRUD e queries do banco de dados
 
-// Busca os dados de um voluntário através do código - para busca de dados exata
-private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
-        {
-            MySqlCommand comm = new MySqlCommand();
-            comm.CommandText = $"SELECT * FROM tbVoluntarios WHERE codVol = @codVol;";
+        // Busca os dados de um voluntário através do código - para busca de dados exata
+        private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
+                {
+                    MySqlCommand comm = new MySqlCommand();
+                    comm.CommandText = $"SELECT * FROM tbVoluntarios WHERE codVol = @codVol;";
 
-            comm.CommandType = CommandType.Text;
-            comm.Parameters.Clear();
+                    comm.CommandType = CommandType.Text;
+                    comm.Parameters.Clear();
 
-            comm.Parameters.Add("@codVol", MySqlDbType.VarChar, 100).Value = codVoluntario;
+                    comm.Parameters.Add("@codVol", MySqlDbType.VarChar, 100).Value = codVoluntario;
 
-            comm.Connection = DataBaseConnection.OpenConnection();
+                    comm.Connection = DataBaseConnection.OpenConnection();
 
-            MySqlDataReader DR;
-            DR = comm.ExecuteReader();
+                    MySqlDataReader DR;
+                    DR = comm.ExecuteReader();
 
-            while (DR.Read())
-            {
-                isVoluntarioActive = DR.GetBoolean(11);
-                codVolSelected = DR.GetInt32(0);
+                    while (DR.Read())
+                    {
+                        isVoluntarioActive = DR.GetBoolean(11);
+                        codVolSelected = DR.GetInt32(0);
 
-                txtNomeVoluntario.Text = DR.GetString(1);
-                mskTelefone.Text = DR.GetString(2);
-                mskCpf.Text = DR.GetString(3);
-                mskCep.Text = DR.GetString(4);
-                txtRua.Text = DR.GetString(5);
-                txtNumero.Text = DR.GetString(6);
-                txtComplemento.Text = DR.GetString(7);
-                txtBairro.Text = DR.GetString(8);
-                txtCidade.Text = DR.GetString(9);
-                SelecionarEstadoPorUF(DR.GetString(10));
-            }
+                        txtNomeVoluntario.Text = DR.GetString(1);
+                        mskTelefone.Text = DR.GetString(2);
+                        mskCpf.Text = DR.GetString(3);
+                        mskCep.Text = DR.GetString(4);
+                        txtRua.Text = DR.GetString(5);
+                        txtNumero.Text = DR.GetString(6);
+                        txtComplemento.Text = DR.GetString(7);
+                        txtBairro.Text = DR.GetString(8);
+                        txtCidade.Text = DR.GetString(9);
+                        SelecionarEstadoPorUF(DR.GetString(10));
+                    }
 
-            DataBaseConnection.CloseConnection();
-        }
+                    DataBaseConnection.CloseConnection();
+                }
 
         // Busca dados de um usuario com base no código do voluntário
         private void buscarUsuarioPorCodVol(int codVoluntario)
         {
-            MySqlCommand comm = new MySqlCommand();
-            comm.CommandText = $"SELECT * FROM tbUsuarios WHERE codVol = @codVol;";
+            bool usuarioEncontrado = false; // variavel local para registrar se o usuário foi encontrado
 
-            comm.CommandType = CommandType.Text;
-            comm.Parameters.Clear();
-
-            comm.Parameters.Add("@codVol", MySqlDbType.VarChar, 100).Value = codVoluntario;
-
-            comm.Connection = DataBaseConnection.OpenConnection();
-
-            MySqlDataReader DR;
-            DR = comm.ExecuteReader();
-
-            while (DR.Read())
+            using (MySqlCommand comm = new MySqlCommand())
             {
-                isUsuarioActive = DR.GetBoolean(5);
-                txtUsuario.Text = DR.GetString(1);
-                txtSenha.Text = DR.GetString(2);
-                txtConfirmaSenha.Text = DR.GetString(2);
-                string acesso = DR.GetString(3);
-                BuscarAcessoDoUsuario(acesso);
+                comm.CommandText = $"SELECT * FROM tbUsuarios WHERE codVol = @codVol;";
+
+                comm.CommandType = CommandType.Text;
+                comm.Parameters.Clear();
+                comm.Parameters.Add("@codVol", MySqlDbType.Int32).Value = codVoluntario;
+
+                comm.Connection = DataBaseConnection.OpenConnection();
+
+                using (MySqlDataReader DR = comm.ExecuteReader())
+                {
+                    if (DR.Read())
+                    {
+                        // caso o usuário associado ao voluntário seja encontrado, os dados são coletados e aplicados nos campos da janela
+                        usuarioEncontrado = true;
+                        isUsuarioActive = DR.GetBoolean("ativo");
+
+                        txtUsuario.Text = DR.GetString("usuario");
+                        txtSenha.Text = DR.GetString("senha");
+                        txtConfirmaSenha.Text = DR.GetString("senha");
+                        BuscarAcessoDoUsuario(DR.GetString("tipo"));
+                    }
+                }
             }
 
-            if (isUsuarioActive)
+            DataBaseConnection.CloseConnection();
+
+            if (!usuarioEncontrado)
             {
-                rdbtnUsuarioAtivo.Checked = true;
-                rdbtnUsuarioDesativado.Checked = false;
-            }
-            else if (isUsuarioActive == false)
-            {
-                rdbtnUsuarioDesativado.Checked = true;
+                // Se o usuário não for encontrado ele limpa os campos de usuário para evitar dados carregados incorretamente
+                isUsuarioActive = false;
                 rdbtnUsuarioAtivo.Checked = false;
+                rdbtnUsuarioDesativado.Checked = false;
+
+                txtUsuario.Clear();
+                txtSenha.Clear();
+                txtConfirmaSenha.Clear();
+
+                return;
             }
+
+            // Se o uusário é encontrado, a depender do estado do usuário (ativo ou desativado), é selecionado um dos radio buttons
+            rdbtnUsuarioAtivo.Checked = isUsuarioActive;
+            rdbtnUsuarioDesativado.Checked = !isUsuarioActive;
         }
 
         // Com base nos dados retornados do usuário, faz uma busca do seu tipo de acesso e seleciona a opção equivalente da combobox
@@ -388,16 +402,16 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
             codVolSelected = 0;
             isVoluntarioActive = true;
 
-            txtNomeVoluntario.Clear();
-            txtNomeVoluntario.Focus();
+            cbbEstado.SelectedItem = null;
             mskTelefone.Clear();
             mskCpf.Clear();
+            mskCep.Clear();
+            txtNomeVoluntario.Clear();
+            txtNomeVoluntario.Focus();
             txtRua.Clear();
             txtNumero.Clear();
             txtComplemento.Clear();
-            mskCep.Clear();
             txtBairro.Clear();
-            cbbEstado.Items.Clear();
             txtCidade.Clear();
         }
 
@@ -406,17 +420,26 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
         {
             isUsuarioActive = true;
 
+            cbbTipoDeAcesso.SelectedItem = null;
             txtUsuario.Clear();
             txtSenha.Clear();
             txtConfirmaSenha.Clear();
             rdbtnUsuarioAtivo.Checked = false;
             rdbtnUsuarioDesativado.Checked = false;
-            cbbTipoDeAcesso.SelectedItem = null;
         }
 
 
         //    -----    Metodos para desabilitar ou habilitar campos da janela
         
+        // Desabilita botões da janela
+        private void desativarBotoes()
+        {
+            btnCadastrar.Enabled = false;
+            btnAlterar.Enabled = false;
+            btnLimpar.Enabled = false;
+            btnExcluir.Enabled = false;
+        }
+
         // Desabilita somente campos de voluntário
         private void desabilitarCamposVoluntario()
         {
@@ -433,6 +456,17 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
             cbbEstado.Enabled = false;
             txtCidade.Enabled = false;
             ckbEditarUsuario.Enabled = false;
+        }
+
+        // Desabilita somente os campos de usuário
+        private void desabilitarCamposUsuario()
+        {
+            txtUsuario.Enabled = false;
+            txtSenha.Enabled = false;
+            txtConfirmaSenha.Enabled = false;
+            cbbTipoDeAcesso.Enabled = false;
+            rdbtnUsuarioAtivo.Enabled = false;
+            rdbtnUsuarioDesativado.Enabled = false;
         }
 
         // Habilita somente campos de voluntário
@@ -452,17 +486,6 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
             ckbEditarUsuario.Enabled = true;
         }
 
-        // Desabilita somente os campos de usuário
-        private void desabilitarCamposUsuario()
-        {
-            txtUsuario.Enabled = false;
-            txtSenha.Enabled = false;
-            txtConfirmaSenha.Enabled = false;
-            cbbTipoDeAcesso.Enabled = false;
-            rdbtnUsuarioAtivo.Enabled = false;
-            rdbtnUsuarioDesativado.Enabled = false;
-        }
-
         // Habilita somente os campos de usuário
         private void habilitarCamposUsuario()
         {
@@ -472,15 +495,6 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
             cbbTipoDeAcesso.Enabled = true;
             rdbtnUsuarioAtivo.Enabled = true;
             rdbtnUsuarioDesativado.Enabled = true;
-        }
-
-        // Desabilita botões da janela
-        private void desativarBotoes()
-        {
-            btnCadastrar.Enabled = false;
-            btnAlterar.Enabled = false;
-            btnLimpar.Enabled = false;
-            btnExcluir.Enabled = false;
         }
 
 
