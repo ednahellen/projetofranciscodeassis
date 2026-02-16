@@ -43,44 +43,53 @@ namespace GPSFA_WinForms
             txtUsuario.Focus();
         }
 
-        //Criando método para acesso do Usúario 
+        int codUsuLogado;
+        int codVolLogado;
+        bool usuarioAtivo;
+        string tipoAcesso;
 
+        //Criando método para acesso do Usúario 
         bool resp = false;
 
         public bool acessaUsuario(string usuario, string senha)
         {
             MySqlCommand comm = new MySqlCommand();
-            comm.CommandText = "SELECT usuario, senha FROM tbUsuarios where usuario=@usuario and senha=@senha;";
+            comm.CommandText = "SELECT codUsu, codVol, ativo, tipo FROM tbUsuarios where usuario=@usuario and senha=@senha;";
             comm.CommandType = CommandType.Text;
-
-            comm.Parameters.Clear();
             comm.Parameters.Clear();
             comm.Parameters.Add("@usuario", MySqlDbType.VarChar, 100).Value = usuario;
             comm.Parameters.Add("@senha", MySqlDbType.VarChar, 100).Value = senha;
 
             comm.Connection = DataBaseConnection.OpenConnection();
 
-            MySqlDataReader DR;
-
-            try
+            using (MySqlDataReader DR = comm.ExecuteReader())
             {
-                DR = comm.ExecuteReader();
-                resp = DR.HasRows;
+                if (DR.Read())
+                {
+                    try
+                    {
+                        resp = DR.HasRows;
 
-                DataBaseConnection.CloseConnection();
-            }
-            catch (Exception)
-            {
+                        codUsuLogado = DR.GetInt32(0);
+                        codVolLogado = DR.GetInt32(1);
+                        usuarioAtivo = DR.GetBoolean(2);
+                        tipoAcesso = DR.GetString(3);
 
-                MessageBox.Show("Banco de dados não conectado.", "Mensagem do sistema",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error,
-                MessageBoxDefaultButton.Button1);
+                        DataBaseConnection.CloseConnection();
+                        return resp;
+                    }
+                    catch (Exception error)
+                    {
+                        MessageBox.Show($"Banco de dados não conectado. Erro:\n\n{error}", "Mensagem do sistema",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error,
+                        MessageBoxDefaultButton.Button1);
+                        DataBaseConnection.CloseConnection();
+                    }
+                }
             }
             return resp;
         }                
-
-        int codUsu;       
 
         private void btnEntrar_Click(object sender, EventArgs e)
         {
@@ -91,9 +100,19 @@ namespace GPSFA_WinForms
 
             if (acessaUsuario(usuario, senha))
             {
-                frmMenuPrincipal abrir = new frmMenuPrincipal();
-                abrir.Show();
-                this.Hide();
+                if (usuarioAtivo)
+                {
+                    frmMenuPrincipal abrir = new frmMenuPrincipal();
+                    abrir.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    MessageBox.Show("Acesso negado! O usuário informado se encontra desativado.", "Mensagem do sistema",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                    limparCampos();
+                }
             }
             else
             {

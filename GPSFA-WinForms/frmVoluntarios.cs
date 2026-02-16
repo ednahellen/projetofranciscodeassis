@@ -958,7 +958,7 @@ namespace GPSFA_WinForms
             }
             else
             {
-                // Valida se a edição de usuário está desabilitada e se não há usuário associado ao voluntário> CADASTRAR APENAS O VOLUNTÁRIO
+                // Valida se a edição de usuário está desabilitada e se não há usuário associado ao voluntário> EDITAR APENAS O VOLUNTÁRIO
                 if (ckbEditarUsuario.Checked == false && usuarioEncontrado == false)
                 {
                     limparCamposUsuario();
