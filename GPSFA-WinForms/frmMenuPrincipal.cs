@@ -25,23 +25,27 @@ namespace GPSFA_WinForms
         [DllImport("user32")]
         static extern int GetMenuItemCount(IntPtr hWnd);
 
-        private Form frmAtivo;
-        bool sidebarExpand;
         public frmMenuPrincipal()
         {
             InitializeComponent();            
         }
 
+        // Variáveis globais da janela para salvar o usuário atualmente logado e seu tipo de acesso
+        int codUsuLogado; 
+        string tipoAcessoUsuLogado;
+
+        // Instancia da janela para receber o código do usuário loado
         public frmMenuPrincipal(int codUsu)
         {
             InitializeComponent();
+            codUsuLogado = codUsu;
+            buscaDoTipoDeAcessoDoUsuario(codUsu);
         }
 
-        string tipoAcesso;
-
-        //Criando método de autenticação de usuário
-        public int autenticaUsu(int codUsu)
+        // Criando método para buscar o tipo de acesso do usuário e salvar o resultado em uma variável global
+        public int buscaDoTipoDeAcessoDoUsuario(int codUsu)
         {
+            int resp;
             MySqlCommand comm = new MySqlCommand();
             comm.CommandText = "SELECT tipo FROM tbUsuarios WHERE codUsu = @codUsu;";
             comm.CommandType = CommandType.Text;
@@ -51,61 +55,30 @@ namespace GPSFA_WinForms
 
             comm.Connection = DataBaseConnection.OpenConnection();
 
-            try
+            using (MySqlDataReader DR = comm.ExecuteReader())
             {
-                tipoAcesso = comm.CommandText;
+                if (DR.Read())
+                {
+                    try
+                    {
+                        tipoAcessoUsuLogado = DR.GetString(0);
 
-                int resp = comm.ExecuteNonQuery();
+                        DataBaseConnection.CloseConnection();
 
-                DataBaseConnection.CloseConnection();
+                        return resp = 1;
+                    }
+                    catch (Exception error)
+                    {
+                        MessageBox.Show($"Erro ao validar tipo de acesso do usuário! Erro:\n\n{error}", "Mensagem do sistema",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error,
+                            MessageBoxDefaultButton.Button1);
 
-                return resp;
+                        DataBaseConnection.CloseConnection();
+                    }
+                }
             }
-            catch (Exception)
-            {
-                //MessageBox.Show("Este registro já existe!", "Mensagem do sistema",
-                //    MessageBoxButtons.OK,
-                //    MessageBoxIcon.Error,
-                //    MessageBoxDefaultButton.Button1);
-            }
-            return 0;
-        }
-
-
-
-        private void FormShow(Form frm)
-        {
-            ActiveFormClose();
-            frmAtivo = frm;
-
-            frm.TopLevel = false;
-
-            pnlForm.Controls.Add(frm);
-            frm.BringToFront();
-            frm.Dock = DockStyle.Fill;
-            frm.Show();
-        }
-
-        private void ActiveFormClose()
-        {
-            if (frmAtivo != null) { 
-                frmAtivo.Close();
-            }
-        }
-
-        private void ActiveButton(Button frmAtivo)
-        {
-            //foreach (Control ctrl in pnlSidebar.Controls)
-            //{
-            //    ctrl.ForeColor = Color.White;
-            //    ctrl.BackColor = Color.FromArgb(48, 112, 99);
-            //}
-
-        }
-        private void btnHome_Click(object sender, EventArgs e)
-        {
-            //    ActiveButton(btnHome);
-            //    ActiveFormClose();
+            return resp = 0;
         }
 
         private void btnDashboard_Click(object sender, EventArgs e)
@@ -122,11 +95,19 @@ namespace GPSFA_WinForms
         {
             //ActiveButton(btnVoluntarios);
             //FormShow(new frmGestaoDeVoluntarios());
-            
-            frmVoluntarios abrir = new frmVoluntarios();
 
-            abrir.Show();
-            this.Hide();
+            if (tipoAcessoUsuLogado == "ADMIN") // validação simples para limitar o acesso do usuário
+            {
+                frmVoluntarios abrir = new frmVoluntarios();
+
+                abrir.Show();
+                this.Hide();
+            }
+            else {
+                MessageBox.Show("Acesso negado!\n\nVocê precisa ser um administrador para acessar esta função.", "Mensagem do sistema",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
+            }
         }
 
 

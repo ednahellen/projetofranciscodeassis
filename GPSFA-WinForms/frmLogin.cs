@@ -22,6 +22,8 @@ namespace GPSFA_WinForms
         [DllImport("user32")]
         static extern int GetMenuItemCount(IntPtr hWnd);
 
+        // Implementar função de 'lembre-se de mim' somente com o uso de API + Token persistente - não seria o mais seguro e viável nesse primeiro momento
+
         //Desativando botão fechar
         private void frmLogin_Load(object sender, EventArgs e)
         {
@@ -44,17 +46,17 @@ namespace GPSFA_WinForms
         }
 
         int codUsuLogado;
-        int codVolLogado;
         bool usuarioAtivo;
         string tipoAcesso;
 
-        //Criando método para acesso do Usúario 
         bool resp = false;
 
-        public bool acessaUsuario(string usuario, string senha)
+        //Criando método para autenticação do Usúario 
+        public int acessaUsuario(string usuario, string senha)
         {
+            int resp;
             MySqlCommand comm = new MySqlCommand();
-            comm.CommandText = "SELECT codUsu, codVol, ativo, tipo FROM tbUsuarios where usuario=@usuario and senha=@senha;";
+            comm.CommandText = "SELECT codUsu, ativo, tipo FROM tbUsuarios where usuario=@usuario and senha=@senha;";
             comm.CommandType = CommandType.Text;
             comm.Parameters.Clear();
             comm.Parameters.Add("@usuario", MySqlDbType.VarChar, 100).Value = usuario;
@@ -68,19 +70,17 @@ namespace GPSFA_WinForms
                 {
                     try
                     {
-                        resp = DR.HasRows;
-
                         codUsuLogado = DR.GetInt32(0);
-                        codVolLogado = DR.GetInt32(1);
-                        usuarioAtivo = DR.GetBoolean(2);
-                        tipoAcesso = DR.GetString(3);
+                        usuarioAtivo = DR.GetBoolean(1);
+                        tipoAcesso = DR.GetString(2);
 
                         DataBaseConnection.CloseConnection();
-                        return resp;
+
+                        return resp = 1;
                     }
                     catch (Exception error)
                     {
-                        MessageBox.Show($"Banco de dados não conectado. Erro:\n\n{error}", "Mensagem do sistema",
+                        MessageBox.Show($"Erro ao autenticar usuário. Erro:\n\n{error}", "Mensagem do sistema",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error,
                         MessageBoxDefaultButton.Button1);
@@ -88,7 +88,7 @@ namespace GPSFA_WinForms
                     }
                 }
             }
-            return resp;
+            return resp = 0;
         }                
 
         private void btnEntrar_Click(object sender, EventArgs e)
@@ -98,11 +98,11 @@ namespace GPSFA_WinForms
             usuario = txtUsuario.Text;
             senha = txtSenha.Text;
 
-            if (acessaUsuario(usuario, senha))
+            if (acessaUsuario(usuario, senha) == 1)
             {
                 if (usuarioAtivo)
                 {
-                    frmMenuPrincipal abrir = new frmMenuPrincipal();
+                    frmMenuPrincipal abrir = new frmMenuPrincipal(codUsuLogado);
                     abrir.Show();
                     this.Hide();
                 }
@@ -123,9 +123,24 @@ namespace GPSFA_WinForms
                 limparCampos();
                     
             }
-           
         }
 
-      
+        private void btnSair_Click(object sender, EventArgs e)
+        {
+            DialogResult resultado = MessageBox.Show("Deseja sair do sistema?", "Mensagem do sistema",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
+
+            else
+            {
+                txtUsuario.Focus();
+                return;
+            }
+        }
     }
 }

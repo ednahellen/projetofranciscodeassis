@@ -34,14 +34,14 @@
             this.txtSenha = new System.Windows.Forms.TextBox();
             this.lblSenha = new System.Windows.Forms.Label();
             this.btnEntrar = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btnSair = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblUusuario
             // 
             this.lblUusuario.AutoSize = true;
             this.lblUusuario.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUusuario.Location = new System.Drawing.Point(264, 256);
+            this.lblUusuario.Location = new System.Drawing.Point(60, 227);
             this.lblUusuario.Name = "lblUusuario";
             this.lblUusuario.Size = new System.Drawing.Size(85, 27);
             this.lblUusuario.TabIndex = 4;
@@ -50,7 +50,7 @@
             // txtUsuario
             // 
             this.txtUsuario.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtUsuario.Location = new System.Drawing.Point(253, 286);
+            this.txtUsuario.Location = new System.Drawing.Point(65, 257);
             this.txtUsuario.Name = "txtUsuario";
             this.txtUsuario.Size = new System.Drawing.Size(360, 34);
             this.txtUsuario.TabIndex = 5;
@@ -58,7 +58,7 @@
             // txtSenha
             // 
             this.txtSenha.Font = new System.Drawing.Font("Wingdings", 18F);
-            this.txtSenha.Location = new System.Drawing.Point(253, 363);
+            this.txtSenha.Location = new System.Drawing.Point(65, 334);
             this.txtSenha.Name = "txtSenha";
             this.txtSenha.PasswordChar = 'l';
             this.txtSenha.Size = new System.Drawing.Size(360, 34);
@@ -68,7 +68,7 @@
             // 
             this.lblSenha.AutoSize = true;
             this.lblSenha.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSenha.Location = new System.Drawing.Point(264, 333);
+            this.lblSenha.Location = new System.Drawing.Point(60, 304);
             this.lblSenha.Name = "lblSenha";
             this.lblSenha.Size = new System.Drawing.Size(70, 27);
             this.lblSenha.TabIndex = 6;
@@ -79,33 +79,34 @@
             this.btnEntrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(112)))), ((int)(((byte)(99)))));
             this.btnEntrar.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEntrar.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnEntrar.Location = new System.Drawing.Point(253, 415);
+            this.btnEntrar.Location = new System.Drawing.Point(65, 394);
             this.btnEntrar.Name = "btnEntrar";
-            this.btnEntrar.Size = new System.Drawing.Size(152, 65);
+            this.btnEntrar.Size = new System.Drawing.Size(152, 46);
             this.btnEntrar.TabIndex = 8;
             this.btnEntrar.Text = "&Entrar";
             this.btnEntrar.UseVisualStyleBackColor = false;
             this.btnEntrar.Click += new System.EventHandler(this.btnEntrar_Click);
             // 
-            // button2
+            // btnSair
             // 
-            this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(11)))), ((int)(((byte)(13)))));
-            this.button2.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.button2.Location = new System.Drawing.Point(461, 415);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(152, 65);
-            this.button2.TabIndex = 9;
-            this.button2.Text = "&Sair";
-            this.button2.UseVisualStyleBackColor = false;
+            this.btnSair.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(11)))), ((int)(((byte)(13)))));
+            this.btnSair.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSair.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.btnSair.Location = new System.Drawing.Point(273, 394);
+            this.btnSair.Name = "btnSair";
+            this.btnSair.Size = new System.Drawing.Size(152, 46);
+            this.btnSair.TabIndex = 9;
+            this.btnSair.Text = "&Sair";
+            this.btnSair.UseVisualStyleBackColor = false;
+            this.btnSair.Click += new System.EventHandler(this.btnSair_Click);
             // 
             // frmLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(237)))), ((int)(((byte)(228)))));
-            this.ClientSize = new System.Drawing.Size(865, 561);
-            this.Controls.Add(this.button2);
+            this.ClientSize = new System.Drawing.Size(490, 492);
+            this.Controls.Add(this.btnSair);
             this.Controls.Add(this.btnEntrar);
             this.Controls.Add(this.txtSenha);
             this.Controls.Add(this.lblSenha);
@@ -130,6 +131,6 @@
         private System.Windows.Forms.TextBox txtSenha;
         private System.Windows.Forms.Label lblSenha;
         private System.Windows.Forms.Button btnEntrar;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btnSair;
     }
 }
