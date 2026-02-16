@@ -96,7 +96,7 @@ namespace GPSFA_WinForms
             //ActiveButton(btnVoluntarios);
             //FormShow(new frmGestaoDeVoluntarios());
 
-            if (tipoAcessoUsuLogado == "ADMIN") // validação simples para limitar o acesso do usuário
+            if (tipoAcessoUsuLogado.Equals("ADMIN")) // validação simples para limitar o acesso do usuário
             {
                 frmVoluntarios abrir = new frmVoluntarios();
 
@@ -143,9 +143,9 @@ namespace GPSFA_WinForms
 
         private void frmMenuPrincipal_Load(object sender, EventArgs e)
         {
-            //if (tipoUsu.Equals("admin"))
+            //if (tipoAcessoUsuLogado.Equals("USER"))
             //{
-            //    btnGerenciarProdutos.Enabled = false;
+            //    btnVoluntarios.Enabled = false;
             //}
         }
     }
