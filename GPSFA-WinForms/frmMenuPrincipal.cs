@@ -148,5 +148,21 @@ namespace GPSFA_WinForms
             //    btnVoluntarios.Enabled = false;
             //}
         }
+
+        private void btnSair_Click(object sender, EventArgs e)
+        {
+            DialogResult resultado = MessageBox.Show("Deseja sair do sistema?", "Mensagem do sistema",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
+            else
+            {
+                return;
+            }
+        }
     }
 }
