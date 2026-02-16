@@ -166,9 +166,9 @@
             this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(11)))), ((int)(((byte)(13)))));
             this.button1.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.button1.Location = new System.Drawing.Point(779, 449);
+            this.button1.Location = new System.Drawing.Point(783, 449);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(152, 46);
+            this.button1.Size = new System.Drawing.Size(148, 46);
             this.button1.TabIndex = 11;
             this.button1.Text = "&Sair";
             this.button1.UseVisualStyleBackColor = false;
