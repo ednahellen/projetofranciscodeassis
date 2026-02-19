@@ -37,9 +37,15 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDashboard));
             this.tbctrlDashboard = new System.Windows.Forms.TabControl();
             this.tbpgDashboardAlimentos = new System.Windows.Forms.TabPage();
+            this.lblTotalProdutos = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lblTotalQuantidade = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.lblTotalEmQuilosDataReceiver = new System.Windows.Forms.Label();
             this.lblMesAtualDataReceiver = new System.Windows.Forms.Label();
-            this.lbTotalDeItensDataReceiver = new System.Windows.Forms.Label();
+            this.lblTotalItens = new System.Windows.Forms.Label();
             this.lblTotalEmQuilos = new System.Windows.Forms.Label();
             this.lblTotalDeItens = new System.Windows.Forms.Label();
             this.lblMesAtual = new System.Windows.Forms.Label();
@@ -47,6 +53,8 @@
             this.tbpgDashboadMensal = new System.Windows.Forms.TabPage();
             this.chartDoacaoMensal = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.pnlDadosProdutos = new System.Windows.Forms.Panel();
+            this.btnCadastrar = new System.Windows.Forms.Button();
+            this.btnMenu = new System.Windows.Forms.Button();
             this.lblTitleDashboard = new System.Windows.Forms.Label();
             this.tbctrlDashboard.SuspendLayout();
             this.tbpgDashboardAlimentos.SuspendLayout();
@@ -66,64 +74,133 @@
             this.tbctrlDashboard.Location = new System.Drawing.Point(12, 45);
             this.tbctrlDashboard.Name = "tbctrlDashboard";
             this.tbctrlDashboard.SelectedIndex = 0;
-            this.tbctrlDashboard.Size = new System.Drawing.Size(1861, 854);
+            this.tbctrlDashboard.Size = new System.Drawing.Size(1624, 713);
             this.tbctrlDashboard.TabIndex = 0;
             // 
             // tbpgDashboardAlimentos
             // 
+            this.tbpgDashboardAlimentos.Controls.Add(this.lblTotalProdutos);
+            this.tbpgDashboardAlimentos.Controls.Add(this.label5);
+            this.tbpgDashboardAlimentos.Controls.Add(this.label1);
+            this.tbpgDashboardAlimentos.Controls.Add(this.label3);
+            this.tbpgDashboardAlimentos.Controls.Add(this.lblTotalQuantidade);
+            this.tbpgDashboardAlimentos.Controls.Add(this.label2);
             this.tbpgDashboardAlimentos.Controls.Add(this.lblTotalEmQuilosDataReceiver);
             this.tbpgDashboardAlimentos.Controls.Add(this.lblMesAtualDataReceiver);
-            this.tbpgDashboardAlimentos.Controls.Add(this.lbTotalDeItensDataReceiver);
+            this.tbpgDashboardAlimentos.Controls.Add(this.lblTotalItens);
             this.tbpgDashboardAlimentos.Controls.Add(this.lblTotalEmQuilos);
             this.tbpgDashboardAlimentos.Controls.Add(this.lblTotalDeItens);
             this.tbpgDashboardAlimentos.Controls.Add(this.lblMesAtual);
             this.tbpgDashboardAlimentos.Controls.Add(this.chartProdutos);
-            this.tbpgDashboardAlimentos.Location = new System.Drawing.Point(4, 29);
+            this.tbpgDashboardAlimentos.Location = new System.Drawing.Point(4, 34);
             this.tbpgDashboardAlimentos.Name = "tbpgDashboardAlimentos";
             this.tbpgDashboardAlimentos.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpgDashboardAlimentos.Size = new System.Drawing.Size(1853, 821);
+            this.tbpgDashboardAlimentos.Size = new System.Drawing.Size(1616, 675);
             this.tbpgDashboardAlimentos.TabIndex = 0;
             this.tbpgDashboardAlimentos.Text = "Alimentos mais recebidos";
             this.tbpgDashboardAlimentos.UseVisualStyleBackColor = true;
+            // 
+            // lblTotalProdutos
+            // 
+            this.lblTotalProdutos.AutoSize = true;
+            this.lblTotalProdutos.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.lblTotalProdutos.Location = new System.Drawing.Point(1396, 197);
+            this.lblTotalProdutos.Name = "lblTotalProdutos";
+            this.lblTotalProdutos.Size = new System.Drawing.Size(23, 25);
+            this.lblTotalProdutos.TabIndex = 17;
+            this.lblTotalProdutos.Text = "0";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label5.Location = new System.Drawing.Point(1180, 195);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(211, 29);
+            this.label5.TabIndex = 16;
+            this.label5.Text = "Total de Produtos:";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label1.Location = new System.Drawing.Point(1397, 164);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(23, 25);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "0";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label3.Location = new System.Drawing.Point(1180, 157);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(136, 29);
+            this.label3.TabIndex = 14;
+            this.label3.Text = "Total Peso:";
+            // 
+            // lblTotalQuantidade
+            // 
+            this.lblTotalQuantidade.AutoSize = true;
+            this.lblTotalQuantidade.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.lblTotalQuantidade.Location = new System.Drawing.Point(1396, 121);
+            this.lblTotalQuantidade.Name = "lblTotalQuantidade";
+            this.lblTotalQuantidade.Size = new System.Drawing.Size(23, 25);
+            this.lblTotalQuantidade.TabIndex = 13;
+            this.lblTotalQuantidade.Text = "0";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label2.Location = new System.Drawing.Point(1179, 114);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(205, 29);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "Total Quantidade:";
             // 
             // lblTotalEmQuilosDataReceiver
             // 
             this.lblTotalEmQuilosDataReceiver.AutoSize = true;
             this.lblTotalEmQuilosDataReceiver.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblTotalEmQuilosDataReceiver.Location = new System.Drawing.Point(1698, 93);
+            this.lblTotalEmQuilosDataReceiver.Location = new System.Drawing.Point(1375, 81);
             this.lblTotalEmQuilosDataReceiver.Name = "lblTotalEmQuilosDataReceiver";
-            this.lblTotalEmQuilosDataReceiver.Size = new System.Drawing.Size(39, 20);
+            this.lblTotalEmQuilosDataReceiver.Size = new System.Drawing.Size(23, 25);
             this.lblTotalEmQuilosDataReceiver.TabIndex = 9;
-            this.lblTotalEmQuilosDataReceiver.Text = "0 kg";
+            this.lblTotalEmQuilosDataReceiver.Text = "0";
             // 
             // lblMesAtualDataReceiver
             // 
             this.lblMesAtualDataReceiver.AutoSize = true;
             this.lblMesAtualDataReceiver.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblMesAtualDataReceiver.Location = new System.Drawing.Point(1646, 26);
+            this.lblMesAtualDataReceiver.Location = new System.Drawing.Point(1332, 12);
             this.lblMesAtualDataReceiver.Name = "lblMesAtualDataReceiver";
-            this.lblMesAtualDataReceiver.Size = new System.Drawing.Size(39, 20);
+            this.lblMesAtualDataReceiver.Size = new System.Drawing.Size(50, 25);
             this.lblMesAtualDataReceiver.TabIndex = 11;
             this.lblMesAtualDataReceiver.Text = "Mês";
             // 
-            // lbTotalDeItensDataReceiver
+            // lblTotalItens
             // 
-            this.lbTotalDeItensDataReceiver.AutoSize = true;
-            this.lbTotalDeItensDataReceiver.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lbTotalDeItensDataReceiver.Location = new System.Drawing.Point(1678, 60);
-            this.lbTotalDeItensDataReceiver.Name = "lbTotalDeItensDataReceiver";
-            this.lbTotalDeItensDataReceiver.Size = new System.Drawing.Size(18, 20);
-            this.lbTotalDeItensDataReceiver.TabIndex = 8;
-            this.lbTotalDeItensDataReceiver.Text = "0";
+            this.lblTotalItens.AutoSize = true;
+            this.lblTotalItens.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.lblTotalItens.Location = new System.Drawing.Point(1362, 43);
+            this.lblTotalItens.Name = "lblTotalItens";
+            this.lblTotalItens.Size = new System.Drawing.Size(23, 25);
+            this.lblTotalItens.TabIndex = 8;
+            this.lblTotalItens.Text = "0";
             // 
             // lblTotalEmQuilos
             // 
             this.lblTotalEmQuilos.AutoSize = true;
             this.lblTotalEmQuilos.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTotalEmQuilos.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblTotalEmQuilos.Location = new System.Drawing.Point(1545, 90);
+            this.lblTotalEmQuilos.Location = new System.Drawing.Point(1179, 77);
             this.lblTotalEmQuilos.Name = "lblTotalEmQuilos";
-            this.lblTotalEmQuilos.Size = new System.Drawing.Size(147, 24);
+            this.lblTotalEmQuilos.Size = new System.Drawing.Size(190, 29);
             this.lblTotalEmQuilos.TabIndex = 7;
             this.lblTotalEmQuilos.Text = "Total em Quilos:";
             // 
@@ -132,9 +209,9 @@
             this.lblTotalDeItens.AutoSize = true;
             this.lblTotalDeItens.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTotalDeItens.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblTotalDeItens.Location = new System.Drawing.Point(1545, 56);
+            this.lblTotalDeItens.Location = new System.Drawing.Point(1179, 43);
             this.lblTotalDeItens.Name = "lblTotalDeItens";
-            this.lblTotalDeItens.Size = new System.Drawing.Size(127, 24);
+            this.lblTotalDeItens.Size = new System.Drawing.Size(165, 29);
             this.lblTotalDeItens.TabIndex = 6;
             this.lblTotalDeItens.Text = "Total de Itens:";
             // 
@@ -143,9 +220,9 @@
             this.lblMesAtual.AutoSize = true;
             this.lblMesAtual.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMesAtual.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblMesAtual.Location = new System.Drawing.Point(1545, 23);
+            this.lblMesAtual.Location = new System.Drawing.Point(1179, 9);
             this.lblMesAtual.Name = "lblMesAtual";
-            this.lblMesAtual.Size = new System.Drawing.Size(95, 24);
+            this.lblMesAtual.Size = new System.Drawing.Size(122, 29);
             this.lblMesAtual.TabIndex = 10;
             this.lblMesAtual.Text = "Mês atual:";
             // 
@@ -159,7 +236,7 @@
             this.chartProdutos.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
             this.chartProdutos.Legends.Add(legend1);
-            this.chartProdutos.Location = new System.Drawing.Point(7, 7);
+            this.chartProdutos.Location = new System.Drawing.Point(4, 0);
             this.chartProdutos.Margin = new System.Windows.Forms.Padding(4);
             this.chartProdutos.Name = "chartProdutos";
             this.chartProdutos.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Bright;
@@ -167,17 +244,17 @@
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chartProdutos.Series.Add(series1);
-            this.chartProdutos.Size = new System.Drawing.Size(1515, 807);
+            this.chartProdutos.Size = new System.Drawing.Size(1158, 668);
             this.chartProdutos.TabIndex = 0;
             this.chartProdutos.Text = "Produtos";
             // 
             // tbpgDashboadMensal
             // 
             this.tbpgDashboadMensal.Controls.Add(this.chartDoacaoMensal);
-            this.tbpgDashboadMensal.Location = new System.Drawing.Point(4, 29);
+            this.tbpgDashboadMensal.Location = new System.Drawing.Point(4, 34);
             this.tbpgDashboadMensal.Name = "tbpgDashboadMensal";
             this.tbpgDashboadMensal.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpgDashboadMensal.Size = new System.Drawing.Size(1852, 821);
+            this.tbpgDashboadMensal.Size = new System.Drawing.Size(1616, 675);
             this.tbpgDashboadMensal.TabIndex = 1;
             this.tbpgDashboadMensal.Text = "Alimentos mensais";
             this.tbpgDashboadMensal.UseVisualStyleBackColor = true;
@@ -192,7 +269,7 @@
             this.chartDoacaoMensal.ChartAreas.Add(chartArea2);
             legend2.Name = "Legend1";
             this.chartDoacaoMensal.Legends.Add(legend2);
-            this.chartDoacaoMensal.Location = new System.Drawing.Point(7, 7);
+            this.chartDoacaoMensal.Location = new System.Drawing.Point(1, 0);
             this.chartDoacaoMensal.Margin = new System.Windows.Forms.Padding(4);
             this.chartDoacaoMensal.Name = "chartDoacaoMensal";
             this.chartDoacaoMensal.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Bright;
@@ -200,7 +277,7 @@
             series2.Legend = "Legend1";
             series2.Name = "Series1";
             this.chartDoacaoMensal.Series.Add(series2);
-            this.chartDoacaoMensal.Size = new System.Drawing.Size(1839, 807);
+            this.chartDoacaoMensal.Size = new System.Drawing.Size(1298, 668);
             this.chartDoacaoMensal.TabIndex = 1;
             this.chartDoacaoMensal.Text = "Mensal";
             // 
@@ -208,13 +285,35 @@
             // 
             this.pnlDadosProdutos.AutoSize = true;
             this.pnlDadosProdutos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(112)))), ((int)(((byte)(99)))));
+            this.pnlDadosProdutos.Controls.Add(this.btnCadastrar);
+            this.pnlDadosProdutos.Controls.Add(this.btnMenu);
             this.pnlDadosProdutos.Controls.Add(this.lblTitleDashboard);
             this.pnlDadosProdutos.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlDadosProdutos.Location = new System.Drawing.Point(0, 0);
             this.pnlDadosProdutos.Name = "pnlDadosProdutos";
             this.pnlDadosProdutos.Padding = new System.Windows.Forms.Padding(0, 0, 0, 10);
-            this.pnlDadosProdutos.Size = new System.Drawing.Size(1884, 39);
+            this.pnlDadosProdutos.Size = new System.Drawing.Size(1647, 53);
             this.pnlDadosProdutos.TabIndex = 1;
+            // 
+            // btnCadastrar
+            // 
+            this.btnCadastrar.Location = new System.Drawing.Point(491, 7);
+            this.btnCadastrar.Name = "btnCadastrar";
+            this.btnCadastrar.Size = new System.Drawing.Size(164, 33);
+            this.btnCadastrar.TabIndex = 22;
+            this.btnCadastrar.Text = "Cadastrar";
+            this.btnCadastrar.UseVisualStyleBackColor = true;
+            this.btnCadastrar.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // btnMenu
+            // 
+            this.btnMenu.Location = new System.Drawing.Point(682, 7);
+            this.btnMenu.Name = "btnMenu";
+            this.btnMenu.Size = new System.Drawing.Size(164, 33);
+            this.btnMenu.TabIndex = 21;
+            this.btnMenu.Text = "Menu";
+            this.btnMenu.UseVisualStyleBackColor = true;
+            this.btnMenu.Click += new System.EventHandler(this.btnMenu_Click);
             // 
             // lblTitleDashboard
             // 
@@ -223,16 +322,16 @@
             this.lblTitleDashboard.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.lblTitleDashboard.Location = new System.Drawing.Point(12, 9);
             this.lblTitleDashboard.Name = "lblTitleDashboard";
-            this.lblTitleDashboard.Size = new System.Drawing.Size(97, 20);
+            this.lblTitleDashboard.Size = new System.Drawing.Size(117, 25);
             this.lblTitleDashboard.TabIndex = 12;
             this.lblTitleDashboard.Text = "Dashboard";
             // 
             // frmDashboard
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(237)))), ((int)(((byte)(228)))));
-            this.ClientSize = new System.Drawing.Size(1884, 911);
+            this.ClientSize = new System.Drawing.Size(1647, 770);
             this.Controls.Add(this.tbctrlDashboard);
             this.Controls.Add(this.pnlDadosProdutos);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -266,11 +365,19 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart chartProdutos;
         private System.Windows.Forms.DataVisualization.Charting.Chart chartDoacaoMensal;
         private System.Windows.Forms.Label lblTitleDashboard;
-        private System.Windows.Forms.Label lblTotalEmQuilosDataReceiver;
         private System.Windows.Forms.Label lblMesAtualDataReceiver;
-        private System.Windows.Forms.Label lbTotalDeItensDataReceiver;
-        private System.Windows.Forms.Label lblTotalEmQuilos;
+        private System.Windows.Forms.Label lblTotalItens;
         private System.Windows.Forms.Label lblTotalDeItens;
         private System.Windows.Forms.Label lblMesAtual;
+        private System.Windows.Forms.Label lblTotalQuantidade;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblTotalEmQuilosDataReceiver;
+        private System.Windows.Forms.Label lblTotalEmQuilos;
+        private System.Windows.Forms.Label lblTotalProdutos;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button btnCadastrar;
+        private System.Windows.Forms.Button btnMenu;
     }
 }

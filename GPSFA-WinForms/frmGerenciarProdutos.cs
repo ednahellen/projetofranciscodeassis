@@ -49,7 +49,7 @@ namespace GPSFA_WinForms
         private void carregarOrigemCbb()
         {
             MySqlCommand comm = new MySqlCommand();
-            comm.CommandText = "SELECT * FROM tbOrigemDoacao ORDER BY nome ASC;";
+            comm.CommandText = "SELECT * FROM tbOrigemDoacao ORDER BY descricao ASC;";
             comm.CommandType = CommandType.Text;
 
             comm.Connection = DataBaseConnection.OpenConnection();
@@ -527,6 +527,18 @@ namespace GPSFA_WinForms
             frmUnidadeMedida abrir = new frmUnidadeMedida();
             abrir.Show();
             this.Hide();
+        }
+
+        private void gpbCamposDoProduto_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnVoltar_Click(object sender, EventArgs e)
+        {
+            frmMenuPrincipal abrir = new frmMenuPrincipal();
+            abrir.Show();
+            this.Close();
         }
 
         //    private void cbbDescricao_SelectedIndexChanged(object sender, EventArgs e)

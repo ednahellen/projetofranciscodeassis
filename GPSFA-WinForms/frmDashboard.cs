@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using ClosedXML.Excel;
+using MySql.Data.MySqlClient;
 using Mysqlx.Crud;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,7 @@ namespace GPSFA_WinForms
         private void frmDashboard_Load(object sender, EventArgs e)
         {
             CarregarDados();
+            CarregarDashboard();
         }
 
         public void CarregarDados()
@@ -43,6 +45,25 @@ namespace GPSFA_WinForms
             //CarregarDadosNaListaDeProdutos();
         }
 
+        private void CarregarDashboard()
+        {
+            DataTable dt = ProductRepository.BuscarTodosProdutos();
+
+            lblTotalProdutos.Text = dt.Rows.Count.ToString();
+
+            int totalQuantidade = 0;
+            int totalPeso = 0;
+
+            foreach (DataRow row in dt.Rows)
+            {
+                totalQuantidade += Convert.ToInt32(row["quantidade"]);
+                totalPeso += Convert.ToInt32(row["peso"]);
+            }
+
+            lblTotalQuantidade.Text = totalQuantidade.ToString();
+            label1.Text = totalPeso.ToString() + " kg";
+        }
+
         private void CarregarDadosNoChartProdutos()
         {
             // Remove todas as séries e títulos existentes do gráfico
@@ -61,29 +82,30 @@ namespace GPSFA_WinForms
             // Consulta SQL que obtém os 8 produtos com maior quantidade total cadastrada
             // Soma as quantidades de cada produto (SUM) e agrupa por nome
             // Ordena do maior para o menor e limita a 8 resultados
-            string query = "SELECT p.nome AS nomeProduto, SUM(p.quantidade) AS totalQuantidadeProdutos FROM tbProdutos as p GROUP BY p.nome ORDER BY totalQuantidadeProdutos DESC LIMIT 8;";
+            string query = "SELECT p.descricao AS descricaoProduto, SUM(p.quantidade) AS totalQuantidadeProdutos FROM tbProdutos as p GROUP BY p.descricao ORDER BY totalQuantidadeProdutos DESC LIMIT 8;";
 
             try
             {
                 // Abre a conexão com o banco e executa a consulta
-                using (var cmd = new MySqlCommand(query, DataBaseConnection.OpenConnection()))
+                using (var conn = DataBaseConnection.OpenConnection())
                 {
                     // O ExecuteReader permite percorrer os resultados linha por linha  
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        // Lê cada produto retornado pela consulta
-                        while (reader.Read())
-                        {
+                    using (var cmd = new MySqlCommand(query, conn))
+                    { 
+                        using (var reader = cmd.ExecuteReader())
+                            // Lê cada produto retornado pela consulta
+                            while (reader.Read())
+                            {
                             // Obtém o nome do produto
-                            string nome = reader["nomeProduto"].ToString();
+                                string descricao = reader["descricaoProduto"].ToString();
 
                             // Se o nome for muito longo, encurta e adiciona "..." - Isso evita sobreposição dos rótulos no gráfico
-                            if (nome.Length > 15) nome = nome.Substring(0, 12) + "...";
+                                if (descricao.Length > 15) descricao = descricao.Substring(0, 12) + "...";
 
-                            // Adiciona um ponto ao gráfico (eixo X = nome do produto, eixo Y = quantidade total)
-                            series.Points.AddXY(
-                                nome,
-                                Convert.ToDouble(reader["totalQuantidadeProdutos"])
+                            // Adiciona um ponto ao gráfico (eixo X = descricao do produto, eixo Y = quantidade total)
+                                series.Points.AddXY(
+                                    descricao,
+                                    Convert.ToDouble(reader["totalQuantidadeProdutos"])
                             );
                         }
                     }
@@ -141,12 +163,12 @@ namespace GPSFA_WinForms
                             int ano = Convert.ToInt32(reader["ano"]);
 
                             // Cria o rótulo do eixo X no formato "mês/ano"
-                            string label = $"{mes}/{ano}";
+                            string mesNome = new DateTime (ano, mes, 1).ToString ("MMM/yyyy");
 
                             // Adiciona o ponto ao gráfico:
                             // eixo X = mês/ano | eixo Y = total de produtos cadastrados no período
                             series.Points.AddXY(
-                                label,
+                                mesNome,
                                 Convert.ToDouble(reader["totalMensal"])
                             );
                         }
@@ -199,7 +221,8 @@ namespace GPSFA_WinForms
                             "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
                         };
                         // Obtém o nome do mês atual baseado na data do sistema
-                        string mesAtual = meses[DateTime.Now.Month - 1];
+                        string mesAtual = DateTime.Now.ToString("MMMM");
+                        lblMesAtualDataReceiver.Text = mesAtual;
 
                         // Obtém o ano atual (não utilizado, mas pode ser útil em versões futuras)
                         int anoAtual = DateTime.Now.Year;
@@ -219,7 +242,7 @@ namespace GPSFA_WinForms
                 lblMesAtualDataReceiver.ForeColor = Color.Red;
                 Console.WriteLine("Erro ao atualizar label do mês: " + ex.Message);
             }
-            // Fecha a conexão com o banco de dados para evitar vazamentos de recursos
+            // Fecha a conexão com o banco de dados para evitar vazamentos de recursos. 
             DataBaseConnection.CloseConnection();
         }
 
@@ -245,7 +268,7 @@ namespace GPSFA_WinForms
 
                         // Se houver valor válido, converte para inteiro e formata com separadores de milhar
                         // Caso contrário, exibe "0"
-                        lbTotalDeItensDataReceiver.Text = result != DBNull.Value ? Convert.ToInt64(result).ToString("N0") : "0";
+                        lblTotalItens.Text = result != DBNull.Value ? Convert.ToInt64(result).ToString("N0") : "0";
                     }
 
                     // ===== CONSULTA 2: Total em Quilos =====
@@ -267,6 +290,23 @@ namespace GPSFA_WinForms
             }
             // Fecha a conexão com o banco de dados para evitar vazamentos de recursos
             DataBaseConnection.CloseConnection();
+        }
+
+        
+        private void btnMenu_Click(object sender, EventArgs e)
+        {
+            frmMenuPrincipal abrir = new frmMenuPrincipal();
+            abrir.Show();
+            this.Hide();
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            frmGerenciarProdutos abrir = new frmGerenciarProdutos();
+            abrir.Show();
+            this.Hide();
+
         }
     }
 }

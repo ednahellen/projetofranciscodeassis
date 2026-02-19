@@ -1,259 +1,200 @@
-﻿using Google.Protobuf.WellKnownTypes;
+﻿using ClosedXML.Excel;
 using MySql.Data.MySqlClient;
-using Mysqlx;
 using Projeto_Socorrista;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GPSFA_WinForms
 {
     public partial class frmRelatorios : Form
     {
-        const int MF_BYCOMMAND = 0X400;
-        [DllImport("user32")]
-        static extern int RemoveMenu(IntPtr hMenu, int nPosition, int wFlags);
-        [DllImport("user32")]
-        static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
-        [DllImport("user32")]
-        static extern int GetMenuItemCount(IntPtr hWnd);
-
-
         public frmRelatorios()
         {
             InitializeComponent();
         }
 
+        #region LOAD
+
         private void frmRelatorios_Load(object sender, EventArgs e)
         {
-            // Carrega no datagrid view os últimos produtos adicionados no banco
-            CarregarDadosNaListaDeProdutos();
-            carregarUsuários();
-            ConfigDGVRelatorios();
-            dtpDataInicialPeriodo.Enabled = false;
-            dtpDataFinalPeriodo.Enabled = false;
-            //cbbListaDeUsuarios.SelectedIndex = 0;
-            //cbbListaDeUsuarios.Enabled = false;
+            ConfigurarGrid();
+            CarregarUsuarios();
+            CarregarTodosProdutos();
+
+            dtpDataInicialPeriodo.Value = DateTime.Now.AddMonths(-1);
+            dtpDataFinalPeriodo.Value = DateTime.Today;
+
+            btnExportarExcel.Enabled = false;
         }
 
-        private void ConfigDGVRelatorios()
-        { // Ajustar para ocupar toda a largura
-            //dgvRelatorioDeProdutos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            // Alternar cores das linhas
-            //dgvRelatorioDeProdutos.RowsDefaultCellStyle.BackColor = Color.LightGray;
-            // Aumentar fonte
-            //dgvRelatorioDeProdutos.RowsDefaultCellStyle.Font = new Font("Arial", 10, FontStyle.Regular);
-            //dgvRelatorioDeProdutos.ColumnHeadersDefaultCellStyle.Font = new Font("Arial", 10, FontStyle.Bold);
-            //// Ajustar altura das linhas
-            //dgvRelatorioDeProdutos.RowTemplate.Height = 40;
-            //// Habilitar quebra de texto
-            //dgvRelatorioDeProdutos.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            //// Ajustar seleção de célula
-            //dgvRelatorioDeProdutos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            //dgvRelatorioDeProdutos.MultiSelect = false;
-        }
+        #endregion
 
-        // Carrega no datagrid view os últimos produtos adicionados no banco
-        private void CarregarDadosNaListaDeProdutos()
+        #region CONFIGURAÇÕES
+
+        private void ConfigurarGrid()
         {
-            //dgvRelatorioDeProdutos.Columns.Clear();
+            dgvProdutos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvProdutos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvProdutos.MultiSelect = false;
+            dgvProdutos.ReadOnly = true;
+        }
 
-            DataTable tabela = new DataTable();
+        #endregion
 
-            using (MySqlConnection conexao = DataBaseConnection.OpenConnection())
+        #region CONSULTAS
+
+        private void CarregarTodosProdutos()
+        {
+            string sql = BaseQuery() + " ORDER BY prod.dataDeEntrada DESC;";
+
+            using (var conn = DataBaseConnection.OpenConnection())
+            using (var cmd = new MySqlCommand(sql, conn))
+            using (var da = new MySqlDataAdapter(cmd))
             {
-                StringBuilder query = new StringBuilder();
-
-                query.Append("SELECT prod.nome AS 'Nome do Produto', prod.quantidade AS 'Quantidade', CONCAT(prod.peso,' ', prod.unidade) AS 'Peso', prod.dataDeEntrada AS 'Data de Cadastro', prod.dataDeValidade AS 'Data de Validade', vol.nome AS 'Quem Cadastrou' FROM tbprodutos AS prod INNER JOIN tbUsuarios AS usr ON prod.codUsu = usr.codUsu INNER JOIN tbvoluntarios AS vol ON usr.codVol = vol.codVol ORDER BY prod.dataDeEntrada DESC;");
-
-                MySqlCommand comm = new MySqlCommand();
-                comm.Connection = conexao;
-
-                comm.CommandText = query.ToString();
-
-                MySqlDataAdapter DA = new MySqlDataAdapter(comm);
-                DA.Fill(tabela);
-
-                //dgvRelatorioDeProdutos.DataSource = tabela;
-
-                //dgvRelatorioDeProdutos.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-                //DataBaseConnection.CloseConnection();
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dgvProdutos.DataSource = dt;
             }
+
+            btnExportarExcel.Enabled = dgvProdutos.Rows.Count > 0;
         }
 
-
-        public DataTable BuscarProdutosPorFiltro(params FiltroDeBuscaBD[] filtros)
+        private void BuscarRelatorio(DateTime dataInicial, DateTime dataFinal, string usuario)
         {
-            DataTable tabela = new DataTable();
+            StringBuilder sql = new StringBuilder(BaseQuery());
+            sql.Append(" WHERE prod.dataDeEntrada BETWEEN @dataInicial AND @dataFinal ");
 
-            using (MySqlConnection conexao = DataBaseConnection.OpenConnection())
+            if (!string.IsNullOrWhiteSpace(usuario))
+                sql.Append(" AND vol.nome LIKE @usuario ");
+
+            sql.Append(" ORDER BY prod.dataDeEntrada DESC;");
+
+            using (var conn = DataBaseConnection.OpenConnection())
+            using (var cmd = new MySqlCommand(sql.ToString(), conn))
             {
-                StringBuilder query = new StringBuilder();
+                cmd.Parameters.AddWithValue("@dataInicial", dataInicial);
+                cmd.Parameters.AddWithValue("@dataFinal", dataFinal);
 
-                query.Append("SELECT prod.nome AS 'Nome do Produto', prod.quantidade AS 'Quantidade', CONCAT(prod.peso,' ', prod.unidade) AS 'Peso', prod.dataDeEntrada AS 'Data de Cadastro', prod.dataDeValidade AS 'Data de Validade', vol.nome AS 'Quem Cadastrou' FROM tbprodutos AS prod INNER JOIN tbUsuarios AS usr ON prod.codUsu = usr.codUsu INNER JOIN tbvoluntarios AS vol ON usr.codVol = vol.codVol WHERE 1=1 ");
+                if (!string.IsNullOrWhiteSpace(usuario))
+                    cmd.Parameters.AddWithValue("@usuario", "%" + usuario + "%");
 
-                using (MySqlCommand comm = new MySqlCommand())
+                using (var da = new MySqlDataAdapter(cmd))
                 {
-                    comm.Connection = conexao;
-                    int paramCount = 0;
-
-                    foreach (var filtro in filtros)
-                    {
-                        // Filtro por período
-                        if (filtro.FiltrarPorPeriodo && !string.IsNullOrEmpty(filtro.DataInicial) && !string.IsNullOrEmpty(filtro.DataFinal))
-                        {
-                            string paramInicio = "@dataInicio" + paramCount;
-                            string paramFim = "@dataFim" + paramCount;
-                            query.Append($" AND prod.dataDeEntrada BETWEEN {paramInicio} AND {paramFim} ");
-
-                            comm.Parameters.AddWithValue(paramInicio, filtro.DataInicial);
-                            comm.Parameters.AddWithValue(paramFim, filtro.DataFinal);
-                            paramCount++;
-                        }
-
-                        // Filtro por voluntário
-                        if (filtro.FiltrarPorUsuario && !string.IsNullOrEmpty(filtro.NomeUsuario))
-                        {
-                            string paramNome = "@nomeUsuario" + paramCount;
-                            query.Append($" AND vol.nome LIKE {paramNome} ");
-                            comm.Parameters.AddWithValue(paramNome, "%" + filtro.NomeUsuario + "%");
-                            paramCount++;
-                        }
-                    }
-                    query.Append(" ORDER BY prod.dataDeEntrada DESC;");
-
-                    comm.CommandText = query.ToString();
-                    using(MySqlDataAdapter DA = new MySqlDataAdapter(comm))
-                    {
-                        DA.Fill(tabela);
-                    }
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dgvProdutos.DataSource = dt;
                 }
             }
-            return tabela;
+
+            btnExportarExcel.Enabled = dgvProdutos.Rows.Count > 0;
         }
 
-        private void btnAplicarFiltros_Click(object sender, EventArgs e)
+        private string BaseQuery()
         {
-            //dgvRelatorioDeProdutos.Columns.Clear();
-
-            try
-            {
-                //if (cbbListaDeUsuarios.SelectedItem == null)
-                //{
-                //    MessageBox.Show($"Selecione uma opção válida da lista para usar o filtro", "Erro do sistema", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //    limparFiltros();
-                //    CarregarDadosNaListaDeProdutos();
-                //}
-                //else
-                //{
-                //    FiltroDeBuscaBD filtroDeData = new FiltroDeBuscaBD
-                //    {
-                //        //FiltrarPorPeriodo = chkbDataEntrada.Checked,
-                //        DataInicial = dtpDataInicialPeriodo.Value.ToString("yyyy-MM-dd"),
-                //        DataFinal = dtpDataFinalPeriodo.Value.ToString("yyyy-MM-dd"),
-                //    };
-                    
-                //    FiltroDeBuscaBD filtroDeVoluntario = new FiltroDeBuscaBD
-                //    {
-                //        //FiltrarPorUsuario = chkbListaUsuarios.Checked,
-                //        //NomeUsuario = cbbListaDeUsuarios.SelectedItem.ToString(),
-                //    };
-
-                //    DataTable resultado = BuscarProdutosPorFiltro(filtroDeData, filtroDeVoluntario);
-                //    //dgvRelatorioDeProdutos.DataSource = resultado;
-                //    //dgvRelatorioDeProdutos.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-                //}
-            }
-            catch (Exception error) {
-                MessageBox.Show($"Erro: {error}", "Erro do sistema", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                limparFiltros();
-            }
-            DataBaseConnection.CloseConnection();
+            return @"SELECT 
+                        prod.descricao AS 'Descrição do Produto',
+                        prod.quantidade AS 'Quantidade',
+                        CONCAT(prod.peso,' ', prod.unidade) AS 'Peso',
+                        prod.dataDeEntrada AS 'Data de Cadastro',
+                        prod.dataDeValidade AS 'Data de Validade',
+                        vol.nome AS 'Quem Cadastrou'
+                     FROM tbprodutos AS prod
+                     INNER JOIN tbUsuarios AS usr ON prod.codUsu = usr.codUsu
+                     INNER JOIN tbVoluntarios AS vol ON usr.codVol = vol.codVol";
         }
 
-        private void limparFiltros()
+        #endregion
+
+        #region FILTROS
+
+        private void btnPesquisar_Click(object sender, EventArgs e)
         {
-            dtpDataInicialPeriodo.Value = DateTime.Now;
-            dtpDataFinalPeriodo.Value = DateTime.Now;
-            //cbbListaDeUsuarios.SelectedIndex = 0;
-            //chkbDataEntrada.Checked = false;
-            //chkbListaUsuarios.Checked = false;
+            BuscarRelatorio(
+                dtpDataInicialPeriodo.Value.Date,
+                dtpDataFinalPeriodo.Value.Date,
+                cbbUsuario.Text
+            );
         }
 
         private void btnLimparFiltros_Click(object sender, EventArgs e)
         {
-            CarregarDadosNaListaDeProdutos();
-            limparFiltros();
+            dtpDataInicialPeriodo.Value = DateTime.Now.AddMonths(-1);
+            dtpDataFinalPeriodo.Value = DateTime.Today;
+            cbbUsuario.SelectedIndex = -1;
+
+            CarregarTodosProdutos();
         }
 
-        private void carregarUsuários()
+        #endregion
+
+        #region USUÁRIOS
+
+        private void CarregarUsuarios()
         {
-            MySqlCommand comm = new MySqlCommand();
-
-            comm.CommandText = "SELECT nome FROM tbvoluntarios ORDER BY nome DESC;";
-
-            comm.Connection = DataBaseConnection.OpenConnection();
-
-            MySqlDataReader DR = comm.ExecuteReader();
-
-            while (DR.Read())
+            using (var conn = DataBaseConnection.OpenConnection())
+            using (var cmd = new MySqlCommand("SELECT nome FROM tbVoluntarios ORDER BY nome;", conn))
+            using (var reader = cmd.ExecuteReader())
             {
-                //cbbListaDeUsuarios.Items.Add(DR.GetString(0));
+                cbbUsuario.Items.Clear();
+
+                while (reader.Read())
+                    cbbUsuario.Items.Add(reader.GetString("nome"));
             }
-
-            DataBaseConnection.CloseConnection();
         }
 
-        private void chkbDataEntrada_CheckedChanged(object sender, EventArgs e)
+        #endregion
+
+        #region EXPORTAÇÃO
+
+        private void btnExportarExcel_Click(object sender, EventArgs e)
         {
-            ////if (chkbDataEntrada.Checked)
-            //{
-            //    dtpDataInicialPeriodo.Enabled = true;
-            //    dtpDataFinalPeriodo.Enabled = true;
-            //}
-            //else
-            //{
-            //    dtpDataInicialPeriodo.Enabled = false;
-            //    dtpDataFinalPeriodo.Enabled = false;
-            //    dtpDataInicialPeriodo.Value = DateTime.Now;
-            //    dtpDataFinalPeriodo.Value = DateTime.Now;
+            if (dgvProdutos.Rows.Count == 0)
+                return;
 
-            //}
+            using (SaveFileDialog sfd = new SaveFileDialog())
+            {
+                sfd.Filter = "Arquivo Excel (*.xlsx)|*.xlsx";
+                sfd.FileName = "Relatorio.xlsx";
+
+                if (sfd.ShowDialog() != DialogResult.OK)
+                    return;
+
+                using (XLWorkbook wb = new XLWorkbook())
+                {
+                    var ws = wb.Worksheets.Add("Relatório");
+
+                    for (int i = 0; i < dgvProdutos.Columns.Count; i++)
+                        ws.Cell(1, i + 1).Value = dgvProdutos.Columns[i].HeaderText;
+
+                    for (int i = 0; i < dgvProdutos.Rows.Count; i++)
+                        for (int j = 0; j < dgvProdutos.Columns.Count; j++)
+                            ws.Cell(i + 2, j + 1).Value =
+                                dgvProdutos.Rows[i].Cells[j].Value?.ToString();
+
+                    ws.Columns().AdjustToContents();
+                    wb.SaveAs(sfd.FileName);
+                }
+
+                MessageBox.Show("Relatório exportado com sucesso.");
+            }
         }
 
-        private void chkbListaUsuarios_CheckedChanged (object sender, EventArgs e)
-        {
-            //if (chkbListaUsuarios.Checked)
-            //{
-            //    cbbListaDeUsuarios.Enabled = true;
-            //    cbbListaDeUsuarios.Items.Remove("Todos");
-            //}
-            //else
-            //{
-            //    cbbListaDeUsuarios.Enabled = false;
-            //    cbbListaDeUsuarios.Items.Insert(0, "Todos");
-            //    cbbListaDeUsuarios.SelectedIndex = 0;
-            //}
-        }
+        #endregion
 
-        private void btnExportarRelatorio_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnSair_Click(object sender, EventArgs e)
+        private void btnMenu_Click(object sender, EventArgs e)
         {
             frmMenuPrincipal abrir = new frmMenuPrincipal();
             abrir.Show();
-            this.Close();
+            this.Hide();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            frmGerenciarProdutos abrir = new frmGerenciarProdutos();
+            abrir.Show();
+            this.Hide();
         }
     }
 }
