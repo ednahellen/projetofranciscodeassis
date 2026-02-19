@@ -65,8 +65,8 @@ namespace GPSFA_WinForms
             {
 
                 //Regex utilizado para remover espaços extras entre as palavras.
-                double peso = Double.Parse(txtPeso.Text);
-               double resp = cadastrarProdutos(Regex.Replace(txtDescricao.Text, @"\s+", " ").Trim().ToUpper() + " - " + txtPeso.Text + cbbUnidadeMedida.Text, peso, cbbUnidadeMedida.Text, 1);
+                double peso = Double.Parse(txtPeso.Text);              
+                int resp = cadastrarProdutos(Regex.Replace(txtDescricao.Text, @"\s+", " ").Trim().ToUpper(), peso, cbbUnidadeMedida.Text, 1);
 
                 if (resp.Equals(1))
                 {

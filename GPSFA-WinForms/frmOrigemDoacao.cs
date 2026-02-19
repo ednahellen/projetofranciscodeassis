@@ -274,7 +274,7 @@ namespace GPSFA_WinForms
         public int cadastrarFornecedores(string nome, string cpf, string cnpj, string cep, string rua, string numero, string complemento, string bairro, string cidade, string estado, string telCel, string referencia)
         {
             MySqlCommand comm = new MySqlCommand();
-            comm.CommandText = "INSERT INTO tborigemdoacao(nome, cpf, cnpj, cep, rua, numero, complemento, bairro, cidade, estado, telCel, referencia)VALUES(@nome, @cpf, @cnpj, @cep, @rua, @numero, @complemento, @bairro, @cidade, @estado, @telCel, @referencia);";
+            comm.CommandText = "INSERT INTO TBOrigemDoacao(nome, cpf, cnpj, cep, rua, numero, complemento, bairro, cidade, estado, telCel, referencia)VALUES(@nome, @cpf, @cnpj, @cep, @rua, @numero, @complemento, @bairro, @cidade, @estado, @telCel, @referencia);";
             comm.CommandType = CommandType.Text;
 
             comm.Parameters.Clear();
