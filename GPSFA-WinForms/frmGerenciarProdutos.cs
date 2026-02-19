@@ -67,7 +67,10 @@ namespace GPSFA_WinForms
         private void carregarOrigemCbb()
         {
             MySqlCommand comm = new MySqlCommand();
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5618a08e548db1543f9f68d47853e599ff11c352
             comm.CommandText = "SELECT * FROM TBOrigemDoacao ORDER BY nome ASC;";
 
             comm.CommandType = CommandType.Text;
