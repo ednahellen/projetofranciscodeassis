@@ -1,10 +1,14 @@
 ﻿using CpfLibrary;
+using DocumentFormat.OpenXml.Drawing;
+using GPSFA_WinForms.classes;
 using MySql.Data.MySqlClient;
+using Mysqlx.Crud;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Entity;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http;
@@ -15,7 +19,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GPSFA_WinForms.classes;
+using static ClosedXML.Excel.XLPredefinedFormat;
 
 
 namespace GPSFA_WinForms
@@ -70,14 +74,15 @@ namespace GPSFA_WinForms
         bool isVoluntarioActive; // Estado do voluntário
         bool usuarioEncontrado; // Guarda globalmente se há usuário associado ao voluntário 
         bool isUsuarioActive; // Estado do usuário do voluntário// String para salvar o estado selecionado - para evitar enviar valor nulo na requisição para o banco
-        string estadoSelected;
 
-            
+        string estadoSelected, cpfFormated;
 
 
-//    -----    Métodos para ações CRUD e queries do banco de dados
-// Busca os dados de um voluntário através do código - para busca de dados exata
-private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
+
+        //    -----    Métodos para ações CRUD e queries do banco de dados
+        
+        // Busca os dados de um voluntário através do código - para busca de dados exata
+        private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
                 {
                     MySqlCommand comm = new MySqlCommand();
                     comm.CommandText = $"SELECT * FROM tbVoluntarios WHERE codVol = @codVol;";
@@ -99,13 +104,14 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
 
                         txtNomeVoluntario.Text = DR.GetString(1);
                         mskTelefone.Text = DR.GetString(2);
-                        mskCpf.Text = DR.GetString(3);
                         mskCep.Text = DR.GetString(4);
                         txtRua.Text = DR.GetString(5);
                         txtNumero.Text = DR.GetString(6);
                         txtComplemento.Text = DR.GetString(7);
                         txtBairro.Text = DR.GetString(8);
                         txtCidade.Text = DR.GetString(9);
+                        mskCpf.Text = DR.GetValue(3).ToString();
+
                         SelecionarEstadoPorUF(DR.GetString(10));
                     }
 
@@ -203,31 +209,32 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
             return resp;
         }
         
-        // Busca o código do voluntário através do CPF
-        private void buscarCodVolPorCPF(string volCpf)
-        {
-            MySqlCommand comm = new MySqlCommand();
-            comm.CommandText = $"SELECT codVol FROM tbVoluntarios WHERE cpf = @volCpf;";
+        // Busca o código do voluntário através do CPF - Método desabilitado
+        //private void buscarCodVolPorCPF(string volCpf)
+        //{
+        //    MySqlCommand comm = new MySqlCommand();
+        //    comm.CommandText = $"SELECT codVol FROM tbVoluntarios WHERE cpf = @volCpf;";
 
-            comm.CommandType = CommandType.Text;
-            comm.Parameters.Clear();
+        //    comm.CommandType = CommandType.Text;
+        //    comm.Parameters.Clear();
 
-            comm.Parameters.Add("@volCpf", MySqlDbType.VarChar).Value = volCpf;
+        //    comm.Parameters.Add("@volCpf", MySqlDbType.VarChar).Value = volCpf;
 
-            comm.Connection = DataBaseConnection.OpenConnection();
+        //    comm.Connection = DataBaseConnection.OpenConnection();
 
-            MySqlDataReader DR;
-            DR = comm.ExecuteReader();
+        //    MySqlDataReader DR;
+        //    DR = comm.ExecuteReader();
 
-            while (DR.Read())
-            {
-                codVolSelected = DR.GetInt32(0);
-            }
-        }
+        //    while (DR.Read())
+        //    {
+        //        codVolSelected = DR.GetInt32(0);
+        //    }
+        //}
 
-        // Cria um novo registro de voluntário na tabela de voluntários
+        // Cria um novo registro de voluntário na tabela de voluntários e retorna o seu ID
         private int cadastrarVoluntario(string nome, string telCel, string cpf, string cep, string rua, string numero, string complemento, string bairro, string cidade, string estado)
         {
+            int resp;
             MySqlCommand comm = new MySqlCommand();
             comm.CommandText = "INSERT INTO tbVoluntarios(nome,telCel,cpf,cep,rua,numero,complemento,bairro,cidade,estado)VALUES(@nome,@telCel,@cpf,@cep,@rua,@numero,@complemento,@bairro,@cidade,@estado);";
             comm.CommandType = CommandType.Text;
@@ -246,23 +253,28 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
 
             comm.Connection = DataBaseConnection.OpenConnection();
 
+
             try
             {
                 comm.ExecuteNonQuery();
 
                 // ✅ ID do voluntário recém-criado
-                return (int)comm.LastInsertedId;
+
+                DataBaseConnection.CloseConnection();
+                return resp = (int)comm.LastInsertedId;
             }
             catch (MySqlException ex) when (ex.Number == 1062)
             {
                 // 1062 = Duplicate entry
                 MessageBox.Show(
-                    "Já existe um voluntário cadastrado com esse CPF.",
+                    $"Erro ao cadastrar voluntário! Error:\n\n{ex}",
                     "Mensagem do sistema",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning
                 );
-                return -1;
+                DataBaseConnection.CloseConnection();
+
+                return resp = -1;
             }
         }
 
@@ -379,7 +391,7 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
         private int excluirDadosEdesativarVoluntario(int codVol)
         {
             MySqlCommand comm = new MySqlCommand();
-            comm.CommandText = "UPDATE tbVoluntarios SET  telCel = '', cpf = '', cep = '', rua = '', numero = '', complemento  = '', bairro = '', cidade = '', estado = '', ativo = FALSE WHERE codVol = @codVol;";
+            comm.CommandText = "UPDATE tbVoluntarios SET  telCel = '', cpf = NULL, cep = '', rua = '', numero = '', complemento  = '', bairro = '', cidade = '', estado = '', ativo = FALSE WHERE codVol = @codVol;";
             
             comm.CommandType = CommandType.Text;
 
@@ -640,6 +652,15 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
                 estadoSelected = cbbEstado.SelectedItem.ToString();
             }
 
+            if (mskCpf.Text.Equals(""))
+            {
+                cpfFormated = null;
+            }
+            else
+            {
+                 cpfFormated = mskCpf.Text;
+            }
+
             //    -----    Primeira etapa de validações -> dados de voluntário
             // Valida se algum dos campos de voluntário está vazio
             if (txtNomeVoluntario.Text.Equals("")) // Falta adicionar mais validações
@@ -687,7 +708,7 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
                         else
                         {
                             // Faz a criação de registro na tabela de voluntários com os dados da janela
-                            int respCodVol = cadastrarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, mskCpf.Text, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, estadoSelected);
+                            int respCodVol = cadastrarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, cpfFormated, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, estadoSelected);
 
                             // Se houver sucesso na criação do registro retorna mensagem de sucesso
                             if (respCodVol > 0)
@@ -796,7 +817,7 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
                                     else
                                     {
                                         // realiza o cadastro do voluntário e usuário - mas com o usuário desativado
-                                        int respCodVol = cadastrarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, mskCpf.Text, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, cbbEstado.SelectedItem.ToString());
+                                        int respCodVol = cadastrarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, cpfFormated, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, estadoSelected);
 
                                         // Retorno se o cadastro de voluntário foi bem sucedido
                                         if (respCodVol > 0)
@@ -903,13 +924,14 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
                                 else
                                 {
                                     // Realiza a criação de Voluntário no banco
-                                    int volResp = cadastrarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, mskCpf.Text, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, estadoSelected);
+                                    int respCodVol = cadastrarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, cpfFormated, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, estadoSelected);
 
                                     // Se a criação do voluntário for bem sucedida
-                                    if (volResp == 1)
+                                    if (respCodVol > 0)
                                     {
+                                        codVolSelected = respCodVol;
                                         // Faz a busca do código do voluntário criado utilizando o cpf
-                                        buscarCodVolPorCPF(mskCpf.Text);
+                                        //buscarCodVolPorCPF(mskCpf.Text);
 
                                         // Realiza a criação do usuário a partir do código do voluntário capturado
                                         int userResp = cadastrarUsuario(isUsuarioActive, txtUsuario.Text, txtSenha.Text, cbbTipoDeAcesso.SelectedItem.ToString(), codVolSelected);
@@ -985,6 +1007,15 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
                 estadoSelected = cbbEstado.SelectedItem.ToString();
             }
 
+            if (mskCpf.Text.Equals(""))
+            {
+                cpfFormated = null;
+            }
+            else
+            {
+                cpfFormated = mskCpf.Text;
+            }
+
             //    -----    Primeira etapa de validações -> dados de voluntário
             // Valida se algum dos campos de voluntário está vazio
             if (txtNomeVoluntario.Text.Equals("")) // Falta adicionar mais validações
@@ -1011,7 +1042,7 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
                     if (resultado == DialogResult.Yes)
                     {
                         // Faz a edição dos dados na linha referente ao voluntário
-                        int updtVolResp = editarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, mskCpf.Text, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, cbbEstado.SelectedItem.ToString(), codVolSelected);
+                        int updtVolResp = editarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, cpfFormated, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, estadoSelected, codVolSelected);
 
                         // Se houver sucesso na edição do registro retorna mensagem de sucesso
                         if (updtVolResp.Equals(1))
@@ -1101,7 +1132,7 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
                                 else
                                 {
                                     // realiza a edição dos dados do voluntário
-                                    int updtVolResp = editarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, mskCpf.Text, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, cbbEstado.SelectedItem.ToString(), codVolSelected);
+                                    int updtVolResp = editarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, cpfFormated, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, estadoSelected, codVolSelected);
 
                                     // Retorno se a edição de dados foi bem sucedido
                                     if (updtVolResp == 1)
@@ -1188,13 +1219,13 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
                             else
                             {
                                 // Realiza a criação de Voluntário no banco
-                                int updtVolResp = editarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, mskCpf.Text, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, estadoSelected, codVolSelected);
+                                int updtVolResp = editarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, cpfFormated, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, estadoSelected, codVolSelected);
 
                                 // Se a criação do voluntário for bem sucedida
                                 if (updtVolResp == 1)
                                 {
                                     // Faz a busca do código do voluntário criado utilizando o cpf
-                                    buscarCodVolPorCPF(mskCpf.Text);
+                                    //buscarCodVolPorCPF(mskCpf.Text);
 
                                     // Realiza a criação do usuário a partir do código do voluntário capturado
                                     int userResp = cadastrarUsuario(isUsuarioActive, txtUsuario.Text, txtSenha.Text, cbbTipoDeAcesso.SelectedItem.ToString(), codVolSelected);
@@ -1301,7 +1332,7 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
                                 else
                                 {
                                     // realiza a edição dos dados do voluntário
-                                    int updtVolResp = editarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, mskCpf.Text, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, estadoSelected, codVolSelected);
+                                    int updtVolResp = editarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, cpfFormated, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, estadoSelected, codVolSelected);
 
                                     // Retorno se a edição de dados foi bem sucedido
                                     if (updtVolResp == 1)
@@ -1388,13 +1419,13 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
                             else
                             {
                                 // Realiza a edição de Voluntário no banco
-                                int updtVolResp = editarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, mskCpf.Text, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, estadoSelected, codVolSelected);
+                                int updtVolResp = editarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, cpfFormated, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, estadoSelected, codVolSelected);
 
                                 // Se a edição do voluntário for bem sucedida
                                 if (updtVolResp == 1)
                                 {
                                     // Faz a busca do código do voluntário criado utilizando o cpf
-                                    buscarCodVolPorCPF(mskCpf.Text);
+                                    //buscarCodVolPorCPF(mskCpf.Text);
 
                                     // Realiza a edição do usuário a partir do código do voluntário capturado
                                     int updtUserResp = editarUsuario(isUsuarioActive, txtUsuario.Text, txtSenha.Text, cbbTipoDeAcesso.SelectedItem.ToString(), codVolSelected);
@@ -1478,7 +1509,7 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
                             else
                             {
                                 // realiza a edição dos dados do voluntário
-                                int updtVolResp = editarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, mskCpf.Text, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, cbbEstado.SelectedItem.ToString(), codVolSelected);
+                                int updtVolResp = editarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, cpfFormated, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, estadoSelected, codVolSelected);
 
                                 // Retorno se a edição de dados foi bem sucedido
                                 if (updtVolResp == 1)
@@ -1565,13 +1596,13 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
                         else
                         {
                             // Realiza a edição de Voluntário no banco
-                            int updtVolResp = editarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, mskCpf.Text, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, cbbEstado.SelectedItem.ToString(), codVolSelected);
+                            int updtVolResp = editarVoluntario(txtNomeVoluntario.Text, mskTelefone.Text, cpfFormated, mskCep.Text, txtRua.Text, txtNumero.Text, txtComplemento.Text, txtBairro.Text, txtCidade.Text, estadoSelected, codVolSelected);
 
                             // Se a edição do voluntário for bem sucedida
                             if (updtVolResp == 1)
                             {
                                 // Faz a busca do código do voluntário criado utilizando o cpf
-                                buscarCodVolPorCPF(mskCpf.Text);
+                                //buscarCodVolPorCPF(mskCpf.Text);
 
                                 // Realiza a edição do usuário a partir do código do voluntário capturado
                                 int updtUserResp = editarUsuario(isUsuarioActive, txtUsuario.Text, txtSenha.Text, cbbTipoDeAcesso.SelectedItem.ToString(), codVolSelected);
@@ -1648,6 +1679,24 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
         // Aciona o método de exclusão e limpeza de dados com base na instância dos dados de um voluntário
         private void btnExcluir_Click(object sender, EventArgs e)
         {
+            if (cbbEstado.SelectedItem == null)
+            {
+                estadoSelected = "";
+            }
+            else
+            {
+                estadoSelected = cbbEstado.SelectedItem.ToString();
+            }
+
+            if (mskCpf.Text.Equals(""))
+            {
+                cpfFormated = null;
+            }
+            else
+            {
+                cpfFormated = mskCpf.Text;
+            }
+
             if (codVolSelected < 1)
             {
                 MessageBox.Show("Não há Voluntário selecionado para exclusão!", "Mensagem do sistema",
@@ -1658,7 +1707,7 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
 
             else
             {
-                DialogResult resultado = MessageBox.Show("Deseja realmente apagar os dados do voluntário?\n\nObs: Esta ação vai apenas apagar dados sensíveis e desativar o voluntário e seu uusário", "Mensagem do sistema",
+                DialogResult resultado = MessageBox.Show("Deseja realmente apagar os dados do voluntário?\n\nObs: Esta ação vai apenas apagar dados sensíveis e desativar o voluntário e seu uuário", "Mensagem do sistema",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question);
 
@@ -1670,44 +1719,62 @@ private void buscarDadosDoVoluntarioPeloCodigo(int codVoluntario)
 
                         if (apagarDadosVolResp == 1)
                         {
-                            int desativarUsuarioResp = desativarUsuario(codVolSelected);
-
-                            if (desativarUsuarioResp == 1)
+                            if (usuarioEncontrado)
                             {
-                                MessageBox.Show("Dados do voluntário apagados com sucesso e usuário desativado", "Mensagem do sistema",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Information);
-
-                                if (codVolSelected == codUsuLogado)
+                                if (!isUsuarioActive)
                                 {
-                                    Application.Exit();
+                                    MessageBox.Show("Dados do voluntário apagados com sucesso e usuário desativado!", "Mensagem do sistema",
+                                        MessageBoxButtons.OK,
+                                        MessageBoxIcon.Information);
                                 }
                                 else
                                 {
-                                    limparCamposVoluntario();
-                                    desabilitarCamposVoluntario();
-                                    limparCamposUsuario();
-                                    desabilitarCamposUsuario();
-                                    desativarBotoes();
-                                    btnNovo.Enabled = true;
-                                    btnNovo.Focus();
+                                    int desativarUsuarioResp = desativarUsuario(codVolSelected);
+
+                                    if (desativarUsuarioResp == 1)
+                                    {
+                                        MessageBox.Show("Dados do voluntário apagados com sucesso e usuário desativado!", "Mensagem do sistema",
+                                            MessageBoxButtons.OK,
+                                            MessageBoxIcon.Information);
+
+                                        if (codVolSelected == codUsuLogado)
+                                        {
+                                            Application.Exit();
+                                        }
+                                        else
+                                        {
+                                            limparCamposVoluntario();
+                                            desabilitarCamposVoluntario();
+                                            limparCamposUsuario();
+                                            desabilitarCamposUsuario();
+                                            desativarBotoes();
+                                            btnNovo.Enabled = true;
+                                            btnNovo.Focus();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // Se houver alguma falha na atualização do registro é retornada mensagem de erro
+                                        MessageBox.Show("Erro ao desativar usuário!", "Mensagem do sistema",
+                                            MessageBoxButtons.OK,
+                                            MessageBoxIcon.Error,
+                                            MessageBoxDefaultButton.Button1);
+
+                                        limparCamposVoluntario();
+                                        desabilitarCamposVoluntario();
+                                        limparCamposUsuario();
+                                        desabilitarCamposUsuario();
+                                        desativarBotoes();
+                                        btnNovo.Enabled = true;
+                                        btnNovo.Focus();
+                                    }
                                 }
                             }
                             else
                             {
-                                // Se houver alguma falha na atualização do registro é retornada mensagem de erro
-                                MessageBox.Show("Erro ao desativar usuário!", "Mensagem do sistema",
+                                MessageBox.Show("Voluntário desativado e dados apagados!", "Mensagem do sistema",
                                     MessageBoxButtons.OK,
-                                    MessageBoxIcon.Error,
-                                    MessageBoxDefaultButton.Button1);
-
-                                limparCamposVoluntario();
-                                desabilitarCamposVoluntario();
-                                limparCamposUsuario();
-                                desabilitarCamposUsuario();
-                                desativarBotoes();
-                                btnNovo.Enabled = true;
-                                btnNovo.Focus();
+                                    MessageBoxIcon.Information);
                             }
                         }
                         else

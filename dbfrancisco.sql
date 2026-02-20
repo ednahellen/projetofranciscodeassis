@@ -17,7 +17,7 @@ CREATE TABLE tbVoluntarios(
 codVol INT NOT NULL AUTO_INCREMENT, -- 0
 nome VARCHAR(100) NOT NULL, -- 1
 telCel VARCHAR(15), -- 2
-cpf VARCHAR(14) UNIQUE,
+cpf VARCHAR(14) NULL UNIQUE,
 cep VARCHAR(9),
 rua VARCHAR(100),
 numero VARCHAR(5),
@@ -180,9 +180,9 @@ FOREIGN KEY(codCli) REFERENCES tbClientes(codCli)
 INSERT INTO tbVoluntarios
 (nome, telCel, cpf, cep, rua, numero, complemento, bairro, cidade, estado)
 VALUES
-('Admin','0000000-0000','000.000.000-00','00000-000','Grupo Francisco','000','','Jd.Francisco','São Paulo','SP'),
-('João Silva','1191111-1111','111.111.111-01','01001-000','Rua A','10','','Centro','São Paulo','SP'),
-('Maria Souza','1192222-2222','111.111.111-02','02002-000','Rua B','20','Apto 1','Bela Vista','São Paulo','SP');
+('Admin','(00)90000-0000','000.000.000-00','00000-000','Grupo Francisco','000','','Jd.Francisco','São Paulo','SP'),
+('João Silva','(11)91111-1111','111.111.111-01','','','','','','',''),
+('Maria Souza','',NULL,'','','','','','','');
 -- INSERT INTO tbVoluntarios
 -- (nome, telCel, cpf, cep, rua, numero, complemento, bairro, cidade, estado, ativo)
 -- VALUES
