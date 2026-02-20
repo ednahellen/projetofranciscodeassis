@@ -640,6 +640,7 @@
             this.Controls.Add(this.pnlCrud);
             this.Controls.Add(this.gpbCamposDoProduto);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "frmVoluntarios";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Grupo Socorrista São Francisco de Assis - Gerenciar Voluntario";

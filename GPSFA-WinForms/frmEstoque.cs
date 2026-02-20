@@ -438,7 +438,7 @@ namespace Projeto_Socorrista
             cbxModoExibicao.SelectedIndex = modoAgrupado ? cbxModoExibicao.SelectedIndex = 1 : cbxModoExibicao.SelectedIndex = 2;
 
             // Botão mostra para onde vai (inverter)
-            btnAplicarModoExibicao.Text = modoAgrupado ? "Modo Detalhado" : "Modo Agrupado";
+            btnAplicarModo.Text = modoAgrupado ? "Modo Detalhado" : "Modo Agrupado";
 
             carregaDados();
         }
@@ -523,6 +523,57 @@ namespace Projeto_Socorrista
             }
         }
 
+        private void btnAplicarModo_Click(object sender, EventArgs e)
+        {
+
+            modoAgrupado = !modoAgrupado;
+
+            // Combo mostra o modo atual
+            cbxModoExibicao.SelectedIndex = modoAgrupado ? cbxModoExibicao.SelectedIndex = 1 : cbxModoExibicao.SelectedIndex = 2;
+
+            // Botão mostra para onde vai (inverter)
+            btnAplicarModo.Text = modoAgrupado ? "Modo Detalhado" : "Modo Agrupado";
+
+            carregaDados();
+        }
+
+        private void btnLimparFiltros_Click_1(object sender, EventArgs e)
+        {
+
+            bool isClean = (cbxCategoria.SelectedIndex == 0 || cbxCategoria.SelectedIndex == -1)
+                           && (cbxStatus.SelectedIndex == 0 || cbxStatus.SelectedIndex == -1)
+                           && !dtpDataValidade.Checked
+                           && string.IsNullOrWhiteSpace(txtNomeOrCod.Text);
+
+            if (isClean)
+            {
+                MessageBox.Show("Não há filtros para limpar", "ATENÇÃO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // limpar
+            cbxCategoria.SelectedIndex = 0;
+            cbxStatus.SelectedIndex = 0;
+            dtpDataValidade.Value = DateTime.Today;
+            dtpDataValidade.Checked = false;
+            txtNomeOrCod.Clear();
+
+            // reset globals
+            busca = "";
+            unidadeEscolhida = "";
+            status_validade = "";
+            dataValidade = null;
+
+            carregaDados();
+        }
+
+        private void btnAplicarFiltros_Click_1(object sender, EventArgs e)
+        {
+            AplicarFiltros();
+
+        }
     }
 }
+
+
 
