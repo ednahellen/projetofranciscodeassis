@@ -3,12 +3,14 @@
 DROP DATABASE dbfrancisco;
 
 -- CRIANDO O BANCO DE DADOS
-
 CREATE DATABASE dbfrancisco;
 
 -- ENTRANDO NO BANCO DE DADOS
-
 USE dbfrancisco;
+
+ALTER DATABASE dbfrancisco 
+CHARACTER SET utf8mb4 
+COLLATE utf8mb4_general_ci;
 
 -- CRIANDO A TABELA DE VOLUNTÁRIOS
 
@@ -38,7 +40,7 @@ codUsu INT NOT NULL AUTO_INCREMENT,
 usuario VARCHAR(100) NOT NULL UNIQUE,
 senha VARCHAR(100) NOT NULL,
 tipo ENUM('ADMIN','USER') DEFAULT 'USER',
-salt VARCHAR(64) NOT NULL,
+-- salt VARCHAR(64) NOT NULL,
 ativo BOOLEAN DEFAULT TRUE,
 codVol INT NOT NULL,
 PRIMARY KEY(codUsu),
@@ -193,9 +195,9 @@ MODIFY peso DECIMAL(10,3) NOT NULL;
 INSERT INTO tbVoluntarios
 (nome, telCel, cpf, cep, rua, numero, complemento, bairro, cidade, estado)
 VALUES
-('Admin','(00)90000-0000','000.000.000-00','00000-000','Grupo Francisco','000','','Jd.Francisco','São Paulo','SP'),
-('João Silva','(11)91111-1111','111.111.111-01','','','','','','',''),
-('Maria Souza','',NULL,'','','','','','','');
+('Admin','(11)90000-0000','000.000.000-00','00000-000','Grupo Francisco','000','','Jd.Francisco','São Paulo','SP');
+-- ('João Silva','(11)91111-1111','111.111.111-01','','','','','','','');
+-- ('Maria Souza','',NULL,'','','','','','','');
 -- INSERT INTO tbVoluntarios
 -- (nome, telCel, cpf, cep, rua, numero, complemento, bairro, cidade, estado, ativo)
 -- VALUES
@@ -221,11 +223,11 @@ VALUES
 
 
 INSERT INTO tbUsuarios
-(usuario, senha, tipo, salt, codVol)
+(usuario, senha, tipo, codVol)
 VALUES
-('admin','123','ADMIN','salt01',1),
-('joao.silva','123','USER','salt02',2),
-('maria.souza','123','USER','salt03',3);
+('admin','123','ADMIN',1);
+-- ('joao.silva','123','USER',2);
+-- ('maria.souza','123','USER',3);
 -- INSERT INTO tbUsuarios
 -- (usuario, senha, tipo, salt, codVol, ativo)
 -- VALUES

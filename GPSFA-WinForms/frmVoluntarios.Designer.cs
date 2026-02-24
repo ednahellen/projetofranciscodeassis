@@ -154,13 +154,14 @@
             // 
             // cbbTipoDeAcesso
             // 
+            this.cbbTipoDeAcesso.Font = new System.Drawing.Font("Microsoft YaHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbbTipoDeAcesso.FormattingEnabled = true;
             this.cbbTipoDeAcesso.Items.AddRange(new object[] {
             "USER",
             "ADMIN"});
             this.cbbTipoDeAcesso.Location = new System.Drawing.Point(496, 393);
             this.cbbTipoDeAcesso.Name = "cbbTipoDeAcesso";
-            this.cbbTipoDeAcesso.Size = new System.Drawing.Size(148, 35);
+            this.cbbTipoDeAcesso.Size = new System.Drawing.Size(148, 39);
             this.cbbTipoDeAcesso.TabIndex = 15;
             // 
             // label3
@@ -181,9 +182,9 @@
             this.label4.ForeColor = System.Drawing.Color.Black;
             this.label4.Location = new System.Drawing.Point(933, 361);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(208, 29);
+            this.label4.Size = new System.Drawing.Size(204, 29);
             this.label4.TabIndex = 92;
-            this.label4.Text = "Confirmar Senha";
+            this.label4.Text = "Confirmar senha";
             // 
             // txtConfirmaSenha
             // 
@@ -210,7 +211,7 @@
             // txtSenha
             // 
             this.txtSenha.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtSenha.Font = new System.Drawing.Font("Wingdings", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.txtSenha.Font = new System.Drawing.Font("Wingdings", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.txtSenha.Location = new System.Drawing.Point(696, 393);
             this.txtSenha.MaxLength = 100;
             this.txtSenha.Name = "txtSenha";
@@ -474,9 +475,9 @@
             this.lblNome.ForeColor = System.Drawing.Color.Black;
             this.lblNome.Location = new System.Drawing.Point(25, 41);
             this.lblNome.Name = "lblNome";
-            this.lblNome.Size = new System.Drawing.Size(245, 29);
+            this.lblNome.Size = new System.Drawing.Size(241, 29);
             this.lblNome.TabIndex = 1;
-            this.lblNome.Text = "Nome do Voluntário";
+            this.lblNome.Text = "Nome do voluntário";
             // 
             // txtNomeVoluntario
             // 

@@ -284,14 +284,14 @@ namespace GPSFA_WinForms
         private int cadastrarUsuario(bool isActive, string usuario, string senha, string tipoAcesso, int codVol)
         {
             MySqlCommand comm = new MySqlCommand();
-            comm.CommandText = "INSERT INTO tbUsuarios(ativo, usuario, senha, tipo, salt, codVol)VALUES(@isActive, @usuario, @senha, @tipo, @salt, @codVol);";
+            comm.CommandText = "INSERT INTO tbUsuarios(ativo, usuario, senha, tipo, codVol)VALUES(@isActive, @usuario, @senha, @tipo, @codVol);";
             comm.CommandType = CommandType.Text;
 
             comm.Parameters.Add("@isActive", MySqlDbType.Byte).Value = isActive;
             comm.Parameters.Add("@usuario", MySqlDbType.VarChar, 20).Value = usuario;
             comm.Parameters.Add("@senha", MySqlDbType.VarChar, 20).Value = senha;
             comm.Parameters.Add("@tipo", MySqlDbType.VarChar, 20).Value = tipoAcesso;
-            comm.Parameters.Add("@salt", MySqlDbType.VarChar, 20).Value = "salt-teste";
+            //comm.Parameters.Add("@salt", MySqlDbType.VarChar, 20).Value = "salt-teste";
             comm.Parameters.Add("@codVol", MySqlDbType.Int32).Value = codVol;
 
             comm.Connection = DataBaseConnection.OpenConnection();
@@ -553,6 +553,33 @@ namespace GPSFA_WinForms
         }
 
 
+        // valida se a senha é igual nas textboxes "senha" e "confirmar senha" e se contém 8 caracteres
+        public int validarSenha()
+        {
+            int resp;
+
+            if (!txtConfirmaSenha.Text.Equals(txtSenha.Text))
+            {
+                MessageBox.Show("As senhas devem ser iguais!", "Mensagem do sistema",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button1);
+                return resp = 0;
+            }
+            else if ((txtSenha.Text.Length < 8 && txtConfirmaSenha.Text.Length < 8) || (txtSenha.Text.Length < 8 || txtConfirmaSenha.Text.Length < 8))
+            {
+                MessageBox.Show("A senha deve ter no mínimo 8 caracteres!", "Mensagem do sistema",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1);
+                return resp = 0;
+            }
+            else
+            {
+                return resp = 1;
+            }
+        }
+
         //    -----    Métodos para integrações com APIs externas
         // Integração com API do ViaCep para buscar endereço através do CEP
         private async void buscarEnderecoPorCep()
@@ -807,12 +834,9 @@ namespace GPSFA_WinForms
                                 else
                                 {
                                     // Se o voluntário não tiver registro no banco, o sistema segue validando se as senhas são iguais
-                                    if (!txtConfirmaSenha.Text.Equals(txtSenha.Text))
+                                    if (validarSenha() == 0)
                                     {
-                                        MessageBox.Show("As senhas devem ser iguais!", "Mensagem do sistema",
-                                            MessageBoxButtons.OK,
-                                            MessageBoxIcon.Warning,
-                                            MessageBoxDefaultButton.Button1);
+                                        return;
                                     }
                                     else
                                     {
@@ -827,7 +851,7 @@ namespace GPSFA_WinForms
                                             //buscarCodVolPorCPF(mskCpf.Text);
 
                                             // Faz a criação do usuário com os dados dos campos e código do voluntário registrado salvo globalmente
-                                            int userResp = cadastrarUsuario(isUsuarioActive, txtUsuario.Text, txtSenha.Text, cbbTipoDeAcesso.SelectedItem.ToString(), codVolSelected);
+                                            int userResp = cadastrarUsuario(isUsuarioActive, txtUsuario.Text.ToLower(), txtConfirmaSenha.Text, cbbTipoDeAcesso.SelectedItem.ToString(), codVolSelected);
 
                                             // Retorno se a criação de usuário for bem sucedida
                                             if (userResp == 1)
@@ -914,12 +938,9 @@ namespace GPSFA_WinForms
                             else
                             {
                                 // Valida se as senhas são iguais
-                                if (!txtConfirmaSenha.Text.Equals(txtSenha.Text))
+                                if (validarSenha() == 0)
                                 {
-                                    MessageBox.Show("As senhas devem ser iguais!", "Mensagem do sistema",
-                                        MessageBoxButtons.OK,
-                                        MessageBoxIcon.Warning,
-                                        MessageBoxDefaultButton.Button1);
+                                    return;
                                 }
                                 else
                                 {
@@ -934,7 +955,7 @@ namespace GPSFA_WinForms
                                         //buscarCodVolPorCPF(mskCpf.Text);
 
                                         // Realiza a criação do usuário a partir do código do voluntário capturado
-                                        int userResp = cadastrarUsuario(isUsuarioActive, txtUsuario.Text, txtSenha.Text, cbbTipoDeAcesso.SelectedItem.ToString(), codVolSelected);
+                                        int userResp = cadastrarUsuario(isUsuarioActive, txtUsuario.Text.ToLower(), txtConfirmaSenha.Text, cbbTipoDeAcesso.SelectedItem.ToString(), codVolSelected);
 
                                         // Se a criação do usuário for bem sucedida - é criado voluntário + usuário ativo
                                         if (userResp == 1)
@@ -1122,12 +1143,9 @@ namespace GPSFA_WinForms
                             if (resultado == DialogResult.Yes)
                             {
                                 // O sistema valida se as senhas são iguais
-                                if (!txtConfirmaSenha.Text.Equals(txtSenha.Text))
+                                if (validarSenha() == 0)
                                 {
-                                    MessageBox.Show("As senhas devem ser iguais!", "Mensagem do sistema",
-                                        MessageBoxButtons.OK,
-                                        MessageBoxIcon.Warning,
-                                        MessageBoxDefaultButton.Button1);
+                                    return;
                                 }
                                 else
                                 {
@@ -1138,7 +1156,7 @@ namespace GPSFA_WinForms
                                     if (updtVolResp == 1)
                                     {
                                         // Faz a criação do usuário com os dados dos campos e código do voluntário registrado salvo globalmente
-                                        int userResp = cadastrarUsuario(isUsuarioActive, txtUsuario.Text, txtSenha.Text, cbbTipoDeAcesso.SelectedItem.ToString(), codVolSelected);
+                                        int userResp = cadastrarUsuario(isUsuarioActive, txtUsuario.Text.ToLower(), txtConfirmaSenha.Text, cbbTipoDeAcesso.SelectedItem.ToString(), codVolSelected);
 
                                         // Retorno se a criação de usuário for bem sucedida
                                         if (userResp == 1)
@@ -1209,12 +1227,9 @@ namespace GPSFA_WinForms
                         {
 
                             // Valida se as senhas são iguais
-                            if (!txtConfirmaSenha.Text.Equals(txtSenha.Text))
+                            if (validarSenha() == 0)
                             {
-                                MessageBox.Show("As senhas devem ser iguais!", "Mensagem do sistema",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Warning,
-                                    MessageBoxDefaultButton.Button1);
+                                return;
                             }
                             else
                             {
@@ -1228,7 +1243,7 @@ namespace GPSFA_WinForms
                                     //buscarCodVolPorCPF(mskCpf.Text);
 
                                     // Realiza a criação do usuário a partir do código do voluntário capturado
-                                    int userResp = cadastrarUsuario(isUsuarioActive, txtUsuario.Text, txtSenha.Text, cbbTipoDeAcesso.SelectedItem.ToString(), codVolSelected);
+                                    int userResp = cadastrarUsuario(isUsuarioActive, txtUsuario.Text.ToLower(), txtConfirmaSenha.Text, cbbTipoDeAcesso.SelectedItem.ToString(), codVolSelected);
 
                                     // Se a criação do usuário for bem sucedida - é editado voluntário e criado um usuário ativo
                                     if (userResp == 1)
@@ -1322,12 +1337,9 @@ namespace GPSFA_WinForms
                             if (resultado == DialogResult.Yes)
                             {
                                 // O sistema valida se as senhas são iguais
-                                if (!txtConfirmaSenha.Text.Equals(txtSenha.Text))
+                                if (validarSenha() == 0)
                                 {
-                                    MessageBox.Show("As senhas devem ser iguais!", "Mensagem do sistema",
-                                        MessageBoxButtons.OK,
-                                        MessageBoxIcon.Warning,
-                                        MessageBoxDefaultButton.Button1);
+                                    return;
                                 }
                                 else
                                 {
@@ -1338,7 +1350,7 @@ namespace GPSFA_WinForms
                                     if (updtVolResp == 1)
                                     {
                                         // Faz a edição do usuário com os dados dos campos e código do voluntário registrado salvo globalmente
-                                        int updtUserResp = editarUsuario(isUsuarioActive, txtUsuario.Text, txtSenha.Text, cbbTipoDeAcesso.SelectedItem.ToString(), codVolSelected);
+                                        int updtUserResp = editarUsuario(isUsuarioActive, txtUsuario.Text.ToLower(), txtSenha.Text, cbbTipoDeAcesso.SelectedItem.ToString(), codVolSelected);
 
                                         // Retorno se a edição de usuário for bem sucedida
                                         if (updtUserResp == 1)
@@ -1409,12 +1421,9 @@ namespace GPSFA_WinForms
                         {
 
                             // Valida se as senhas são iguais
-                            if (!txtConfirmaSenha.Text.Equals(txtSenha.Text))
+                            if (validarSenha() == 0)
                             {
-                                MessageBox.Show("As senhas devem ser iguais!", "Mensagem do sistema",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Warning,
-                                    MessageBoxDefaultButton.Button1);
+                                return;
                             }
                             else
                             {
@@ -1428,7 +1437,7 @@ namespace GPSFA_WinForms
                                     //buscarCodVolPorCPF(mskCpf.Text);
 
                                     // Realiza a edição do usuário a partir do código do voluntário capturado
-                                    int updtUserResp = editarUsuario(isUsuarioActive, txtUsuario.Text, txtSenha.Text, cbbTipoDeAcesso.SelectedItem.ToString(), codVolSelected);
+                                    int updtUserResp = editarUsuario(isUsuarioActive, txtUsuario.Text.ToLower(), txtSenha.Text, cbbTipoDeAcesso.SelectedItem.ToString(), codVolSelected);
 
                                     // Se a edição do usuário for bem sucedida retorna mensagem de sucesso
                                     if (updtUserResp == 1)
@@ -1499,12 +1508,9 @@ namespace GPSFA_WinForms
                         if (resultado == DialogResult.Yes)
                         {
                             // O sistema valida se as senhas são iguais
-                            if (!txtConfirmaSenha.Text.Equals(txtSenha.Text))
+                            if (validarSenha() == 0)
                             {
-                                MessageBox.Show("As senhas devem ser iguais!", "Mensagem do sistema",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Warning,
-                                    MessageBoxDefaultButton.Button1);
+                                return;
                             }
                             else
                             {
@@ -1515,7 +1521,7 @@ namespace GPSFA_WinForms
                                 if (updtVolResp == 1)
                                 {
                                     // Faz a edição do usuário com os dados dos campos e código do voluntário registrado salvo globalmente
-                                    int updtUserResp = editarUsuario(isUsuarioActive, txtUsuario.Text, txtSenha.Text, cbbTipoDeAcesso.SelectedItem.ToString(), codVolSelected);
+                                    int updtUserResp = editarUsuario(isUsuarioActive, txtUsuario.Text.ToLower(), txtSenha.Text, cbbTipoDeAcesso.SelectedItem.ToString(), codVolSelected);
 
                                     // Retorno se a edição de usuário for bem sucedida
                                     if (updtUserResp == 1)
@@ -1586,12 +1592,9 @@ namespace GPSFA_WinForms
                     {
 
                         // Valida se as senhas são iguais
-                        if (!txtConfirmaSenha.Text.Equals(txtSenha.Text))
+                        if (validarSenha() == 0)
                         {
-                            MessageBox.Show("As senhas devem ser iguais!", "Mensagem do sistema",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Warning,
-                                MessageBoxDefaultButton.Button1);
+                            return;
                         }
                         else
                         {
@@ -1605,7 +1608,7 @@ namespace GPSFA_WinForms
                                 //buscarCodVolPorCPF(mskCpf.Text);
 
                                 // Realiza a edição do usuário a partir do código do voluntário capturado
-                                int updtUserResp = editarUsuario(isUsuarioActive, txtUsuario.Text, txtSenha.Text, cbbTipoDeAcesso.SelectedItem.ToString(), codVolSelected);
+                                int updtUserResp = editarUsuario(isUsuarioActive, txtUsuario.Text.ToLower(), txtSenha.Text, cbbTipoDeAcesso.SelectedItem.ToString(), codVolSelected);
 
                                 // Se a edição do usuário for bem sucedida retorna mensagem de sucesso
                                 if (updtUserResp == 1)

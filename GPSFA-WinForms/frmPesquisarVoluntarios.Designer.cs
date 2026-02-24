@@ -30,13 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPesquisarVoluntarios));
             this.gpbListaVoluntarios = new System.Windows.Forms.GroupBox();
+            this.btnVoltar = new System.Windows.Forms.Button();
             this.btnLimpar = new System.Windows.Forms.Button();
             this.btnPesquisar = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.txtDescricao = new System.Windows.Forms.TextBox();
             this.lblDescricao = new System.Windows.Forms.Label();
             this.dgvVoluntarios = new System.Windows.Forms.DataGridView();
-            this.btnVoltar = new System.Windows.Forms.Button();
             this.gpbListaVoluntarios.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVoluntarios)).BeginInit();
             this.SuspendLayout();
@@ -57,6 +57,21 @@
             this.gpbListaVoluntarios.Size = new System.Drawing.Size(1197, 566);
             this.gpbListaVoluntarios.TabIndex = 0;
             this.gpbListaVoluntarios.TabStop = false;
+            // 
+            // btnVoltar
+            // 
+            this.btnVoltar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnVoltar.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVoltar.Image = ((System.Drawing.Image)(resources.GetObject("btnVoltar.Image")));
+            this.btnVoltar.Location = new System.Drawing.Point(1059, 14);
+            this.btnVoltar.Name = "btnVoltar";
+            this.btnVoltar.Size = new System.Drawing.Size(133, 41);
+            this.btnVoltar.TabIndex = 23;
+            this.btnVoltar.Text = "&Voltar";
+            this.btnVoltar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnVoltar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnVoltar.UseVisualStyleBackColor = true;
+            this.btnVoltar.Click += new System.EventHandler(this.btnVoltar_Click);
             // 
             // btnLimpar
             // 
@@ -132,21 +147,6 @@
             this.dgvVoluntarios.Size = new System.Drawing.Size(1189, 392);
             this.dgvVoluntarios.TabIndex = 6;
             this.dgvVoluntarios.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvVoluntarios_CellContentClick);
-            // 
-            // btnVoltar
-            // 
-            this.btnVoltar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnVoltar.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnVoltar.Image = ((System.Drawing.Image)(resources.GetObject("btnVoltar.Image")));
-            this.btnVoltar.Location = new System.Drawing.Point(1059, 14);
-            this.btnVoltar.Name = "btnVoltar";
-            this.btnVoltar.Size = new System.Drawing.Size(133, 55);
-            this.btnVoltar.TabIndex = 23;
-            this.btnVoltar.Text = "&Voltar";
-            this.btnVoltar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnVoltar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnVoltar.UseVisualStyleBackColor = true;
-            this.btnVoltar.Click += new System.EventHandler(this.btnVoltar_Click);
             // 
             // frmPesquisarVoluntarios
             // 

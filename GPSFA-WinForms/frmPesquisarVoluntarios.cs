@@ -134,7 +134,7 @@ namespace GPSFA_WinForms
             {
                 StringBuilder query = new StringBuilder();
 
-                query.Append("SELECT v.codVol, u.usuario, v.nome, v.cpf, v.telCel, CASE WHEN v.ativo = 1 THEN 'Sim' ELSE 'Não' END AS ativo FROM tbVoluntarios AS v LEFT JOIN tbUsuarios AS u ON u.codVol = v.codVol;");
+                query.Append("SELECT v.codVol AS 'Código', v.nome as 'Nome do voluntário', v.cpf AS 'CPF', v.telCel AS 'Telefone', CASE WHEN v.ativo = 1 THEN 'Sim' ELSE 'Não' END AS 'Voluntário ativo' FROM tbVoluntarios AS v LEFT JOIN tbUsuarios AS u ON u.codVol = v.codVol;");
 
                 MySqlCommand comm = new MySqlCommand();
                 comm.Connection = conexao;
@@ -147,6 +147,7 @@ namespace GPSFA_WinForms
                 dgvVoluntarios.DataSource = tabela;
 
                 dgvVoluntarios.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+
                 DataBaseConnection.CloseConnection();
             }
         }

@@ -134,12 +134,6 @@ namespace GPSFA_WinForms
                 return;
             }
         }
-
-        private void frmLogin_KeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
         private void frmLogin_Load(object sender, EventArgs e)
         {
 

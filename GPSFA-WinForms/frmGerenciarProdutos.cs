@@ -246,7 +246,7 @@ namespace GPSFA_WinForms
         //Botão ação cadastrar
         private void btnCadastrar_Click(object sender, EventArgs e)
         {
-<<<<<<< HEAD
+//<<<<<<< HEAD
             if (dtpDataValidade.Value.Date < DateTime.Today)
             {
                 MessageBox.Show("Data de validade inválida.");
@@ -254,7 +254,7 @@ namespace GPSFA_WinForms
             }
 
             using (var conn = DataBaseConnection.OpenConnection())
-=======
+//=======
            
             //int resp = cadastrarProdutos(cbbDescricao.Text, Convert.ToInt32(txtQuantidade.Text), Convert.ToInt32(txtPeso.Text), cbbUnidadeMedida.Text, txtCodBarras.Text, dtpDataEntrada.Value, dtpDataValidade.Value, dtpDataEntrada.Value, codUsuLogado, codOri, codList);
            
@@ -265,7 +265,7 @@ namespace GPSFA_WinForms
                 return;
             }
             else if (cadastrarProdutos(cbbDescricao.Text, Convert.ToInt32(txtQuantidade.Text), Convert.ToInt32(txtPeso.Text), cbbUnidadeMedida.Text, txtCodBarras.Text, dtpDataEntrada.Value, dtpDataValidade.Value, dtpDataEntrada.Value, codUsuLogado, codOri, codList).Equals(1))
->>>>>>> 8f8a8eddb33d53196da667df434a240a8808af77
+//>>>>>>> 8f8a8eddb33d53196da667df434a240a8808af77
             {
                 // Verifica se já existe produto
                 string sqlVerifica = "SELECT codProd, quantidade FROM tbProdutos WHERE codBar = @codBar";
