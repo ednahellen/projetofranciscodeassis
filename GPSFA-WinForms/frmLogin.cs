@@ -117,15 +117,6 @@ namespace GPSFA_WinForms
             }
         }
 
-        private void txtSenha_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress = true; // Evita o som de "beep"
-                btnEntrar.PerformClick(); // Executa o login
-            }
-        }
-
         private void btnSair_Click(object sender, EventArgs e)
         {
             DialogResult resultado = MessageBox.Show("Deseja sair do sistema?", "Mensagem do sistema",
@@ -142,6 +133,10 @@ namespace GPSFA_WinForms
                 txtUsuario.Focus();
                 return;
             }
+        }
+        private void frmLogin_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

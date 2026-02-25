@@ -44,7 +44,7 @@
             this.lblUusuario.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUusuario.Location = new System.Drawing.Point(204, 140);
             this.lblUusuario.Name = "lblUusuario";
-            this.lblUusuario.Size = new System.Drawing.Size(107, 32);
+            this.lblUusuario.Size = new System.Drawing.Size(85, 27);
             this.lblUusuario.TabIndex = 4;
             this.lblUusuario.Text = "Usuário";
             // 
@@ -53,7 +53,7 @@
             this.txtUsuario.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtUsuario.Location = new System.Drawing.Point(209, 170);
             this.txtUsuario.Name = "txtUsuario";
-            this.txtUsuario.Size = new System.Drawing.Size(360, 40);
+            this.txtUsuario.Size = new System.Drawing.Size(360, 34);
             this.txtUsuario.TabIndex = 5;
             // 
             // txtSenha
@@ -62,7 +62,7 @@
             this.txtSenha.Location = new System.Drawing.Point(209, 261);
             this.txtSenha.Name = "txtSenha";
             this.txtSenha.PasswordChar = 'l';
-            this.txtSenha.Size = new System.Drawing.Size(360, 41);
+            this.txtSenha.Size = new System.Drawing.Size(360, 34);
             this.txtSenha.TabIndex = 7;
             // 
             // lblSenha
@@ -71,7 +71,7 @@
             this.lblSenha.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSenha.Location = new System.Drawing.Point(204, 231);
             this.lblSenha.Name = "lblSenha";
-            this.lblSenha.Size = new System.Drawing.Size(86, 32);
+            this.lblSenha.Size = new System.Drawing.Size(70, 27);
             this.lblSenha.TabIndex = 6;
             this.lblSenha.Text = "Senha";
             // 
@@ -113,7 +113,7 @@
             // 
             // frmLogin
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 27F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(237)))), ((int)(((byte)(228)))));
             this.ClientSize = new System.Drawing.Size(793, 491);
@@ -131,6 +131,7 @@
             this.Name = "frmLogin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Grupo Socorrista São Francisco de Assis - Login";
+            this.Load += new System.EventHandler(this.frmLogin_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
