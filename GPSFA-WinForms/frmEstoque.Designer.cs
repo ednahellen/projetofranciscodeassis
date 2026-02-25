@@ -108,7 +108,7 @@
             this.btnLimparFiltros.TabIndex = 20;
             this.btnLimparFiltros.Text = "Limpar Filtros";
             this.btnLimparFiltros.UseVisualStyleBackColor = true;
-            this.btnLimparFiltros.Click += new System.EventHandler(this.btnLimparFiltros_Click_1);
+            
             // 
             // btnAplicarModo
             // 
@@ -325,7 +325,7 @@
             this.btnCarregaTodosProdutos.TabIndex = 13;
             this.btnCarregaTodosProdutos.Text = "Todos";
             this.btnCarregaTodosProdutos.UseVisualStyleBackColor = false;
-            this.btnCarregaTodosProdutos.Click += new System.EventHandler(this.btnCarregaTodosProdutos_Click);
+      
             // 
             // txtNomeOrCod
             // 

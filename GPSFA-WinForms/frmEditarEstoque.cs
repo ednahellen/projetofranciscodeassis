@@ -122,29 +122,41 @@ namespace Projeto_Socorrista
                 txtCodigo.Text = DR["codProd"].ToString();
                 txtProduto.Text = DR["descricao"].ToString();
                 cbxCategoria.Text = DR["unidade"].ToString();
-                nudQuantidade.Value = Convert.ToInt32(DR["quantidade"]);
+                nudQuantidade.Value = Convert.ToInt32(DR["estoqueAtual"]);
                 dtpValidade.Text = DR["dataDEValidade"] == DBNull.Value ? "" : Convert.ToDateTime(DR["dataDEValidade"]).ToString("dd/MM/yyyy");
             }
         }
 
-        public int atualizarEstoque(string nomeProduto, int quantidade, string unidade, DateTime dataValidade, int codProd, int codList) {
-            MySqlCommand comm = new MySqlCommand();
-            comm.CommandText = "UPDATE tbProdutos set codList=@codlist,quantidade=@quantidade, unidade=@unidade, dataDeValidade=@dataValidade WHERE codProd=@codProd;";
+        public int atualizarEstoque(string nomeProduto, int quantidade, string unidade, DateTime dataValidade, int codProd, int codList)
+        {
+            try
+            {
+                using (var conn = DataBaseConnection.OpenConnection())
+                {
+                    MySqlCommand comm = new MySqlCommand();
+                    comm.CommandText = @"UPDATE tbProdutos 
+                                SET codList = @codList, 
+                                    estoqueAtual = @quantidade,   // <-- CORRIGIDO
+                                    unidade = @unidade, 
+                                    dataDeValidade = @dataValidade 
+                                WHERE codProd = @codProd;";
 
-            comm.Parameters.Clear();
-            comm.Parameters.Add("@quantidade", MySqlDbType.Int32).Value = quantidade;
-            comm.Parameters.Add("@unidade", MySqlDbType.VarChar, 50).Value = unidade;
-            comm.Parameters.Add("@dataValidade", MySqlDbType.Date).Value = dataValidade;
-            comm.Parameters.Add("@codProd", MySqlDbType.Int32).Value = codProd;
-            comm.Parameters.Add("@codList", MySqlDbType.Int32).Value = codList;
-            comm.Connection = DataBaseConnection.OpenConnection();
+                    comm.Parameters.Clear();
+                    comm.Parameters.Add("@quantidade", MySqlDbType.Int32).Value = quantidade;
+                    comm.Parameters.Add("@unidade", MySqlDbType.VarChar, 50).Value = unidade;
+                    comm.Parameters.Add("@dataValidade", MySqlDbType.Date).Value = dataValidade;
+                    comm.Parameters.Add("@codProd", MySqlDbType.Int32).Value = codProd;
+                    comm.Parameters.Add("@codList", MySqlDbType.Int32).Value = codList;
+                    comm.Connection = conn;
 
-            int resp = comm.ExecuteNonQuery();
-
-            DataBaseConnection.OpenConnection();
-
-            return resp;
-
+                    return comm.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao atualizar: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return 0;
+            }
         }
 
         private void btnSalvar_Click(object sender, EventArgs e)

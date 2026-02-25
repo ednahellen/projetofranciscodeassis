@@ -95,32 +95,31 @@ namespace Projeto_Socorrista
             MySqlCommand comm = new MySqlCommand();
 
             comm.CommandText = @"
-        SELECT
-            l.descricao AS descricao,
-            SUM(p.quantidade) AS quantidade_total,
-            u.descricao AS unidade,
-            l.peso AS peso,
-            MIN(p.dataDeValidade) AS validade_minima,
-            CASE
-                WHEN MIN(p.dataDeValidade) < CURDATE() THEN 'Vencido'
-                WHEN DATEDIFF(MIN(p.dataDeValidade), CURDATE()) <= 60 THEN 'Próximo do vencimento'
-                ELSE 'Válido'
-            END AS status_validade
-        FROM tbprodutos p
-        INNER JOIN tblista l ON l.codList = p.codList
-        INNER JOIN tbunidades u ON u.codUni = l.codUni
-        WHERE
-            (@busca = '' OR l.descricao LIKE @buscaPattern OR p.codProd LIKE @buscaPattern)
-            AND (@unidade = '' OR u.descricao = @unidade)
-            AND (@validade IS NULL OR DATE(p.dataDeValidade) = @validade)
-        GROUP BY l.codList, l.descricao, u.descricao, l.peso
-        HAVING
-            (@status = '')
-            OR (@status = 'Vencido' AND validade_minima < CURDATE())
-            OR (@status = 'Próximo do vencimento' AND DATEDIFF(validade_minima, CURDATE()) <= 60 AND validade_minima >= CURDATE())
-            OR (@status = 'Válido' AND DATEDIFF(validade_minima, CURDATE()) > 60)
-        ORDER BY l.descricao;
-        ";
+    SELECT
+        l.descricao AS descricao,
+        SUM(p.estoqueAtual) AS quantidade_total,   // <-- CORRIGIDO
+        u.descricao AS unidade,
+        l.peso AS peso,
+        MIN(p.dataDeValidade) AS validade_minima,
+        CASE
+            WHEN MIN(p.dataDeValidade) < CURDATE() THEN 'Vencido'
+            WHEN DATEDIFF(MIN(p.dataDeValidade), CURDATE()) <= 60 THEN 'Próximo do vencimento'
+            ELSE 'Válido'
+        END AS status_validade
+    FROM tbprodutos p
+    INNER JOIN tblista l ON l.codList = p.codList
+    INNER JOIN tbunidades u ON u.codUni = l.codUni
+    WHERE
+        (@busca = '' OR l.descricao LIKE @buscaPattern OR p.codProd LIKE @buscaPattern)
+        AND (@unidade = '' OR u.descricao = @unidade)
+        AND (@validade IS NULL OR DATE(p.dataDeValidade) = @validade)
+    GROUP BY l.codList, l.descricao, u.descricao, l.peso
+    HAVING
+        (@status = '')
+        OR (@status = 'Vencido' AND validade_minima < CURDATE())
+        OR (@status = 'Próximo do vencimento' AND DATEDIFF(validade_minima, CURDATE()) <= 60 AND validade_minima >= CURDATE())
+        OR (@status = 'Válido' AND DATEDIFF(validade_minima, CURDATE()) > 60)
+    ORDER BY l.descricao;";
 
             comm.CommandType = CommandType.Text;
 
@@ -259,31 +258,31 @@ namespace Projeto_Socorrista
             string filtroBusca = buscaQueries.Count > 0 ? $"({string.Join(" OR ", buscaQueries)})" : "1=1";
 
             comm.CommandText = $@"
-                SELECT
-                    l.descricao AS descricao,
-                    SUM(p.quantidade) AS quantidade_total,
-                    u.descricao AS unidade,
-                    l.peso AS peso,
-                    MIN(p.dataDeValidade) AS validade_minima,
-                    CASE
-                        WHEN MIN(p.dataDeValidade) < CURDATE() THEN 'Vencido'
-                        WHEN DATEDIFF(MIN(p.dataDeValidade), CURDATE()) <= 60 THEN 'Próximo do vencimento'
-                        ELSE 'Válido'
-                    END AS status_validade
-                FROM tbprodutos p
-                INNER JOIN tblista l ON l.codList = p.codList
-                INNER JOIN tbunidades u ON u.codUni = l.codUni
-                WHERE
-                    {filtroBusca}
-                    AND (@unidade = '' OR u.descricao = @unidade)
-                    AND (@validade IS NULL OR DATE(p.dataDeValidade) = @validade)
-                GROUP BY l.codList, l.descricao, u.descricao, l.peso
-                HAVING
-                    (@status = '')
-                    OR (@status = 'Vencido' AND validade_minima < CURDATE())
-                    OR (@status = 'Próximo do vencimento' AND DATEDIFF(validade_minima, CURDATE()) <= 60 AND validade_minima >= CURDATE())
-                    OR (@status = 'Válido' AND DATEDIFF(validade_minima, CURDATE()) > 60)
-                ORDER BY l.descricao;";
+    SELECT
+        l.descricao AS descricao,
+        SUM(p.estoqueAtual) AS quantidade_total,   // <-- CORRIGIDO
+        u.descricao AS unidade,
+        l.peso AS peso,
+        MIN(p.dataDeValidade) AS validade_minima,
+        CASE
+            WHEN MIN(p.dataDeValidade) < CURDATE() THEN 'Vencido'
+            WHEN DATEDIFF(MIN(p.dataDeValidade), CURDATE()) <= 60 THEN 'Próximo do vencimento'
+            ELSE 'Válido'
+        END AS status_validade
+    FROM tbprodutos p
+    INNER JOIN tblista l ON l.codList = p.codList
+    INNER JOIN tbunidades u ON u.codUni = l.codUni
+    WHERE
+        {filtroBusca}
+        AND (@unidade = '' OR u.descricao = @unidade)
+        AND (@validade IS NULL OR DATE(p.dataDeValidade) = @validade)
+    GROUP BY l.codList, l.descricao, u.descricao, l.peso
+    HAVING
+        (@status = '')
+        OR (@status = 'Vencido' AND validade_minima < CURDATE())
+        OR (@status = 'Próximo do vencimento' AND DATEDIFF(validade_minima, CURDATE()) <= 60 AND validade_minima >= CURDATE())
+        OR (@status = 'Válido' AND DATEDIFF(validade_minima, CURDATE()) > 60)
+    ORDER BY l.descricao;";
 
             // Demais parâmetros fixos
             comm.Parameters.AddWithValue("@unidade", unidade == "Selecione..." ? "" : unidade ?? "");
@@ -434,14 +433,7 @@ namespace Projeto_Socorrista
                     return;
                 }
                 string codigo = cell.Value.ToString();
-                frmEditarEstoque f = new frmEditarEstoque(codigo);
-                f.DadosAtualizados += () =>
-                {
-                    AtualizarStatusValidade();
-                    carregaDados();
-                };
-
-                f.Show();
+                
             }
         }
 
@@ -474,42 +466,6 @@ namespace Projeto_Socorrista
             carregaDados();
         }
 
-        private void AtualizarStatusValidade()
-        {
-            try
-            {
-                using (MySqlCommand comm = new MySqlCommand())
-                {
-                    comm.CommandText = @"
-                        UPDATE tbprodutos
-                        SET status_validade =
-                            CASE
-                                WHEN dataDeValidade < CURDATE() THEN 'Vencido'
-                                WHEN DATEDIFF(dataDeValidade, CURDATE()) BETWEEN 0 AND 60 THEN 'Próximo do vencimento'
-                                ELSE 'Válido'
-                            END
-                        WHERE dataDeValidade IS NOT NULL;
-                        ";
-                    comm.CommandType = CommandType.Text;
-                    comm.Connection = DataBaseConnection.OpenConnection();
-                    comm.ExecuteNonQuery();
-                    DataBaseConnection.CloseConnection();
-                }
-            }
-            catch (MySqlException mex)
-            {
-                DataBaseConnection.CloseConnection();
-                // pode ser que a coluna status_validade não exista; trate se necessário
-                Console.WriteLine("AtualizarStatusValidade failed: " + mex.Message);
-            }
-        }
-        private void btnCarregaTodosProdutos_Click(object sender, EventArgs e)
-        {
-            txtNomeOrCod.Clear();
-            busca = "";
-            carregaDados();
-        }
-
         private void btnAplicarFiltros_Click(object sender, EventArgs e)
         {
             AplicarFiltros();
@@ -530,7 +486,7 @@ namespace Projeto_Socorrista
             modoAgrupado = !modoAgrupado;
 
             // Combo mostra o modo atual
-            cbxModoExibicao.SelectedIndex = modoAgrupado ? cbxModoExibicao.SelectedIndex = 1 : cbxModoExibicao.SelectedIndex = 2;
+            cbxModoExibicao.SelectedIndex = modoAgrupado ? 0 : 1;
 
             // Botão mostra para onde vai (inverter)
             btnAplicarModo.Text = modoAgrupado ? "Modo Detalhado" : "Modo Agrupado";
@@ -632,36 +588,7 @@ namespace Projeto_Socorrista
             carregaDados();
         }
 
-        private void btnLimparFiltros_Click_1(object sender, EventArgs e)
-        {
-
-            bool isClean = (cbxCategoria.SelectedIndex == 0 || cbxCategoria.SelectedIndex == -1)
-                           && (cbxStatus.SelectedIndex == 0 || cbxStatus.SelectedIndex == -1)
-                           && !dtpDataValidade.Checked
-                           && string.IsNullOrWhiteSpace(txtNomeOrCod.Text);
-
-            if (isClean)
-            {
-                MessageBox.Show("Não há filtros para limpar", "ATENÇÃO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // limpar
-            cbxCategoria.SelectedIndex = 0;
-            cbxStatus.SelectedIndex = 0;
-            dtpDataValidade.Value = DateTime.Today;
-            dtpDataValidade.Checked = false;
-            txtNomeOrCod.Clear();
-
-            // reset globals
-            busca = "";
-            unidadeEscolhida = "";
-            status_validade = "";
-            dataValidade = null;
-
-            carregaDados();
-        }
-
+        
         private void btnAplicarFiltros_Click_1(object sender, EventArgs e)
         {
             AplicarFiltros();

@@ -37,7 +37,7 @@ namespace GPSFA_WinForms
         public void CarregarDados()
         {
 
-            string query = @"SELECT COUNT(*) AS totalProdutos, SUM(quantidade) AS totalQuantidade, SUM(quantidade* peso) AS totalPeso
+            string query = @"SELECT COUNT(*) AS totalProdutos, SUM(estoqueAtual) AS totalQuantidade, SUM(estoqueAtual* peso) AS totalPeso
                              FROM tbProdutos;";
              try
             {
@@ -55,10 +55,22 @@ namespace GPSFA_WinForms
                     }
                 }
             }
-            catch (Exception ex)
+            catch (MySqlException ex)
             {
-                MessageBox.Show("Erro ao carregar dados do dashboard: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (ex.Number == 1062)
+                {
+                    MessageBox.Show("Este código de barras já está cadastrado para outro produto!",
+                        "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show($"Erro no banco de dados: {ex.Message}",
+                        "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                return; 
             }
+
+
             // Atualiza o total dos itens (quantidade e depois o total em kg)
             AtualizarTotais();
 
@@ -86,7 +98,7 @@ namespace GPSFA_WinForms
 
             foreach (DataRow row in dt.Rows)
             {
-                totalQuantidade += Convert.ToInt32(row["quantidade"]);
+                totalQuantidade += Convert.ToInt32(row["estoqueAtual"]);
                 totalPeso += Convert.ToInt32(row["peso"]);
             }
 
@@ -112,7 +124,7 @@ namespace GPSFA_WinForms
             // Consulta SQL que obtém os 8 produtos com maior quantidade total cadastrada
             // Soma as quantidades de cada produto (SUM) e agrupa por nome
             // Ordena do maior para o menor e limita a 8 resultados
-            string query = "SELECT p.descricao AS descricaoProduto, SUM(p.quantidade) AS totalQuantidadeProdutos FROM tbProdutos as p GROUP BY p.descricao ORDER BY totalQuantidadeProdutos DESC LIMIT 8;";
+            string query = "SELECT p.descricao AS descricaoProduto, SUM(p.estoqueAtual) AS totalQuantidadeProdutos FROM tbProdutos as p GROUP BY p.descricao ORDER BY totalQuantidadeProdutos DESC LIMIT 8;";
 
             try
             {
@@ -182,7 +194,7 @@ namespace GPSFA_WinForms
 
             // Consulta SQL que retorna o total de produtos cadastrados em cada mês/ano
             // Agrupa os resultados por ano e mês, somando as quantidades de produtos e ordena os resultados em ordem cronológica crescente
-            string query = @"SELECT YEAR(dataDeEntrada) AS ano,MONTH(dataDeEntrada) AS mes,SUM(quantidade) AS totalQuantidade,SUM(quantidade * peso) AS totalPeso FROM tbProdutos GROUP BY YEAR(dataDeEntrada), MONTH(dataDeEntrada) ORDER BY ano, mes;"; 
+            string query = @"SELECT YEAR(dataDeEntrada) AS ano,MONTH(dataDeEntrada) AS mes,SUM(estoqueAtual) AS totalQuantidade,SUM(estoqueAtual * peso) AS totalPeso FROM tbProdutos GROUP BY YEAR(dataDeEntrada), MONTH(dataDeEntrada) ORDER BY ano, mes;"; 
 
             try
             {   // Abre a conexão com o banco e executa o comando SQL
@@ -304,7 +316,10 @@ namespace GPSFA_WinForms
                 IsValueShownAsLabel = true
             };
 
-            string query = @" SELECT YEAR(dataDeEntrada) AS ano, SUM(quantidade) AS totalQuantidade,SUM(quantidade * peso) AS totalPeso FROM tbProdutos GROUP BY YEAR(dataDeEntrada) ORDER BY ano;";
+            string query = @" SELECT YEAR(dataDeEntrada) AS ano, 
+                  SUM(estoqueAtual) AS totalQuantidade, SUM(estoqueAtual * peso) AS totalPeso                   FROM tbProdutos 
+                  GROUP BY YEAR(dataDeEntrada) 
+                  ORDER BY ano;";
 
             try
             {
@@ -341,11 +356,11 @@ namespace GPSFA_WinForms
         private void AtualizarTotais()
         {
             // Consulta que retorna a soma total de todos os itens cadastrados na tabela
-            string queryTotalItens = "SELECT SUM(quantidade) as total_itens FROM tbProdutos;";
+            string queryTotalItens = "SELECT SUM(estoqueAtual) as total_itens FROM tbProdutos;";
 
             // Consulta que retorna o peso total (em kg) de todos os produtos cuja unidade é "KG"
             // Multiplica a quantidade de cada produto pelo seu peso individual
-            string queryTotalKilos = "SELECT SUM(quantidade * peso) as total_peso FROM tbProdutos WHERE unidade = 'KG';";
+            string queryTotalKilos = "SELECT SUM(estoqueAtual * peso) as total_peso FROM tbProdutos WHERE unidade = 'KG';";
 
             try
             {

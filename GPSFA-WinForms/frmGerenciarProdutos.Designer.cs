@@ -241,7 +241,7 @@
             this.gpbCamposDoProduto.Size = new System.Drawing.Size(1214, 437);
             this.gpbCamposDoProduto.TabIndex = 0;
             this.gpbCamposDoProduto.TabStop = false;
-            this.gpbCamposDoProduto.Enter += new System.EventHandler(this.gpbCamposDoProduto_Enter);
+            
             // 
             // dtpDiaDistribuicao
             // 
