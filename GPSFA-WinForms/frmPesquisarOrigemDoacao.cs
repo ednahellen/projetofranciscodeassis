@@ -24,7 +24,7 @@ namespace GPSFA_WinForms
         static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
         [DllImport("user32")]
         static extern int GetMenuItemCount(IntPtr hWnd);
-        
+
         public frmPesquisarOrigemDoacao()
         {
             InitializeComponent();
@@ -49,16 +49,14 @@ namespace GPSFA_WinForms
             IntPtr hMenu = GetSystemMenu(this.Handle, false);
             int MenuCount = GetMenuItemCount(hMenu) - 1;
             RemoveMenu(hMenu, MenuCount, MF_BYCOMMAND);
-        }        
+        }
 
         public void buscaOrigemDoacao(string nome)
         {
 
             MySqlCommand comm = new MySqlCommand();
             comm.CommandText = $"SELECT nome FROM tborigemdoacao WHERE nome LIKE '%{nome}%';";
-
             comm.CommandType = CommandType.Text;
-
             comm.Connection = DataBaseConnection.OpenConnection();
 
             MySqlDataReader DR;
@@ -72,23 +70,20 @@ namespace GPSFA_WinForms
                     "Mensagem do sistema",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information,
-                    MessageBoxDefaultButton.Button1);                
+                    MessageBoxDefaultButton.Button1);
                 txtDescricao.Clear();
                 txtDescricao.Focus();
             }
             else
             {
-              
-                    while (DR.Read())
-                    {
-                    ltbPesquisarOrigem.Items.Add(DR.GetString(0));                  
-           
+                while (DR.Read())
+                {
+                    ltbPesquisarOrigem.Items.Add(DR.GetString(0));
                 }
-                
-                
+
             }
             DataBaseConnection.CloseConnection();
-        }        
+        }
 
         private void btnPesquisarOrigem_Click(object sender, EventArgs e)
         {
@@ -121,7 +116,7 @@ namespace GPSFA_WinForms
 
         private void btnLimpar_Click(object sender, EventArgs e)
         {
-            
+
             ltbPesquisarOrigem.Items.Clear();
             btnPesquisarOrigem.Enabled = false;
             btnLimpar.Enabled = false;
@@ -140,17 +135,25 @@ namespace GPSFA_WinForms
                 btnLimpar.Enabled = false;
             }
         }     
-        
-            string nome;
+       
         private void ltbPesquisarOrigem_SelectedIndexChanged(object sender, EventArgs e)
         {
-           
-                nome = ltbPesquisarOrigem.SelectedItem.ToString();
-            
+            if (ltbPesquisarOrigem.SelectedItem == null)
+            {
+                MessageBox.Show("Favor selecionar um item da lista!",
+                    "Mensagem do sistema",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error,
+                    MessageBoxDefaultButton.Button1);
+            }
+            else
+            {
+                string nome = ltbPesquisarOrigem.SelectedItem.ToString();
+
                 frmOrigemDoacao abrir = new frmOrigemDoacao(nome);
                 abrir.Show();
                 this.Hide();
+            }
         }
-            
-    }
+    }     
 }
