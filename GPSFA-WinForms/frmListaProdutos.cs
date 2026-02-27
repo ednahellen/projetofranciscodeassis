@@ -91,7 +91,29 @@ namespace GPSFA_WinForms
             }
             catch (Exception)
             {
+<<<<<<< Updated upstream
                 MessageBox.Show("Este registro já existe!", "Mensagem do sistema",
+=======
+
+                //Regex utilizado para remover espaços extras entre as palavras.
+                double peso = Double.Parse(txtPeso.Text);              
+                int resp = cadastrarProdutos(Regex.Replace(txtDescricao.Text, @"\s+", " ").Trim().ToUpper() + " " + peso + cbbUnidadeMedida.Text, peso, cbbUnidadeMedida.Text, 1);
+
+                if (resp.Equals(1))
+                {
+                    MessageBox.Show("Cadastrado com sucesso!", "Mensagem do sistema",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1);                    
+                    txtDescricao.Clear();
+                    txtDescricao.Enabled = false;
+                    btnNovo.Enabled = true;
+                    btnNovo.Focus();
+                }
+                else
+                {
+                    MessageBox.Show("Erro ao Cadastrar!", "Mensagem do sistema",
+>>>>>>> Stashed changes
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error,
                     MessageBoxDefaultButton.Button1);
