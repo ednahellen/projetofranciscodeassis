@@ -8,9 +8,9 @@ CREATE DATABASE dbfrancisco;
 -- ENTRANDO NO BANCO DE DADOS
 USE dbfrancisco;
 
-ALTER DATABASE dbfrancisco 
-CHARACTER SET utf8mb4 
-COLLATE utf8mb4_general_ci;
+-- ALTER DATABASE dbfrancisco 
+-- CHARACTER SET utf8mb4 
+-- COLLATE utf8mb4_general_ci;
 
 -- CRIANDO A TABELA DE VOLUNTÁRIOS
 
@@ -173,12 +173,13 @@ codProd INT NOT NULL,
 codUsu INT NOT NULL,
 dataDeMontagem DATETIME NOT NULL,
 codCli INT NOT NULL,
-PRIMARY KEY(codCes, codProd),
+PRIMARY KEY(codCes),
 FOREIGN KEY(codUsu) REFERENCES tbUsuarios(codUsu),
+FOREIGN KEY(codProd) REFERENCES tbProdutos(codProd),
 FOREIGN KEY(codCli) REFERENCES tbClientes(codCli)
 );
 
--- FOREIGN KEY(codProd) REFERENCES tbProdutos(codProd),
+
 
 INSERT INTO tbVoluntarios
 (nome, telCel, cpf, cep, rua, numero, complemento, bairro, cidade, estado)
@@ -256,3 +257,15 @@ VALUES
 -- INSERT INTO tbProdutos(codProd,nome,quantidade,peso,unidade,codBar,dataDeEntrada,dataDeValidade,dataLimiteDeSaida,codUsu)VALUES(3,'Macarrão',20,500,'G','1234561555333','2025-06-10','2025-12-25','2026-03-05',1);
 
 -- INSERT INTO tbProdutos(codProd,nome,quantidade,peso,unidade,codBar,dataDeEntrada,dataDeValidade,dataLimiteDeSaida,codUsu)VALUES(4,'Farinha de trigo',7,1,'KG','5468761566644','2025-09-11','2025-11-30','2026-12-28',1);
+
+-- INSERINDO DADOS TBUNIDADES
+
+INSERT INTO tbUnidades(codUni, descricao)VALUES(1,'QUILOGRAMAS (KG)');
+INSERT INTO tbUnidades(codUni, descricao)VALUES(2,'GRAMAS (G)');
+INSERT INTO tbUnidades(codUni, descricao)VALUES(3,'LITROS (L)');
+INSERT INTO tbUnidades(codUni, descricao)VALUES(4,'MILILITROS (ML)');
+INSERT INTO tbUnidades(codUni, descricao)VALUES(5,'UNIDADES (UN)');
+
+-- INSERINDO DADOS TBFORNECEDORES
+
+INSERT INTO tbOrigemDoacao(codOri, nome)VALUES(1,'ROTARY');
