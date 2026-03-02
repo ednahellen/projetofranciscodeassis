@@ -3,6 +3,7 @@ using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using MySql.Data.MySqlClient;
+using Mysqlx.Crud;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -121,6 +122,12 @@ namespace GPSFA_WinForms
             }
         }
 
+        // Registra itens em uma cesta
+        private void criarCesta()
+        {
+
+        }
+
 
         // CONFIGURAÇÕES E AÇÕES DA JANELA
         // Configuração adicional DO DESIGN do datagrid view de intes da cesta - OK
@@ -130,6 +137,7 @@ namespace GPSFA_WinForms
             dgvItensDaCesta.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             // Alternar cores das linhas
             dgvItensDaCesta.RowsDefaultCellStyle.BackColor = System.Drawing.Color.LightGray;
+
             // Aumentar fonte
             dgvItensDaCesta.RowsDefaultCellStyle.Font = new System.Drawing.Font("Arial", 10, FontStyle.Regular);
             dgvItensDaCesta.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Arial", 10, FontStyle.Bold);
@@ -144,7 +152,7 @@ namespace GPSFA_WinForms
             dgvItensDaCesta.MultiSelect = false;
 
             DataGridViewButtonColumn buttonColumn = new DataGridViewButtonColumn();
-            buttonColumn.HeaderText = "Remover produto";
+            buttonColumn.HeaderText = "";
             buttonColumn.Name = "RemoverProduto"; // Name for programmatic reference
             buttonColumn.Text = "Remover"; // The text displayed on the button
             buttonColumn.UseColumnTextForButtonValue = true; // Use the Text property value for all buttons
@@ -182,7 +190,7 @@ namespace GPSFA_WinForms
                 qtdCestas = Convert.ToInt32(txtQtdCestas.Text);
             }
 
-            foreach(DataGridViewRow row in dgvItensDaCesta.Rows)
+            foreach (DataGridViewRow row in dgvItensDaCesta.Rows)
             {
                 if (row.IsNewRow) continue;
 
@@ -205,7 +213,7 @@ namespace GPSFA_WinForms
                 }
                 else
                 {
-                    row.Cells["Status"].Style.BackColor = System.Drawing.Color.White;
+                    row.Cells["Status"].Style.BackColor = System.Drawing.Color.LightGray;
                     row.Cells["Status"].Value = "Ok";
                 }
             }
@@ -272,7 +280,7 @@ namespace GPSFA_WinForms
         // Aciona o método de buscar os itens de um determinado modelo de cesta
         private void cbbModeloDeCesta_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cbbModeloDeCesta.SelectedItem != null) 
+            if (cbbModeloDeCesta.SelectedItem != null)
             {
                 // Busca o código do modelo de cesta pela descrição do item selecionado
                 buscarCodModeloPorDescricao(cbbModeloDeCesta.SelectedItem.ToString());
@@ -285,7 +293,7 @@ namespace GPSFA_WinForms
                 return;
             }
         }
-        
+
         // Instancia do evento de clique do botão de voltar - OK
         private void btnVoltar_Click(object sender, EventArgs e)
         {
@@ -319,24 +327,31 @@ namespace GPSFA_WinForms
             }
         }
 
-        // Realiza o registro de montagem de cestas
+        // Realiza o registro de montagem de cestas - A FAZER
         private void btnMontar_Click(object sender, EventArgs e)
-        {   // valida se o usuário confirma a montagem
-            DialogResult result = MessageBox.Show("Deseja confirmar a montagem de cestas?", "Mensagem do sistema", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (result == DialogResult.Yes) 
+        {
+            if (dgvItensDaCesta.Rows.Count < 1 || txtQtdCestas.Text.Equals(""))
             {
+                MessageBox.Show("A cesta deve conter pelo menos 5 itens e a quantidade não pode estar vazia", "Mensagem do sistema", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                // valida se o usuário confirma a montagem
+                DialogResult result = MessageBox.Show($"Deseja confirmar a montagem de {txtQtdCestas.Text} cestas?", "Mensagem do sistema", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                }
             }
         }
 
-        // Instancia do evento de clique do botão de limpar - A FAZER
+        // Instancia do evento de clique do botão de limpar - OK
         private void btnLimpar_Click(object sender, EventArgs e)
         {
             limparDados();
         }
 
-
-        // Evento de alterar o valor de quantidade de cestas
+        // Evento de alterar o valor de quantidade de cestas - OK
         private void txtQtdCestas_TextChanged(object sender, EventArgs e)
         {
             calcularTotalNecessario();
@@ -351,15 +366,16 @@ namespace GPSFA_WinForms
             }
         }
 
-        // Evento de alterar o valor de alguma célular dentro do dgv
+        // Evento de alterar o valor de alguma célular dentro do dgv - OK
         private void dgvItensDaCesta_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             if (dgvItensDaCesta.Columns[e.ColumnIndex].Name == "QtdePorCesta")
-            {   
+            {
                 calcularTotalNecessario();
             }
         }
 
+        // Evento de pressionar teclas na caixa de texto de quantidade - limita a entrada de dados a números
         private void dgvItensDaCesta_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
             if (dgvItensDaCesta.CurrentCell.ColumnIndex == dgvItensDaCesta.Columns["QtdePorCesta"].Index)
@@ -374,9 +390,9 @@ namespace GPSFA_WinForms
             }
         }
 
+        // Abre o modal para configurar modelos de cesta
         private void btnModeloDeCesta_Click(object sender, EventArgs e)
         {
-            calcularTotalNecessario();
         }
     }
 }
