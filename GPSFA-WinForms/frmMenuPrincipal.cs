@@ -165,5 +165,12 @@ namespace GPSFA_WinForms
             abrir.Show();
             this.Hide();
         }
+
+        private void btnCestas_Click(object sender, EventArgs e)
+        {
+            frmCestas abrir = new frmCestas(codUsuLogado);
+            abrir.Show();
+            this.Close();
+        }
     }
 }

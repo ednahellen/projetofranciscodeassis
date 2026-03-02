@@ -232,10 +232,6 @@ namespace GPSFA_WinForms
         //Botão ação cadastrar
         private void btnCadastrar_Click(object sender, EventArgs e)
         {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             if (dtpDataValidade.Value.Date < DateTime.Today)
             {
                 MessageBox.Show("Data de validade inválida.");
@@ -248,12 +244,8 @@ namespace GPSFA_WinForms
             }
 
             using (var conn = DataBaseConnection.OpenConnection())
-<<<<<<< Updated upstream
-
            
             //int resp = cadastrarProdutos(cbbDescricao.Text, Convert.ToInt32(txtQuantidade.Text), Convert.ToInt32(txtPeso.Text), cbbUnidadeMedida.Text, txtCodBarras.Text, dtpDataEntrada.Value, dtpDataValidade.Value, dtpDataEntrada.Value, codUsuLogado, codOri, codList);
-=======
->>>>>>> Stashed changes
            
             if (dtpDataValidade.Value < DateTime.Today)
             {
@@ -263,10 +255,6 @@ namespace GPSFA_WinForms
             }
 
             else if (cadastrarProdutos(cbbDescricao.Text, Convert.ToInt32(txtQuantidade.Text), Convert.ToInt32(txtPeso.Text), cbbUnidadeMedida.Text, txtCodBarras.Text, dtpDataEntrada.Value, dtpDataValidade.Value, dtpDataEntrada.Value, codUsuLogado, codOri, codList).Equals(1))
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             {
                 // Verifica se já existe produto
                 string sqlVerifica = "SELECT codProd, estoqueAtual FROM tbProdutos WHERE codBar = @codBar";
@@ -586,7 +574,23 @@ namespace GPSFA_WinForms
 
             DataBaseConnection.CloseConnection();
         }
-     
+
+
+        private void txtQuantidade_KeyPress_1(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void txtPeso_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
     }        
 }
 

@@ -139,7 +139,9 @@
     <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
       <HintPath>..\packages\SixLabors.Fonts.1.0.0\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
+    <Reference Include="System">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.dll</HintPath>
+    </Reference>
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
@@ -193,6 +195,18 @@
     <Compile Include="classes\ViaCepResponse.cs" />
     <Compile Include="data.dbfransisco\DataBaseConnection.cs" />
     <Compile Include="classes\FiltroDeBuscaBD.cs" />
+    <Compile Include="frmAdicionarItemNaCesta.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmAdicionarItemNaCesta.Designer.cs">
+      <DependentUpon>frmAdicionarItemNaCesta.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmCestas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCestas.Designer.cs">
+      <DependentUpon>frmCestas.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmDiaArrecadacao.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -292,6 +306,12 @@
     <Compile Include="ProductRepository.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="frmAdicionarItemNaCesta.resx">
+      <DependentUpon>frmAdicionarItemNaCesta.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmCestas.resx">
+      <DependentUpon>frmCestas.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmDiaArrecadacao.resx">
       <DependentUpon>frmDiaArrecadacao.cs</DependentUpon>
     </EmbeddedResource>

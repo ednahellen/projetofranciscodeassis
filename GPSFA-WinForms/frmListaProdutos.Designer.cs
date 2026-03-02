@@ -246,6 +246,7 @@
             this.txtPeso.Name = "txtPeso";
             this.txtPeso.Size = new System.Drawing.Size(134, 39);
             this.txtPeso.TabIndex = 3;
+            this.txtPeso.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtPeso_KeyPress);
             // 
             // lblPeso
             // 
