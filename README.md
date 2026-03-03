@@ -85,23 +85,7 @@ Pode ser utilizado como base para:
 * Organizações que trabalham com doações e distribuição de produtos
 * Projetos acadêmicos ou corporativos
 
----
 
-## ▶ Como Executar
-
-1. Clone o repositório:
-
-   ```bash
-   git clone https://github.com/anselmosz/DashboardDeGestaoDeProdutos.git
-   ```
-
-2. Abra no Visual Studio 2022.
-
-3. Configure a string de conexão com o MySQL.
-
-4. Execute o projeto.
-
----
 
 ## 📌 Status
 
@@ -111,6 +95,6 @@ Projeto em evolução contínua, com foco em aprimoramento técnico e boas prát
 
 ## 👩‍💻 Desenvolvido por
 
-Edna Del Ry
+Edna Del Ry e equipe
 Estudante de Tecnologia em Banco de Dados
 Foco em desenvolvimento e análise de dados
