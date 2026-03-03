@@ -173,8 +173,7 @@ CREATE TABLE tbItensDoModeloCesta(
 -- CRIANDO A TABELA DE CESTAS
 CREATE TABLE tbCestas(
   codCes INT NOT NULL AUTO_INCREMENT,
-  dataDeSaida DATE NOT NULL,
-  dataDeMontagem DATETIME NOT NULL,
+  dataDeSaida DATETIME DEFAULT CURRENT_TIMESTAMP,
   codUsu INT NOT NULL,
   codCli INT NULL,
   PRIMARY KEY(codCes),
@@ -183,7 +182,7 @@ CREATE TABLE tbCestas(
 );
 
 -- CRIANDO A TABELA QUE LIGA UM PRODUTO A UMA CESTA
-CREATE TABLE tbSacola(
+CREATE TABLE tbItensCesta(
   codCes INT NOT NULL,
   codList INT NOT NULL,
   quantidade INT NOT NULL,
@@ -192,6 +191,56 @@ CREATE TABLE tbSacola(
   FOREIGN KEY (codList) REFERENCES tbLista(codList)
 );
 
+CREATE TABLE tbEstoqueItens(
+  codList INT NOT NULL,
+  quantidade INT NOT NULL DEFAULT 0,
+  dataMovimentacao DATE DEFAULT CURRENT_TIMESTAMP
+  horaMovimentacao TIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (codList),
+  FOREIGN KEY (codList) REFERENCES tbLista(codList)
+);
+
+
+-- TRIGGER PARA CRIAR NO ESTOQUE O REGISTRO DO ITEM PRESENTE EM TBLISTA
+DELIMITER $$
+
+CREATE TRIGGER trg_CriarRegistroEstoque
+AFTER INSERT ON tbLista
+FOR EACH ROW
+BEGIN
+    INSERT INTO tbEstoqueItens (codList, quantidade)
+    VALUES (NEW.codList, 0);
+END$$
+
+DELIMITER ;
+
+-- TRIGGER PARA REGISTRAR A ENTRADA DE ITENS 
+DELIMITER $$
+
+CREATE TRIGGER trg_AtualizarEstoque_Entrada
+AFTER INSERT ON tbprodutos
+FOR EACH ROW
+BEGIN
+    UPDATE tbEstoqueItens
+    SET quantidade = quantidade + NEW.quantidade, dataMovimentacao = CURRENT_TIMESTAMP, horaMovimentacao = CURRENT_TIMESTAMP
+    WHERE codList = NEW.codList;
+END$$
+
+DELIMITER ;
+
+-- TRIGGER PARA REGISTRAR A SAIDA DE ITENS 
+DELIMITER $$
+
+CREATE TRIGGER trg_AtualizarEstoque_Saida
+AFTER INSERT ON tbItensCesta
+FOR EACH ROW
+BEGIN
+    UPDATE tbEstoqueItens
+    SET quantidade = quantidade - NEW.quantidade, dataMovimentacao = CURRENT_TIMESTAMP, horaMovimentacao = CURRENT_TIMESTAMP
+    WHERE codList = NEW.codList;
+END$$
+
+DELIMITER ;
 
 
 INSERT INTO tbVoluntarios
@@ -234,22 +283,22 @@ INSERT INTO tbUnidades(codUni, descricao)VALUES(5,'UNIDADES (UN)');
 
 INSERT INTO tbOrigemDoacao(codOri, nome)VALUES(1,'ROTARY');
 
--- INSERT INTO tbLista(descricao, peso, unidade, codUni)
--- VALUES
--- ('ARROZ BRANCO TIPO 1 5KG', 5, 'KG', 1),
--- ('FEIJAO CARIOCA 1KG', 1, 'KG', 1),
--- ('ACUCAR CRISTAL 1KG', 1, 'KG', 1),
--- ('LEITE INTEGRAL 1L', 1, 'L', 3),
--- ('OLEO DE SOJA 900ML', 900, 'ML', 4),
--- ('MACARRAO PENNE 500G', 500, 'G', 2);
+INSERT INTO tbLista(descricao, peso, unidade, codUni)
+VALUES
+('ARROZ BRANCO TIPO 1 5KG', 5, 'KG', 1),
+('FEIJAO CARIOCA 1KG', 1, 'KG', 1),
+('ACUCAR CRISTAL 1KG', 1, 'KG', 1),
+('LEITE INTEGRAL 1L', 1, 'L', 3),
+('OLEO DE SOJA 900ML', 900, 'ML', 4),
+('MACARRAO PENNE 500G', 500, 'G', 2);
 
--- INSERT INTO tbModeloCesta(descricao)VALUES('CESTA BASICA PADRAO');
+INSERT INTO tbModeloCesta(descricao)VALUES('CESTA BASICA PADRAO');
 
--- INSERT INTO tbItensDoModeloCesta(codModelo, codList, quantidadeMinima)VALUES
--- (1, 1, 1),
--- (1, 2, 1),
--- (1, 3, 4),
--- (1, 4, 4);
+INSERT INTO tbItensDoModeloCesta(codModelo, codList, quantidadeMinima)VALUES
+(1, 1, 1),
+(1, 2, 1),
+(1, 3, 4),
+(1, 4, 4);
 
 -- INSERT INTO tbprodutos(descricao, quantidade, peso, unidade, codBar, dataDeEntrada, dataDeValidade, codUsu, codOri, codList)
 -- VALUES
@@ -266,6 +315,21 @@ INSERT INTO tbOrigemDoacao(codOri, nome)VALUES(1,'ROTARY');
 -- ('MACARRAO PENNE 500G', 70, 500, 'GRAMAS (G)', '7896000600110', '2026-02-15', '2026-07-20', 1, 1, 6),
 -- ('MACARRAO PENNE 500G', 55, 500, 'GRAMAS (G)', '7896000600127', '2026-02-28', '2026-08-05', 1, 1, 6);
 
+-- SELECT L.codList, L.descricao, E.quantidade AS quantidadeEmEstoque, E.datamovimentacao, E.horamovimentacao FROM tbLista AS L INNER JOIN tbEstoqueItens AS E ON L.codList = E.codList ORDER BY L.descricao;
+
+-- INSERT INTO tbCestas(codUsu)VALUES(1);
+
+-- INSERT INTO tbItensCesta(codCes, codList, quantidade)
+-- VALUES
+-- (1, 1, 1),
+-- (1, 2, 1),
+-- (1, 3, 4),
+-- (1, 4, 4);
+
+-- SELECT L.codList, L.descricao, E.quantidade AS quantidadeEmEstoque, E.datamovimentacao, E.horamovimentacao FROM tbLista AS L INNER JOIN tbEstoqueItens AS E ON L.codList = E.codList ORDER BY L.descricao;
+
 -- SELECT l.descricao, imc.quantidadeMinima FROM tbItensDoModeloCesta AS imc INNER JOIN tbLista AS l ON l.codList = imc.codList WHERE imc.codModelo = 1;
 
 -- SELECT l.descricao, imc.quantidadeMinima, IFNULL(SUM(p.quantidade),0) AS estoqueAtual FROM tbItensDoModeloCesta imc INNER JOIN tbLista l ON l.codList = imc.codList LEFT JOIN tbProdutos p ON p.codList = l.codList WHERE imc.codModelo = 1 GROUP BY imc.codModelo, imc.codList, l.descricao, l.unidade, imc.quantidadeMinima;
+
+-- SELECT L.codList, L.descricao, E.quantidade AS quantidadeEmEstoque FROM tbLista AS L INNER JOIN tbEstoqueItens AS E ON L.codList = E.codList ORDER BY L.nomeProduto;
