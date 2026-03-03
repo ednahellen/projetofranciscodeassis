@@ -224,61 +224,50 @@ namespace GPSFA_WinForms
         {
             try
             {
-                // Limpar o grid
                 dgvRelatorios.Rows.Clear();
-
-                // Atualizar status
                 lblStatus.Text = "Pesquisando...";
 
-                // Query SQL completa
                 string sql = @"
-                    SELECT 
-                        p.dataDeEntrada,
-                        l.descricao AS produto,
-                        p.quantidade,
-                        l.unidade,
-                        c.dataDeSaida,
-                        DATEDIFF(p.dataDeValidade, CURDATE()) AS diasRestantes,
-                        CASE
-                            WHEN p.dataDeValidade < CURDATE() THEN 'VENCIDO'
-                            WHEN DATEDIFF(p.dataDeValidade, CURDATE()) <= 7 THEN 'CRÍTICO (7 dias)'
-                            WHEN DATEDIFF(p.dataDeValidade, CURDATE()) <= 15 THEN 'ATENÇÃO (15 dias)'
-                            WHEN DATEDIFF(p.dataDeValidade, CURDATE()) <= 30 THEN 'ALERTA (30 dias)'
-                            ELSE 'OK'
-                        END AS status,
-                        v.nome AS usuario
-                    FROM tbProdutos p
-                    INNER JOIN tbLista l ON p.codList = l.codList
-                    INNER JOIN tbUsuarios u ON p.codUsu = u.codUsu
-                    INNER JOIN tbVoluntarios v ON u.codVol = v.codVol
-                    LEFT JOIN tbItensCesta ic ON ic.codList = l.codList
-                    LEFT JOIN tbCestas c ON c.codCes = ic.codCes
-                    WHERE p.dataDeEntrada BETWEEN @dataInicial AND @dataFinal";
+            SELECT 
+                p.dataDeEntrada,
+                l.descricao AS produto,
+                p.quantidade,
+                l.unidade,
+                c.dataDeSaida,
+                DATEDIFF(p.dataDeValidade, CURDATE()) AS diasRestantes,
+                CASE
+                    WHEN p.dataDeValidade < CURDATE() THEN 'VENCIDO'
+                    WHEN DATEDIFF(p.dataDeValidade, CURDATE()) <= 7 THEN 'CRÍTICO (7 dias)'
+                    WHEN DATEDIFF(p.dataDeValidade, CURDATE()) <= 15 THEN 'ATENÇÃO (15 dias)'
+                    WHEN DATEDIFF(p.dataDeValidade, CURDATE()) <= 30 THEN 'ALERTA (30 dias)'
+                    ELSE 'OK'
+                END AS status,
+                v.nome AS usuario
+            FROM tbProdutos p
+            INNER JOIN tbLista l ON p.codList = l.codList
+            INNER JOIN tbUsuarios u ON p.codUsu = u.codUsu
+            INNER JOIN tbVoluntarios v ON u.codVol = v.codVol
+            LEFT JOIN tbItensCesta ic ON ic.codList = l.codList
+            LEFT JOIN tbCestas c ON c.codCes = ic.codCes
+            WHERE p.dataDeEntrada BETWEEN @dataInicial AND @dataFinal";
 
-                // Adicionar filtros conforme selecionados
                 if (cbxProduto.SelectedIndex > 0 && cbxProduto.Text != "TODOS")
-                {
                     sql += " AND l.descricao = @produto";
-                }
 
                 if (cbbUsuario.SelectedIndex > 0 && cbbUsuario.Text != "TODOS")
-                {
                     sql += " AND v.nome = @usuario";
-                }
 
-                // Ordenar por data de entrada (mais recente primeiro)
                 sql += " ORDER BY p.dataDeEntrada DESC";
 
                 int contador = 0;
+                int totalQuantidade = 0;
 
                 using (MySqlConnection conexao = DataBaseConnection.OpenConnection())
                 using (MySqlCommand comando = new MySqlCommand(sql, conexao))
                 {
-                    // Parâmetros de data
                     comando.Parameters.AddWithValue("@dataInicial", dtpDataInicialPeriodo.Value.Date);
                     comando.Parameters.AddWithValue("@dataFinal", dtpDataFinalPeriodo.Value.Date);
 
-                    // Parâmetros de filtros
                     if (cbxProduto.SelectedIndex > 0 && cbxProduto.Text != "TODOS")
                         comando.Parameters.AddWithValue("@produto", cbxProduto.Text);
 
@@ -295,35 +284,49 @@ namespace GPSFA_WinForms
 
                             string status = reader["status"].ToString();
                             int diasRestantes = Convert.ToInt32(reader["diasRestantes"]);
+                            int quantidade = Convert.ToInt32(reader["quantidade"]);
 
-                            // Aplicar filtro de status (se selecionado)
                             if (cbxStatus.SelectedIndex > 0 && cbxStatus.Text != "TODOS")
                             {
                                 if (status != cbxStatus.Text)
-                                    continue; // Pula registros que não correspondem ao status
+                                    continue;
                             }
 
                             int rowIndex = dgvRelatorios.Rows.Add(
                                 Convert.ToDateTime(reader["dataDeEntrada"]).ToString("dd/MM/yyyy"),
                                 reader["produto"].ToString(),
-                                reader["quantidade"].ToString(),
+                                quantidade,
                                 reader["unidade"].ToString(),
                                 dataSaida,
                                 status
                             );
 
-                            // Aplicar cor conforme status
                             AplicarCorStatus(dgvRelatorios.Rows[rowIndex], diasRestantes);
 
+                            totalQuantidade += quantidade;
                             contador++;
                         }
                     }
                 }
 
-                // Atualizar label de status (sempre com cor branca)
+                // Adiciona linha de total geral
                 if (contador > 0)
                 {
-                    lblStatus.Text = $"Encontrados {contador} registros no período.";
+                    int totalRowIndex = dgvRelatorios.Rows.Add(
+                        "",
+                        "TOTAL GERAL DO ESTOQUE:",
+                        totalQuantidade,
+                        "",
+                        "",
+                        ""
+                    );
+
+                    DataGridViewRow totalRow = dgvRelatorios.Rows[totalRowIndex];
+                    totalRow.DefaultCellStyle.BackColor = Color.DarkSlateGray;
+                    totalRow.DefaultCellStyle.ForeColor = Color.White;
+                    totalRow.DefaultCellStyle.Font = new Font("Arial", 10, FontStyle.Bold);
+
+                    lblStatus.Text = $"Encontrados {contador} registros | Total de itens em estoque: {totalQuantidade}";
                 }
                 else
                 {

@@ -170,7 +170,7 @@ namespace GPSFA_WinForms
             catch (Exception error)
             {
                 var errorMessage = error.Message;
-                if ()
+                
 
                 MessageBox.Show($"Erro ao montar cestas! Erro:\n\n{error}", "Mensagem do sistema");
             }
